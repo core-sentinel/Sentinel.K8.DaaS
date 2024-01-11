@@ -1,24 +1,194 @@
 ﻿@page "/connectivity-checker"
+@using Sentinel.NetworkUtils.Models
+
+<div class="row">
+    <div class="col-6">
+
+        <Card Size="CardSize.Medium">
+            <CardHeader>
+                <h3>Check Connectivity</h3>
+            </CardHeader>
+            <CardBody>
+                <form class="needs-validation" novalidate="">
+                    <div class="row g-3">
+                        <div class="col-sm-9">
+                            <label for="firstName" class="form-label">URL</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="Url" value="" required="">
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label for="lastName" class="form-label">Port</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Port" value="" required="">
+                        </div>
 
 
-<Card Size="CardSize.Default">
-    <CardHeader>
-        <h3>Check Connectivity</h3>
-    </CardHeader>
-    <CardBody>
-        Card Body
-    </CardBody>
-</Card>
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">Category</label>
+                            <select class="form-select" id="category" @onchange="categoryChanged">
+                                @foreach (var cat in categories)
+                                {
+                                    <option value="@cat.Key">@cat.Value</option>
+                                }
+                            </select>
+                        </div>
 
-<Card Size="CardSize.Default">
-    <CardBody>
-        <CardTitle>
-            <h3>Header in the body</h3>
-        </CardTitle>
-        Card Body
-    </CardBody>
-</Card>
+                        <div class="col-md-6">
+                            <label for="state" class="form-label">Authentication</label>
+                            <select class="form-select" id="authselect" required="" @bind="SelectedAuthenticationType">
+                                <option value="None">None</option>
+                                <option value="UseMSI">Use Managed Identity</option>
+                                <option value="SP">Use Service Principal</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    @switch (selectedCategoryValue)
+                    {
+                        case 0:
+                            <hr class="my-4">
+                            <h4 class="mb-3">General</h4>
+                            break;
+                        case 1:
+                            <hr class="my-4">
+                            <h4 class="mb-3">Storage Account</h4>
+                            <div class="row g-3">
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" name="connectionstring"  placeholder="Connection String" value="" required="">
+                                </div>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control"  placeholder="Port" value="" required="">
+                                </div>
+                            </div>
+                            break;
+                        case 2:
+                            <hr class="my-4">
+                            <h4 class="mb-3">Key Vault</h4>
+
+                            <div class="row g-3">
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="firstName" placeholder="Key Vault Name" value="" required="">
+                                </div>
+                            </div>
+                            break;
+                        case 3:
+                            <hr class="my-4">
+                            <h4 class="mb-3">Service Bus</h4>
+                            <div class="row g-3">
+                                <div class="col-sm-12">
+                                    <label for="firstName" class="form-label">URL</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <label for="lastName" class="form-label">Port</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+                                </div>
+                            </div>
+                            break;
+                        case 4:
+                            <hr class="my-4">
+                            <h4 class="mb-3">Redis</h4>
+                            <div class="row g-3">
+                                <div class="col-sm-12">
+                                    <label for="firstName" class="form-label">URL</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                                </div>
+                            </div>
+                            break;
+                        case 5:
+                            <hr class="my-4">
+                            <h4 class="mb-3">Event Hub</h4>
+                            <div class="row g-3">
+                                <div class="col-sm-12">
+                                    <label for="firstName" class="form-label">URL</label>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <label for="lastName" class="form-label">Port</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+                                </div>
+                            </div>
+                            break;
+                        case 6:
+                            <hr class="my-4">
+                            <h4 class="mb-3">Cosmos DB</h4>
+                            break;
+                        case 7:
+                            <hr class="my-4">
+                            <h4 class="mb-3">SQL Server</h4>
+                            <div class="row g-3">
+                                <div class="col-sm-12">
+                                    <label for="firstName" class="form-label">URL</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                                </div>
+                            </div>
+                            break;
+                        default:
+                            break;
+
+                    }
+
+                    @if (SelectedAuthenticationType == "SP")
+                    {
+                        <hr class="my-4">
+                        <span> Service Principal</span>
+                    }
+
+                    <hr class="my-4">
+
+                    <button class="w-100 btn btn-primary" type="submit">Send</button>
+                </form>
+
+            </CardBody>
+        </Card>
+    </div>
+
+
+    <div class="col-6">
+
+
+        <Card Size="CardSize.Default">
+            <CardBody>
+                <CardTitle>
+                    <h3>Header in the body</h3>
+                </CardTitle>
+                Card Body
+            </CardBody>
+        </Card>
+
+
+    </div>
+
+</div>
+
+
+
+
 
 @code {
 
+    private Dictionary<int, string> categories;
+    private int selectedCategoryValue;
+    private string selectedCategoryText;
+    private string SelectedAuthenticationType { get; set; } = "1";
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        categories = Enum.GetValues(typeof(CheckAccessRequestResourceType))
+       .Cast<CheckAccessRequestResourceType>().ToDictionary(t => (int)t, t => t.ToString());
+
+        await Task.Delay(30);
+
+
+
+        //return Task.CompletedTask();
+    }
+
+    private void categoryChanged(ChangeEventArgs e)
+    {
+        selectedCategoryValue = Convert.ToInt32(e.Value);
+        selectedCategoryText = categories[selectedCategoryValue];
+
+    }
 }
