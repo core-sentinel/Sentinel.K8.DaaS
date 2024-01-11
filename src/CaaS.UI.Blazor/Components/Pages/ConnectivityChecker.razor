@@ -2,7 +2,7 @@
 @using Sentinel.NetworkUtils.Models
 
 <div class="row">
-    <div class="col-6">
+    <div class="col-8">
 
         <Card Size="CardSize.Medium">
             <CardHeader>
@@ -13,12 +13,12 @@
                     <div class="row g-3">
                         <div class="col-sm-9">
                             <label for="firstName" class="form-label">URL</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="Url" value="" required="">
+                            <input type="text" class="form-control" id="url" placeholder="URL" @bind="url">
                         </div>
 
                         <div class="col-sm-3">
                             <label for="lastName" class="form-label">Port</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="Port" value="" required="">
+                            <input type="number" class="form-control" id="port" placeholder="Port" @bind="port">
                         </div>
 
 
@@ -51,22 +51,33 @@
                         case 1:
                             <hr class="my-4">
                             <h4 class="mb-3">Storage Account</h4>
+
+                            <Alert BackgroundColor="TablerColor.Info">
+                             <div class="text-secondary">
+                                    Container Name and Connection string is required if MSI or Service Service Principal is used just use the domain name
+                             </div>
+                            </Alert>
+
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" name="connectionstring"  placeholder="Connection String" value="" required="">
+                                    <input type="text" class="form-control" name="connectionstring_sa"  placeholder="Connection String" value="" required="">
                                 </div>
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control"  placeholder="Port" value="" required="">
+                                    <input type="text" class="form-control" name="containername"  placeholder="Container Name" value="" required="">
                                 </div>
                             </div>
                             break;
                         case 2:
                             <hr class="my-4">
                             <h4 class="mb-3">Key Vault</h4>
-
+                            <Alert BackgroundColor="TablerColor.Info">
+                                <div class="text-secondary">
+                                    just the key vault name not the URL
+                                </div>
+                            </Alert>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="firstName" placeholder="Key Vault Name" value="" required="">
+                                    <input type="text" class="form-control" name="keyvaultname" placeholder="Key Vault Name" value="" required="">
                                 </div>
                             </div>
                             break;
@@ -75,13 +86,11 @@
                             <h4 class="mb-3">Service Bus</h4>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <label for="firstName" class="form-label">URL</label>
-                                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="connectionstring_sb" placeholder="Connection String" value="" required="">
                                 </div>
 
                                 <div class="col-sm-12">
-                                    <label for="lastName" class="form-label">Port</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="queuename" placeholder="Queue Name" value="" required="">
                                 </div>
                             </div>
                             break;
@@ -90,8 +99,7 @@
                             <h4 class="mb-3">Redis</h4>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <label for="firstName" class="form-label">URL</label>
-                                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="connectionstring_redis" placeholder="Connection String" value="" required="">
                                 </div>
                             </div>
                             break;
@@ -100,12 +108,11 @@
                             <h4 class="mb-3">Event Hub</h4>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <label for="firstName" class="form-label">URL</label>
+                                    <input type="text" class="form-control" id="connectionstring_eh" placeholder="Connection String" value="" required="">
                                 </div>
 
                                 <div class="col-sm-12">
-                                    <label for="lastName" class="form-label">Port</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="eventhubname" placeholder="Event Hub Name" value="" required="">
                                 </div>
                             </div>
                             break;
@@ -118,8 +125,7 @@
                             <h4 class="mb-3">SQL Server</h4>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <label for="firstName" class="form-label">URL</label>
-                                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="connectionstring_sql" placeholder="Connection String" value="" required="">
                                 </div>
                             </div>
                             break;
@@ -136,7 +142,7 @@
 
                     <hr class="my-4">
 
-                    <button class="w-100 btn btn-primary" type="submit">Send</button>
+                    <button class="w-100 btn btn-primary" type="submit" @onclick="send_clicked">Send</button>
                 </form>
 
             </CardBody>
@@ -144,7 +150,7 @@
     </div>
 
 
-    <div class="col-6">
+    <div class="col-4">
 
 
         <Card Size="CardSize.Default">
@@ -170,7 +176,10 @@
     private Dictionary<int, string> categories;
     private int selectedCategoryValue;
     private string selectedCategoryText;
-    private string SelectedAuthenticationType { get; set; } = "1";
+    private string SelectedAuthenticationType { get; set; } = "None";
+
+    private string url="";
+    private int port=443;
 
     protected override async Task OnInitializedAsync()
     {
@@ -190,5 +199,11 @@
         selectedCategoryValue = Convert.ToInt32(e.Value);
         selectedCategoryText = categories[selectedCategoryValue];
 
+    }
+    private Task send_clicked(MouseEventArgs e)
+    {
+        Console.WriteLine(url + ":" + port.ToString());
+        Console.WriteLine(selectedCategoryValue.ToString() + " " + SelectedAuthenticationType);
+        return Task.CompletedTask;
     }
 }
