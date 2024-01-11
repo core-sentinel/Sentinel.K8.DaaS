@@ -1,0 +1,62 @@
+﻿<Navbar Background=appService.Settings.NavbarBackground Direction=appService.Settings.NavbarDirection NavLinkMatch="Microsoft.AspNetCore.Components.Routing.NavLinkMatch.All">
+
+    <a href="/" class="navbar-brand navbar-brand-autodark">
+        <img src="/img/daas_logo-removebg-preview.png" alt="Tabler" class="navbar-brand-image me-2">
+        <h2 class="text-secondary">DaaS</h2>
+    </a>
+
+    <NavbarMenu>
+
+        <NavbarMenuItem Href="connectivity-checker" Text="Connectivity Checker">
+            <MenuItemIcon>
+                <Icon class="icon" IconType="@TablerIcons.Anvil" />
+            </MenuItemIcon>
+        </NavbarMenuItem>
+
+        <NavbarMenuItem Href="app-settings" Text="App Settings">
+            <MenuItemIcon>
+                <Icon class="icon" IconType="@TablerIcons.Settings" />
+            </MenuItemIcon>
+        </NavbarMenuItem>
+
+        <NavbarMenuItem Href="counter" Text="Dashboard">
+            <MenuItemIcon>
+                <Icon class="icon" IconType="@TablerIcons.Dashboard" />
+            </MenuItemIcon>
+        </NavbarMenuItem>
+
+
+
+        
+
+        <NavbarMenuItem Text="Snippets">
+            <MenuItemIcon>
+                <Icon class="icon" IconType="@TablerIcons.Code" />
+            </MenuItemIcon>
+            <SubMenu>
+                <NavbarMenuItem Text="Statistics" Href="snippets/statistcs" />
+                <NavbarMenuItem Text="Profile" Href="snippets/profiles" />
+            </SubMenu>
+        </NavbarMenuItem>
+
+    </NavbarMenu>
+</Navbar>
+
+@code{
+    [Inject] private AppService appService { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        appService.OnSettingsUpdated += SettingsUpdated;
+    }
+
+    private void SettingsUpdated()
+    {
+        InvokeAsync(() => StateHasChanged());
+    }
+    public void Dispose()
+    {
+        appService.OnSettingsUpdated -= SettingsUpdated;
+    }                        
+}

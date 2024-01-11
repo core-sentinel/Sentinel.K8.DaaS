@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{68A7D98E-0DD8-4B77-8BC8-8B496B124A09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{04D834C0-F01D-48F9-9726-2C85AF42F9A4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{B5C759CF-ED22-4034-BEE1-EB6F84031DD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TabBlazor", "src\TabBlazor\TabBlazor.csproj", "{70F408F1-E743-4786-8168-7290DFC8C67C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaaS.UI.Blazor", "src\CaaS.UI.Blazor\CaaS.UI.Blazor.csproj", "{8B1A2887-E331-4798-AE92-6D0E3EC19C6B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.NetworkUtils", "src\Sentinel.NetworkUtils\Sentinel.NetworkUtils.csproj", "{72919A2D-D51D-4A19-9059-19009836A8AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.NetworkUtils.Tests", "tests\Sentinel.NetworkUtils.Tests\Sentinel.NetworkUtils.Tests.csproj", "{4C1AC6AC-4F6E-4332-8393-DFB1E9D9E82D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70F408F1-E743-4786-8168-7290DFC8C67C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F408F1-E743-4786-8168-7290DFC8C67C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F408F1-E743-4786-8168-7290DFC8C67C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F408F1-E743-4786-8168-7290DFC8C67C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B1A2887-E331-4798-AE92-6D0E3EC19C6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B1A2887-E331-4798-AE92-6D0E3EC19C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B1A2887-E331-4798-AE92-6D0E3EC19C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B1A2887-E331-4798-AE92-6D0E3EC19C6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72919A2D-D51D-4A19-9059-19009836A8AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72919A2D-D51D-4A19-9059-19009836A8AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72919A2D-D51D-4A19-9059-19009836A8AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72919A2D-D51D-4A19-9059-19009836A8AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C1AC6AC-4F6E-4332-8393-DFB1E9D9E82D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C1AC6AC-4F6E-4332-8393-DFB1E9D9E82D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C1AC6AC-4F6E-4332-8393-DFB1E9D9E82D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C1AC6AC-4F6E-4332-8393-DFB1E9D9E82D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{70F408F1-E743-4786-8168-7290DFC8C67C} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
+		{8B1A2887-E331-4798-AE92-6D0E3EC19C6B} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
+		{72919A2D-D51D-4A19-9059-19009836A8AA} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
+		{4C1AC6AC-4F6E-4332-8393-DFB1E9D9E82D} = {04D834C0-F01D-48F9-9726-2C85AF42F9A4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {12F5EFF8-B981-4B1F-BADE-D820FD4FEB56}
+	EndGlobalSection
+EndGlobal
