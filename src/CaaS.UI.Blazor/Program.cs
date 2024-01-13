@@ -1,5 +1,6 @@
 using CaaS.UI.Blazor.Components;
 using CaaS.UI.Blazor.Services;
+using Sentinel.NetworkUtils.Services;
 using TabBlazor;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddTabler()
               .AddSingleton<AppService>();
+
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<ConnectivityCheckService>();
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure;
@@ -14,6 +15,7 @@ public static class TestKeyVaultConnection
 
     public static async Task<TestNetConnectionResponse> TestConnection(string keyVaultName, ServicePrincipal principal = null)
     {
+        var sw = Stopwatch.StartNew();
         var keyVaultUrl = $"https://{keyVaultName}.vault.azure.net";
         SecretClient client = null;
         if (principal != null && principal.ClientId != null && principal.ClientSecret != null && principal.TenantId != null)
@@ -36,11 +38,12 @@ public static class TestKeyVaultConnection
             {
                 Console.WriteLine($"IterateSecretsWithAwaitForeachAsync: {secret.Name}");
             }
-            return new TestNetConnectionResponse(true);
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.KeyVault, true, sw.ElapsedMilliseconds);
         }
         catch (Exception ex)
         {
-            return new TestNetConnectionResponse(false, ex.Message);
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.KeyVault, false, ex.Message, sw.ElapsedMilliseconds);
         }
+        finally { sw.Stop(); }
     }
 }

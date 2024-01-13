@@ -38,6 +38,18 @@ namespace Sentinel.NetworkUtils.Models
         public EventHubDetails? EventHubDetails { get; set; } = default!;
 
 
+        public CheckAccessRequest()
+        {
+            ServicePrincipal = new ServicePrincipal();
+            
+            StrorageAccountDetails = new StrorageAccountDetails();
+            ServiceBusDetails = new ServiceBusDetails();
+            RedisDetails = new RedisDetails();
+            SQLServerDetails = new SQLServerDetails();
+            KeyVaultDetails = new KeyVaultDetails();
+            EventHubDetails = new EventHubDetails();
+        }
+
     }
 
     public class KeyVaultDetails

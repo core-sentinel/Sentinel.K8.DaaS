@@ -1,3 +1,4 @@
+using Sentinel.NetworkUtils.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +11,33 @@ namespace Sentinel.NetworkUtils.Models
         public bool IsConnected { get; set; }
         public string? Message { get; set; }
 
+        public string CategoryTypeName { get; set; }
+        public int CategoryTypeID { get; set; }
+
+        public long ElapsedMilliseconds { get; set; }
+
         public TestNetConnectionResponse()
         {
 
         }
 
-        public TestNetConnectionResponse(bool isConnected)
+        public TestNetConnectionResponse(CheckAccessRequestResourceType categoryType, bool isConnected, long elapsedMilliseconds)
         {
             IsConnected = isConnected;
+            ElapsedMilliseconds = elapsedMilliseconds;
+            CategoryTypeID = Convert.ToInt32(categoryType);
+            CategoryTypeName = categoryType.ToString();
         }
 
-        public TestNetConnectionResponse(bool isConnected, string message)
+        public TestNetConnectionResponse(CheckAccessRequestResourceType categoryType, bool isConnected, string message, long elapsedMilliseconds = 0)
         {
             IsConnected = isConnected;
+            ElapsedMilliseconds = elapsedMilliseconds;
             Message = message;
+            CategoryTypeID = Convert.ToInt32(categoryType);
+            CategoryTypeName = categoryType.ToString();
+
+
         }
     }
 }

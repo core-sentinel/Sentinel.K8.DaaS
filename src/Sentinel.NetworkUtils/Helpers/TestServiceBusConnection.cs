@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Identity;
@@ -14,6 +15,7 @@ public static class TestServiceBusConnection
 
     public static async Task<TestNetConnectionResponse> TestConnection(string connectionString, string queueName, bool MSI = false, ServicePrincipal? principal = null)
     {
+        var sw = Stopwatch.StartNew();
         try
         {
             ServiceBusClient serviceBusClient = null;
@@ -40,12 +42,13 @@ public static class TestServiceBusConnection
             var rts = await serviceBusAdministrationClient.GetQueueRuntimePropertiesAsync(queueName);
             // serviceBusAdministrationClient.
 
-            return new TestNetConnectionResponse { IsConnected = true };
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.ServiceBus, true, sw.ElapsedMilliseconds);
         }
         catch (Exception ex)
         {
-            return new TestNetConnectionResponse { IsConnected = false, Message = ex.Message };
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.ServiceBus, false, ex.Message, sw.ElapsedMilliseconds);
         }
+        finally { sw.Stop(); }
     }
 
 }

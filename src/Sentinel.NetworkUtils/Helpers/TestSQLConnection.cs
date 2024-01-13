@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Identity;
@@ -13,6 +14,7 @@ public static class TestSQLConnection
 
     public static TestNetConnectionResponse TestConnection(string connectionString, bool useMSI = false, ServicePrincipal principal = null)
     {
+        var sw = Stopwatch.StartNew();
         try
         {
             using (var connection = new SqlConnection(connectionString))
@@ -34,12 +36,13 @@ public static class TestSQLConnection
 
                 connection.Open();
                 connection.Database.ToString();
-                return new TestNetConnectionResponse(true);
+                return new TestNetConnectionResponse(CheckAccessRequestResourceType.SQLServer, true, sw.ElapsedMilliseconds);
             }
         }
         catch (Exception ex)
         {
-            return new TestNetConnectionResponse(false, ex.Message);
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.SQLServer, false, ex.Message, sw.ElapsedMilliseconds);
         }
+        finally { sw.Stop(); }
     }
 }

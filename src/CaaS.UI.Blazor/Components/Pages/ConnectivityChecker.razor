@@ -1,5 +1,6 @@
 ﻿@page "/connectivity-checker"
 @using Sentinel.NetworkUtils.Models
+@using Sentinel.NetworkUtils.Services
 
 <div class="row">
     <div class="col-8">
@@ -9,23 +10,23 @@
                 <h3>Check Connectivity</h3>
             </CardHeader>
             <CardBody>
-                <form class="needs-validation" novalidate="">
+                
                     <div class="row g-3">
                         <div class="col-sm-9">
                             <label for="firstName" class="form-label">URL</label>
-                            <input type="text" class="form-control" id="url" placeholder="URL" @bind="url">
+                            <input type="text" class="form-control" id="url" placeholder="URL" @bind="request.Url">
                         </div>
 
                         <div class="col-sm-3">
                             <label for="lastName" class="form-label">Port</label>
-                            <input type="number" class="form-control" id="port" placeholder="Port" @bind="port">
+                            <input type="number" class="form-control" id="port" placeholder="Port" @bind="request.Port">
                         </div>
 
 
                         <div class="col-md-6">
                             <label for="country" class="form-label">Category</label>
                             <select class="form-select" id="category" @onchange="categoryChanged">
-                                @foreach (var cat in categories)
+                                @foreach (var cat in connectivityCheckService.Categories)
                                 {
                                     <option value="@cat.Key">@cat.Value</option>
                                 }
@@ -60,10 +61,10 @@
 
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" name="connectionstring_sa"  placeholder="Connection String" value="" required="">
+                                    <input type="text" class="form-control" name="connectionstring_sa"  placeholder="Connection String" @bind="request.StrorageAccountDetails.ConnectionString">
                                 </div>
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" name="containername"  placeholder="Container Name" value="" required="">
+                                    <input type="text" class="form-control" name="containername" placeholder="Container Name" @bind="request.StrorageAccountDetails.containerName">
                                 </div>
                             </div>
                             break;
@@ -77,7 +78,7 @@
                             </Alert>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" name="keyvaultname" placeholder="Key Vault Name" value="" required="">
+                                    <input type="text" class="form-control" name="keyvaultname" placeholder="Key Vault Name" @bind="request.KeyVaultDetails.KeyVaultName">
                                 </div>
                             </div>
                             break;
@@ -86,11 +87,11 @@
                             <h4 class="mb-3">Service Bus</h4>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="connectionstring_sb" placeholder="Connection String" value="" required="">
+                                    <input type="text" class="form-control" id="connectionstring_sb" placeholder="Connection String" @bind="request.ServiceBusDetails.ConnectionString">
                                 </div>
 
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="queuename" placeholder="Queue Name" value="" required="">
+                                    <input type="text" class="form-control" id="queuename" placeholder="Queue Name" @bind="request.ServiceBusDetails.QueueName">
                                 </div>
                             </div>
                             break;
@@ -99,7 +100,7 @@
                             <h4 class="mb-3">Redis</h4>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="connectionstring_redis" placeholder="Connection String" value="" required="">
+                                    <input type="text" class="form-control" id="connectionstring_redis" placeholder="Connection String" @bind="request.RedisDetails.ConnectionString">
                                 </div>
                             </div>
                             break;
@@ -108,11 +109,11 @@
                             <h4 class="mb-3">Event Hub</h4>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="connectionstring_eh" placeholder="Connection String" value="" required="">
+                                    <input type="text" class="form-control" id="connectionstring_eh" placeholder="Connection String" @bind="request.EventHubDetails.ConnectionString">
                                 </div>
 
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="eventhubname" placeholder="Event Hub Name" value="" required="">
+                                    <input type="text" class="form-control" id="eventhubname" placeholder="Event Hub Name" @bind="request.EventHubDetails.EventHubName">
                                 </div>
                             </div>
                             break;
@@ -125,7 +126,7 @@
                             <h4 class="mb-3">SQL Server</h4>
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="connectionstring_sql" placeholder="Connection String" value="" required="">
+                                    <input type="text" class="form-control" id="connectionstring_sql" placeholder="Connection String" @bind="request.SQLServerDetails.ConnectionString">
                                 </div>
                             </div>
                             break;
@@ -142,29 +143,88 @@
 
                     <hr class="my-4">
 
-                    <button class="w-100 btn btn-primary" type="submit" @onclick="send_clicked">Send</button>
-                </form>
+            
+                <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" @onclick="send_clicked">Send</Button>
+
 
             </CardBody>
         </Card>
     </div>
+
+
 
 
     <div class="col-4">
 
+        @if(checkAccessResponse != null && checkAccessResponse.netResult != null)
+        {
+            
+            @if (checkAccessResponse.netResult.IsConnected)
+            {
+                <Card Size="CardSize.Default" StatusStart="TablerColor.Green">
+                    <CardBody>
+                        <CardTitle>
+                                <h3>Connected  </h3>
+                                <h4>NetResponseTime: @checkAccessResponse.netResult.ElapsedMilliseconds</h4>
+                               <h4> IP @checkAccessResponse.ipaddress</h4>
+                        </CardTitle>
+                        @* Card Body *@
+                    </CardBody>
+                </Card>
+            }
 
-        <Card Size="CardSize.Default">
-            <CardBody>
-                <CardTitle>
-                    <h3>Header in the body</h3>
-                </CardTitle>
-                Card Body
-            </CardBody>
-        </Card>
 
+            @if (checkAccessResponse.netResult.IsConnected == false)
+            {
+                <Card Size="CardSize.Default" StatusStart="TablerColor.Danger">
+                    <CardHeader>
+                        <h3>Connectiviy Failed</h3> 
+                    </CardHeader>
+                    <CardBody>
 
+                        <h4> <b> IP:  </b> @checkAccessResponse.ipaddress</h4>
+                        <h4>NetResponseTime: @checkAccessResponse.netResult.ElapsedMilliseconds</h4>
+                        <br />
+                        @checkAccessResponse.netResult.Message
+                    </CardBody>
+                </Card>
+            }
+        }
+
+        @if (checkAccessResponse !=null && checkAccessResponse.additionalResult != null)
+        {
+            @if (checkAccessResponse.additionalResult.IsConnected == true)
+            {
+                @if (checkAccessResponse.additionalResult.IsConnected == true)
+                {
+                    <Card Size="CardSize.Default" StatusStart="TablerColor.Green">
+                        <CardHeader>
+                            <h3> Success @checkAccessResponse.additionalResult.CategoryTypeName</h3>
+                        </CardHeader>
+                        <CardBody>
+                            <h4>NetResponseTime: @checkAccessResponse.additionalResult.ElapsedMilliseconds</h4>
+                            <br />
+                            @checkAccessResponse.additionalResult.Message
+                        </CardBody>
+                    </Card>
+                }
+            }
+
+            @if (checkAccessResponse.additionalResult.IsConnected == false)
+            {
+                <Card Size="CardSize.Default" StatusStart="TablerColor.Danger">
+                    <CardHeader>
+                        <h3> Failed @checkAccessResponse.additionalResult.CategoryTypeName</h3>
+                    </CardHeader>
+                    <CardBody>
+                        <h4>NetResponseTime: @checkAccessResponse.additionalResult.ElapsedMilliseconds</h4>
+                        <br />
+                        @checkAccessResponse.additionalResult.Message
+                    </CardBody>
+                </Card>
+            }
+        }
     </div>
-
 </div>
 
 
@@ -173,37 +233,88 @@
 
 @code {
 
-    private Dictionary<int, string> categories;
+    [Inject] ConnectivityCheckService connectivityCheckService { get; set; }
+
+
     private int selectedCategoryValue;
     private string selectedCategoryText;
     private string SelectedAuthenticationType { get; set; } = "None";
+    private bool disableSendButton = false;
+    private CheckAccessRequest request = new CheckAccessRequest();
+    private CheckAccessResponse checkAccessResponse;
+  
 
-    private string url="";
-    private int port=443;
-
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-
-        categories = Enum.GetValues(typeof(CheckAccessRequestResourceType))
-       .Cast<CheckAccessRequestResourceType>().ToDictionary(t => (int)t, t => t.ToString());
-
-        await Task.Delay(30);
-
-
-
-        //return Task.CompletedTask();
+        return Task.CompletedTask;
     }
 
     private void categoryChanged(ChangeEventArgs e)
     {
         selectedCategoryValue = Convert.ToInt32(e.Value);
-        selectedCategoryText = categories[selectedCategoryValue];
+        selectedCategoryText = connectivityCheckService.Categories[selectedCategoryValue];
+
+        switch (selectedCategoryValue)
+        {
+            case 0:
+                request.Url = "";
+                request.Port = 443;
+                request.ResourceType = CheckAccessRequestResourceType.General;
+                break;
+            case 1:
+                request.ResourceType = CheckAccessRequestResourceType.StrorageAccount;
+                request.Url = ".blob.core.windows.net";
+                request.Port = 443;
+                break;
+            case 2:
+                request.ResourceType = CheckAccessRequestResourceType.KeyVault;
+                request.Url = ".vault.azure.net";
+                request.Port = 443;
+
+                break;
+            case 3:
+                request.Url = ".servicebus.windows.net";
+                request.Port = 443;
+                request.ResourceType = CheckAccessRequestResourceType.General;
+
+                break;
+            case 4:
+                request.ResourceType = CheckAccessRequestResourceType.Redis;
+                request.Url = ".redis.cache.windows.net";
+                request.Port = 6380;
+                break;
+            case 5:
+                request.ResourceType = CheckAccessRequestResourceType.EventHub;
+                request.Url = ".servicebus.windows.net";
+                request.Port = 5671;
+
+
+                break;
+            case 6:
+                request.ResourceType = CheckAccessRequestResourceType.CosmosDB;
+
+                request.Url = ".documents.azure.com";
+                request.Port = 443;
+                break;
+            case 7:
+                request.ResourceType = CheckAccessRequestResourceType.SQLServer;
+                request.Url = ".database.windows.net";
+                request.Port = 1433;
+                break;
+            default:
+                break;
+        }
 
     }
-    private Task send_clicked(MouseEventArgs e)
+    private async Task send_clicked(MouseEventArgs e)
     {
-        Console.WriteLine(url + ":" + port.ToString());
+        disableSendButton = true;
+        Console.WriteLine(request.Url + ":" + request.Port.ToString());
         Console.WriteLine(selectedCategoryValue.ToString() + " " + SelectedAuthenticationType);
-        return Task.CompletedTask;
+        checkAccessResponse = await connectivityCheckService.ConnectionCheck(request);
+        Console.WriteLine(checkAccessResponse.netResult.IsConnected.ToString());
+        disableSendButton = false;
+      
+       
     }
 }

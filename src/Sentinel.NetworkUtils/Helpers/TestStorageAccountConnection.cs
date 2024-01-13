@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ public static class TestStorageAccountConnection
 {
     public static async Task<TestNetConnectionResponse> TestConnection(string connectionString, string containerName, bool useMSI = false, ServicePrincipal principal = null)
     {
+        var sw = Stopwatch.StartNew();
+
         try
         {
 
@@ -40,12 +43,18 @@ public static class TestStorageAccountConnection
                 containerClient = new BlobContainerClient(connectionString, containerName);
             }
             await containerClient.CreateIfNotExistsAsync();
-            return new TestNetConnectionResponse(true);
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.StrorageAccount, true, sw.ElapsedMilliseconds);
         }
         catch (Exception ex)
         {
             //throw e;
-            return new TestNetConnectionResponse(false, ex.Message);
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.StrorageAccount, false, ex.Message, sw.ElapsedMilliseconds);
+
+        }
+        finally
+        {
+            sw.Reset();
+            sw.Stop();
         }
     }
 }

@@ -6,6 +6,7 @@ using Azure.Identity;
 using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
 using Sentinel.NetworkUtils.Models;
+using System.Diagnostics;
 
 namespace Sentinel.NetworkUtils.Helpers;
 /// <summary>
@@ -22,6 +23,7 @@ public static class TestRedisConnection
     /// <returns>True if the connection is successful, otherwise false.</returns>
     public static async Task<TestNetConnectionResponse> TestConnection(string connectionString, bool useMSI = false, ServicePrincipal principal = null)
     {
+        var sw = Stopwatch.StartNew();
         try
         {
             ConnectionMultiplexer connection = null;
@@ -42,12 +44,13 @@ public static class TestRedisConnection
             var status = connection.GetStatus();
             var dbs = connection.GetDatabase();
             // connection.WaitAll(connection.GetServer(connectionString).PingAsync());
-            return new TestNetConnectionResponse(connection.IsConnected);
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.Redis, connection.IsConnected, sw.ElapsedMilliseconds);
             //return true;
         }
         catch (Exception ex)
         {
-            return new TestNetConnectionResponse(false, ex.Message);
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.Redis, false, ex.Message);
         }
+        finally { sw.Stop(); }
     }
 }
