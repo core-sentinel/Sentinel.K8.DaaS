@@ -139,6 +139,20 @@
                     {
                         <hr class="my-4">
                         <span> Service Principal</span>
+
+                    <div class="row g-3">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="connectionstring_eh" placeholder="Tanent ID" @bind="request.EventHubDetails.ConnectionString">
+                        </div>
+
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="eventhubname" placeholder="Client ID" @bind="request.EventHubDetails.EventHubName">
+                        </div>
+
+                        <div class="col-sm-12">
+                            <input type="password" class="form-control" id="eventhubname" placeholder="Client Secret" @bind="request.EventHubDetails.EventHubName">
+                        </div>
+                    </div>
                     }
 
                     <hr class="my-4">
@@ -242,7 +256,7 @@
     private bool disableSendButton = false;
     private CheckAccessRequest request = new CheckAccessRequest();
     private CheckAccessResponse checkAccessResponse;
-  
+
 
     protected override Task OnInitializedAsync()
     {
@@ -311,6 +325,19 @@
         disableSendButton = true;
         Console.WriteLine(request.Url + ":" + request.Port.ToString());
         Console.WriteLine(selectedCategoryValue.ToString() + " " + SelectedAuthenticationType);
+        if (SelectedAuthenticationType == "UseMSI")
+        {
+            request.UseMSI = true;
+        }
+        else if(SelectedAuthenticationType == "SP")
+        {
+            request.ServicePrincipal = new ServicePrincipal();
+          //  request.ServicePrincipal.ClientId
+          //  request.ServicePrincipal.TenantId
+          //request.ServicePrincipal.ClientSecret = "";
+            // request.ServicePrincipal = CheckAccessRequestAuthenticationType.ServicePrincipal;
+        }
+       
         checkAccessResponse = await connectivityCheckService.ConnectionCheck(request);
         Console.WriteLine(checkAccessResponse.netResult.IsConnected.ToString());
         disableSendButton = false;
