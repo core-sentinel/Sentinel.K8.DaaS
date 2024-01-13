@@ -138,19 +138,19 @@
                     @if (SelectedAuthenticationType == "SP")
                     {
                         <hr class="my-4">
-                        <span> Service Principal</span>
+                        <h4> Service Principal</h4>
 
                     <div class="row g-3">
                         <div class="col-sm-12">
-                            <input type="text" class="form-control" id="connectionstring_eh" placeholder="Tanent ID" @bind="request.EventHubDetails.ConnectionString">
+                            <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="request.ServicePrincipal.TenantId">
                         </div>
 
                         <div class="col-sm-12">
-                            <input type="text" class="form-control" id="eventhubname" placeholder="Client ID" @bind="request.EventHubDetails.EventHubName">
+                            <input type="text" class="form-control" id="sp_clientid" placeholder="Client ID" @bind="request.ServicePrincipal.ClientId">
                         </div>
 
                         <div class="col-sm-12">
-                            <input type="password" class="form-control" id="eventhubname" placeholder="Client Secret" @bind="request.EventHubDetails.EventHubName">
+                            <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
                         </div>
                     </div>
                     }
@@ -301,8 +301,6 @@
                 request.ResourceType = CheckAccessRequestResourceType.EventHub;
                 request.Url = ".servicebus.windows.net";
                 request.Port = 5671;
-
-
                 break;
             case 6:
                 request.ResourceType = CheckAccessRequestResourceType.CosmosDB;
@@ -328,14 +326,6 @@
         if (SelectedAuthenticationType == "UseMSI")
         {
             request.UseMSI = true;
-        }
-        else if(SelectedAuthenticationType == "SP")
-        {
-            request.ServicePrincipal = new ServicePrincipal();
-          //  request.ServicePrincipal.ClientId
-          //  request.ServicePrincipal.TenantId
-          //request.ServicePrincipal.ClientSecret = "";
-            // request.ServicePrincipal = CheckAccessRequestAuthenticationType.ServicePrincipal;
         }
        
         checkAccessResponse = await connectivityCheckService.ConnectionCheck(request);
