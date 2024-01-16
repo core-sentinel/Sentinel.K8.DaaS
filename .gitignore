@@ -396,3 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/tests/Sentinel.NetworkUtils.Tests/appsettings.json

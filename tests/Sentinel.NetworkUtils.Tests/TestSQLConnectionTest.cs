@@ -11,8 +11,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public void Test_TestConnection_Success()
         {
             // Arrange
-            string connectionString = "Server=tcp:mercan.database.windows.net,1433;Initial Catalog=healthCheck;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default';";
-
+            string connectionString = SQLConnectionStrings;
             // Act
             var result = TestSQLConnection.TestConnection(connectionString);
 
