@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Sentinel.Tests.Helper\Sentinel.Tests.Helper.csproj" />
     <ProjectReference Include="..\..\src\Sentinel.NetworkUtils\Sentinel.NetworkUtils.csproj" />
   </ItemGroup>
 

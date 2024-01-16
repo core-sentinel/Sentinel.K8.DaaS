@@ -1,18 +1,35 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Sentinel.NetworkUtils.Helpers;
+using Sentinel.Tests.Helper;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Sentinel.Worker.NetworkUtils.Tests
 {
     public class NSLookupTest
     {
+        private readonly ITestOutputHelper _output;
+        private readonly string? webhostname;
+
+        public NSLookupTest(ITestOutputHelper output)
+        {
+            _output = output;
+
+            var config = ConfigurationHelper.GetConfiguration(null);
+            webhostname = config["WebHostName"];
+            //invalidhostName = config["InvalidHostName"];
+
+
+
+        }
         [Fact]
         public async Task Test_GetIPAddress_Goggle()
         {
             // Arrange
-            string hostName = "google.com";
+            string hostName = webhostname;
             string expectedIpAddress = "142.250.70.174";
 
             // Act

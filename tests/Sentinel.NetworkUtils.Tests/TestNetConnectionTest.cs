@@ -1,16 +1,40 @@
 using System.Threading.Tasks;
 using Sentinel.NetworkUtils.Helpers;
+using Sentinel.Tests.Helper;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Sentinel.Worker.NetworkUtils.Tests
 {
     public class TestNetConnectionTest
     {
+        private readonly ITestOutputHelper _output;
+        private readonly string webhostname;
+        private readonly string invalidhostName;
+        private readonly string dbhostName;
+        private readonly string sbhostName;
+        private readonly string cacheHostName;
+
+        public TestNetConnectionTest(ITestOutputHelper output)
+        {
+            _output = output;
+
+            var config = ConfigurationHelper.GetConfiguration(null);
+            webhostname = config["WebHostName"];
+            invalidhostName = config["InvalidHostName"];
+            dbhostName = config["DbHostName"];
+            sbhostName = config["SbHostName"];
+            cacheHostName = config["CacheHostName"];
+
+
+        }
+
+
         [Fact]
         public async Task Test_TestConnection_Success()
         {
             // Arrange
-            string hostName = "google.com";
+            string hostName = webhostname;
             int port = 80;
 
             // Act
@@ -24,7 +48,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public async Task Test_TestConnection_Failure()
         {
             // Arrange
-            string hostName = "invalidhost";
+            string hostName = invalidhostName;
             int port = 1234;
 
             // Act
@@ -39,7 +63,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public async Task Test_TestConnection_sql()
         {
             // Arrange
-            string hostName = "mercan.database.windows.net";
+            string hostName = dbhostName;
             int port = 1433;
 
             // Act
@@ -54,7 +78,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public async Task Test_TestConnection_ServiceBus()
         {
             // Arrange
-            string hostName = "mercan.servicebus.windows.net";
+            string hostName = sbhostName;
             int port = 5672;
 
             // Act
@@ -68,7 +92,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public async Task Test_TestConnection_Redis()
         {
             // Arrange
-            string hostName = "mercan.redis.cache.windows.net";
+            string hostName = cacheHostName;
             int port = 6380;
 
             // Act
@@ -82,7 +106,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public async Task Test_TestConnection_Redis_Wrong_Port()
         {
             // Arrange
-            string hostName = "mercan.redis.cache.windows.net";
+            string hostName = cacheHostName;
             int port = 6379;
 
             // Act

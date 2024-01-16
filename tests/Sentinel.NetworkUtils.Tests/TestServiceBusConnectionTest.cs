@@ -1,15 +1,66 @@
 using Xunit;
 using Sentinel.NetworkUtils.Helpers;
 using Sentinel.NetworkUtils.Models;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
+using Sentinel.Tests.Helper;
+using Xunit.Abstractions;
 
 namespace Sentinel.Worker.NetworkUtils.Tests;
 public class TestServiceBusConnectionTest
 {
+
+    private readonly string? webhostname;
+    private readonly ITestOutputHelper _output;
+
+    public string? SBSuccessConnectionString { get; }
+    public string? SBMSIConnectionString { get; }
+    public string? SBcontainerName1 { get; }
+    public string? SBcontainerName2 { get; }
+    public string? SBFailconnectionString { get; }
+
+    private string? successPrincipalTenantId;
+    private readonly string? successPrincipalPrincipalId;
+    private readonly string? successPrincipalClientId;
+    private readonly string? successPrincipalClientSecret;
+    private readonly string? successPrincipalUserName;
+    private readonly string? failurePrincipalTenantId;
+    private readonly string? failurePrincipalPrincipalId;
+    private readonly string? failurePrincipalClientId;
+    private readonly string? failurePrincipalClientSecret;
+
+    public TestServiceBusConnectionTest(ITestOutputHelper output)
+    {
+        _output = output;
+
+        var config = ConfigurationHelper.GetConfiguration(null);
+        SBSuccessConnectionString = config["SBSuccessConnectionString"];
+        SBMSIConnectionString = config["SBMSIConnectionString"];
+        SBcontainerName1 = config["SBcontainerName1"];
+        SBcontainerName2 = config["SBcontainerName2"];
+        SBFailconnectionString = config["SBFailconnectionString"];
+
+
+        successPrincipalTenantId = config["successPrincipalTenantId"];
+        successPrincipalPrincipalId = config["successPrincipalPrincipalId"];
+        successPrincipalClientId = config["successPrincipalClientId"];
+        successPrincipalClientSecret = config["successPrincipalClientSecret"];
+        successPrincipalUserName = config["successPrincipalUserName"];
+
+        failurePrincipalTenantId = config["failurePrincipalTenantId"];
+        failurePrincipalPrincipalId = config["failurePrincipalPrincipalId"];
+        failurePrincipalClientId = config["failurePrincipalClientId"];
+        failurePrincipalClientSecret = config["failurePrincipalClientSecret"];
+        //invalidhostName = config["InvalidHostName"];
+
+
+
+    }
+
     [Fact]
     public async Task Test_Connection_Successful()
     {
         // Arrange
-        string connectionString = "Endpoint=sb://mercan.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=FLzjGRoIB1DZM+H05s9XXO06Hm+QT1pBM+ASbK0rdmc=";
+        string connectionString = SBSuccessConnectionString;
         bool useMSI = false;
 
         // Act
@@ -23,14 +74,14 @@ public class TestServiceBusConnectionTest
     public async Task Test_Connection_Successful_WithPrincipal()
     {
         // Arrange
-        string connectionString = "mercan.servicebus.windows.net";
+        string connectionString = SBMSIConnectionString;
         bool useMSI = false;
         ServicePrincipal principal = new ServicePrincipal
         {
-            TenantId = "e1870496-eab8-42d0-8eb9-75fa94cfc3b8",
-            PrincipalId = "35f0c1c4-1e44-4206-b3de-ac5f06300897",
-            ClientId = "b3fb6373-8036-49c8-bc1f-31f26ebcdea9",
-            ClientSecret = "jKV8Q~K7Sc8-nUuIHu6FUfnm2KIzo_PloHSCgblL"
+            TenantId = successPrincipalTenantId,
+            PrincipalId = successPrincipalPrincipalId,
+            ClientId = successPrincipalClientId,
+            ClientSecret = successPrincipalClientSecret
         };
 
         // Act
@@ -44,14 +95,14 @@ public class TestServiceBusConnectionTest
     public async Task Test_Connection_Fails_WithPrincipal_NoAccess()
     {
         // Arrange
-        string connectionString = "mercan.servicebus.windows.net";
+        string connectionString = SBMSIConnectionString;
         bool useMSI = false;
         ServicePrincipal principal = new ServicePrincipal
         {
-            TenantId = "e1870496-eab8-42d0-8eb9-75fa94cfc3b8",
-            PrincipalId = "595fa408-0be0-40ae-b6d1-c71075c141ea",
-            ClientId = "5f2e9333-5af3-4954-b55d-5ff6072bd5ed",
-            ClientSecret = "Xpv8Q~GpeGZ12ZwRmIAXDqQo6fCPElYnZNnsbasy"
+            TenantId = failurePrincipalTenantId,
+            PrincipalId = failurePrincipalPrincipalId,
+            ClientId = failurePrincipalClientId,
+            ClientSecret = failurePrincipalClientSecret
         };
 
         // Act
@@ -66,7 +117,7 @@ public class TestServiceBusConnectionTest
     public async Task Test_Connection_Successful_WithMSI()
     {
         // Arrange
-        string connectionString = "mercan.servicebus.windows.net";
+        string connectionString = SBMSIConnectionString;
         bool useMSI = true;
 
         // Act
@@ -80,7 +131,7 @@ public class TestServiceBusConnectionTest
     public async Task Test_Connection_Failure()
     {
         // Arrange
-        string connectionString = "Endpoint=sb://mercan.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=FLzjGRoIB1DZM+H0XXO06Hm+QT1pBM+ASbK";
+        string connectionString = SBFailconnectionString;
         bool useMSI = false;
 
         // Act

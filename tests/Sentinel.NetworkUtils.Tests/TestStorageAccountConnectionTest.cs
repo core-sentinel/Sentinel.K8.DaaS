@@ -1,17 +1,52 @@
 using Xunit;
 using Sentinel.NetworkUtils.Helpers;
 using Sentinel.NetworkUtils.Models;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
+using Sentinel.Tests.Helper;
+using Xunit.Abstractions;
 
 namespace Sentinel.Worker.NetworkUtils.Tests
 {
     public class TestStorageAccountConnectionTest
     {
+        private readonly ITestOutputHelper _output;
+
+        public string? SASuccessConnectionString { get; }
+        public string? SAContainerName { get; }
+        public string? SAMSIConnectionString { get; }
+        public string? SAMSIContainerName { get; }
+        public string? SAFailConnectionString { get; }
+
+        private string? successPrincipalTenantId;
+        private readonly string? successPrincipalPrincipalId;
+        private readonly string? successPrincipalClientId;
+        private readonly string? successPrincipalClientSecret;
+
+        public TestStorageAccountConnectionTest(ITestOutputHelper output)
+        {
+            _output = output;
+
+            var config = ConfigurationHelper.GetConfiguration(null);
+
+
+            SASuccessConnectionString = config["SASuccessConnectionString"];
+
+            SAContainerName = config["SAContainerName"];
+            SAMSIConnectionString = config["SAMSIConnectionString"];
+            SAMSIContainerName = config["SAMSIContainerName"];
+            SAFailConnectionString = config["SAFailConnectionString"];
+
+            successPrincipalTenantId = config["successPrincipalTenantId"];
+            successPrincipalPrincipalId = config["successPrincipalPrincipalId"];
+            successPrincipalClientId = config["successPrincipalClientId"];
+            successPrincipalClientSecret = config["successPrincipalClientSecret"];
+        }
         [Fact]
         public async Task Test_Connection_Successful()
         {
             // Arrange
-            string connectionString = "DefaultEndpointsProtocol=https;AccountName=mercan;AccountKey=hf27A5YXJ1jyCMfOT1ZsDr0Td0YA+ZvcZbgLhc3kDyCX4OcNaFmvrcMZCoJ1e9XcBS6ZaKx5HzqK+ASt6/x42w==;EndpointSuffix=core.windows.net";
-            string containerName = "tests";
+            string connectionString = SASuccessConnectionString;
+            string containerName = SAContainerName;
 
             // Act
             var result = await TestStorageAccountConnection.TestConnection(connectionString, containerName);
@@ -24,15 +59,15 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public async Task Test_Connection_Successful_WithPrincipal()
         {
             // Arrange
-            string connectionString = "mercan";
-            string containerName = "test123";
+            string connectionString = SAMSIConnectionString;
+            string containerName = SAMSIContainerName;
             bool useMSI = false;
             ServicePrincipal principal = new ServicePrincipal
             {
-                TenantId = "e1870496-eab8-42d0-8eb9-75fa94cfc3b8",
-                PrincipalId = "595fa408-0be0-40ae-b6d1-c71075c141ea",
-                ClientId = "5f2e9333-5af3-4954-b55d-5ff6072bd5ed",
-                ClientSecret = "Xpv8Q~GpeGZ12ZwRmIAXDqQo6fCPElYnZNnsbasy"
+                TenantId = successPrincipalTenantId,
+                PrincipalId = successPrincipalPrincipalId,
+                ClientId = successPrincipalClientId,
+                ClientSecret = successPrincipalClientSecret
             };
 
             // Act
@@ -46,8 +81,8 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public async Task Test_Connection_Successful_WithMSI()
         {
             // Arrange
-            string connectionString = "mercan";
-            string containerName = "tests";
+            string connectionString = SAMSIConnectionString;
+            string containerName = SAContainerName;
             bool useMSI = true;
 
             // Act
@@ -61,8 +96,8 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public async Task Test_Connection_Failure()
         {
             // Arrange
-            string connectionString = "DefaultEndpointsProtocol=https;AccountName=mercan;AccountKey=hf27AJ1jyCMfOT1ZsDr0Td0YA+ZvcZbgLhc3kDyCX4OcNaFmvrcMZCoJ1e9XcBS6ZaKx5HzqK+ASt6/x42w==;EndpointSuffix=core.windows.net";
-            string containerName = "tests";
+            string connectionString = SAFailConnectionString;
+            string containerName = SAContainerName;
 
             // Act
             var result = await TestStorageAccountConnection.TestConnection(connectionString, containerName);

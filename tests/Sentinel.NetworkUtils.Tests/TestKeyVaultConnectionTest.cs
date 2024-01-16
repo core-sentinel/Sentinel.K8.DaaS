@@ -1,27 +1,39 @@
 using Xunit;
 using Sentinel.NetworkUtils.Helpers;
 using Sentinel.NetworkUtils.Models;
+using Sentinel.Tests.Helper;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
+using Xunit.Abstractions;
 
 namespace Sentinel.Worker.NetworkUtils.Tests
 {
+
     public class TestKeyVaultConnectionTest
     {
+        string keyVaultName;
+        ServicePrincipal principal;
+        private readonly ITestOutputHelper _output;
+
+        public TestKeyVaultConnectionTest(ITestOutputHelper output)
+        {
+            _output = output;
+
+            var config = ConfigurationHelper.GetConfiguration(null);
+            keyVaultName = config["KeyVaultName"];
+            var principal = new ServicePrincipal
+            {
+                TenantId = config["TenantId"],
+                PrincipalId = config["PrincipalId"],
+                ClientId = config["ClientId"],
+                ClientSecret = config["ClientSecret"]
+            };
+        }
+
         [Fact]
         public async Task Test_Connection_Successful_WithPrincipal()
         {
-            // Arrange
-            string keyVaultName = "mercan";
-            ServicePrincipal principal = new ServicePrincipal
-            {
-                TenantId = "e1870496-eab8-42d0-8eb9-75fa94cfc3b8",
-                PrincipalId = "c94a676a-0675-45d6-a2b7-177207f3a0b1",
-                ClientId = "b7ed020e-9672-4b42-91ce-f5636c756f71",
-                ClientSecret = "35j8Q~Ofgy9B7L7O87qyya0iyhnzwDLoZrVtHcpC"
-            };
-
             // Act
             var result = await TestKeyVaultConnection.TestConnection(keyVaultName, principal);
-
             // Assert
             Assert.True(result.IsConnected);
         }
@@ -29,12 +41,8 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         [Fact]
         public async Task Test_Connection_Successful_WithoutPrincipal()
         {
-            // Arrange
-            string keyVaultName = "mercan";
-
             // Act
             var result = await TestKeyVaultConnection.TestConnection(keyVaultName);
-
             // Assert
             Assert.True(result.IsConnected);
         }
@@ -44,10 +52,8 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         {
             // Arrange
             string keyVaultName = "invalidkeyvault";
-
             // Act
             var result = await TestKeyVaultConnection.TestConnection(keyVaultName);
-
             // Assert
             Assert.False(result.IsConnected);
         }

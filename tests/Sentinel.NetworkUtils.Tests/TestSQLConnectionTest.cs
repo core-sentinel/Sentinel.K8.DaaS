@@ -1,17 +1,58 @@
 using System.Data.SqlClient;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Sentinel.NetworkUtils.Helpers;
 using Sentinel.NetworkUtils.Models;
+using Sentinel.Tests.Helper;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Sentinel.Worker.NetworkUtils.Tests
 {
     public class TestSQLConnectionTest
     {
+        public string? SQLADConnectionStrings { get; }
+        public string? SQLConnectionStrings { get; }
+        public string? SQLFailConnectionStrings { get; }
+        public string? SQLMSISuccessConnectionStrings { get; }
+        public string? SQLMSIFailConnectionStrings { get; }
+        public string? SQLSPSuccessConnectionStrings { get; }
+
+        private readonly string? successPrincipalTenantId;
+        private readonly string? successPrincipalPrincipalId;
+        private readonly string? successPrincipalClientId;
+        private readonly string? successPrincipalClientSecret;
+        private readonly ITestOutputHelper _output;
+
+        public TestSQLConnectionTest(ITestOutputHelper output)
+        {
+            _output = output;
+
+            var config = ConfigurationHelper.GetConfiguration(null);
+
+
+            SQLADConnectionStrings = config["SQLADConnectionStrings"];
+            SQLConnectionStrings = config["SQLConnectionStrings"];
+            SQLFailConnectionStrings = config["SQLFailConnectionStrings"];
+            SQLMSISuccessConnectionStrings = config["SQLMSISuccessConnectionStrings"];
+            SQLMSIFailConnectionStrings = config["SQLMSIFailConnectionStrings"];
+            SQLSPSuccessConnectionStrings = config["SQLSPSuccessConnectionStrings"];
+
+
+            successPrincipalTenantId = config["successPrincipalTenantId"];
+            successPrincipalPrincipalId = config["successPrincipalPrincipalId"];
+            successPrincipalClientId = config["successPrincipalClientId"];
+            successPrincipalClientSecret = config["successPrincipalClientSecret"];
+
+
+
+
+        }
+
         [Fact]
         public void Test_TestConnection_Success()
         {
             // Arrange
-            string connectionString = SQLConnectionStrings;
+            string connectionString = SQLADConnectionStrings;
             // Act
             var result = TestSQLConnection.TestConnection(connectionString);
 
@@ -23,7 +64,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public void Test_TestConnection_Failure()
         {
             // Arrange
-            string connectionString = "Server=tcp:mercan.database.windows.net,1433;Initial Catalog=healthCheck;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            string connectionString = SQLFailConnectionStrings;
 
             // Act
             var result = TestSQLConnection.TestConnection(connectionString);
@@ -37,7 +78,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         {
             // Arrange
             //   string connectionString = "Server=tcp:mercan.database.windows.net;Authentication=Active Directory Default; Database=healthCheck;"; //"Server=tcp:mercan.database.windows.net,1433;Authentication=\"Active Directory Default\";Initial Catalog=healthCheck;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-            string connectionString = "Server=tcp:mercan.database.windows.net;Database=healthCheck;";
+            string connectionString = SQLMSISuccessConnectionStrings;
             bool useMSI = true;
 
             // Act
@@ -51,7 +92,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public void Test_TestConnection_With_MSI_Failure()
         {
             // Arrange
-            string connectionString = "Server=tcp:mercan.database.windows.net,1433;Initial Catalog=healthCheck;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default;";
+            string connectionString = SQLMSIFailConnectionStrings;
 
             bool useMSI = true;
 
@@ -67,14 +108,14 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         public void Test_TestConnection_With_SP_Success()
         {
             // Arrange
-            string connectionString = "Server=tcp:mercan.database.windows.net,1433;Initial Catalog=healthCheck;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            string connectionString = SQLSPSuccessConnectionStrings;
 
             bool useMSI = false;
             ServicePrincipal principal = new ServicePrincipal
             {
-                TenantId = "e1870496-eab8-42d0-8eb9-75fa94cfc3b8",
-                ClientId = "1dc1d6c4-1676-4eb5-adb4-4f2dc26f9ff1",
-                ClientSecret = "BtM8Q~X5X1udNGsbx1i433.HsEtZLfjaL8yx-bQe"
+                TenantId = successPrincipalTenantId,
+                ClientId = successPrincipalClientId,
+                ClientSecret = successPrincipalClientSecret
             };
             // Act
             var result = TestSQLConnection.TestConnection(connectionString, useMSI, principal);
