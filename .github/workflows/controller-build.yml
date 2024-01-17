@@ -1,4 +1,4 @@
-name: Sentinel Api HealthMonitoring
+name: CaaS K8s Controller
 
 on:
   push:
