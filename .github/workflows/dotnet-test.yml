@@ -20,6 +20,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+
+    - name: print secrets
+      run: |
+          az version
+      shell: bash
+      env:
+        DEV_ENV_FILE : ${{secrets.APPSETTINGS}}        
         
     - name: print secrets
       run: |
