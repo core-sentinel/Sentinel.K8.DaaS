@@ -21,10 +21,10 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: print secrets
+    - name: login for MSI
       run: |
           az version
-          az login --service-principal -t $Tenant_ID -u $Client_ID> -p $Client_Secret
+          az login --service-principal -t $Tenant_ID -u $Client_ID -p $Client_Secret
       shell: bash
       env:
         Tenant_ID  : ${{secrets.Tenant_ID}}   
