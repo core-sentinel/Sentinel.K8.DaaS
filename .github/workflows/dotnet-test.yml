@@ -11,10 +11,26 @@ on:
 
 jobs:
   build:
-
+    environment: dev
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: print secrets
+      run: |
+          echo $DEV_ENV_FILE &gt;&gt; src/.env
+          cat src/.env
+      shell: bash
+      env:
+        DEV_ENV_FILE : ${{secrets.APPSETTINGS}}
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+       name: DEV_ENV_FILE
+       path: src/.env
+
+
+    
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -26,3 +42,4 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
