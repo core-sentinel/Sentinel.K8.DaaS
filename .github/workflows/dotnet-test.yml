@@ -21,6 +21,10 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
+    - name: Install SonarCloud scanners
+      run: |
+          dotnet tool install --global dotnet-sonarscanner
+
     - name: login for MSI
       run: |
           az version
