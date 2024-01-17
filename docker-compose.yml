@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   caas.k8s.worker.controller:
-    image: ${DOCKER_REGISTRY}/caask8sworkercontroller-core:${TAGVersion}-prod-linux
+    image: mmercan/caask8sworkercontroller-core:${TAGVersion}-prod-linux
     build:
       context: .
       dockerfile: src/CaaS.K8s.Controller/Dockerfile
