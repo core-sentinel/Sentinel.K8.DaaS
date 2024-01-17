@@ -23,18 +23,12 @@ jobs:
         
     - name: print secrets
       run: |
-          echo $DEV_ENV_FILE >> src/.env
-          cat src/.env
+          echo $DEV_ENV_FILE >> tests/Sentinel.NetworkUtils.Tests/appsettings.json
+          cat tests/Sentinel.NetworkUtils.Tests/appsettings.json
       shell: bash
       env:
         DEV_ENV_FILE : ${{secrets.APPSETTINGS}}
     
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2
-      with:
-       name: DEV_ENV_FILE
-       path: src/.env
-
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
