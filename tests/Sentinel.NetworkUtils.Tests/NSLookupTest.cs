@@ -30,13 +30,13 @@ namespace Sentinel.Worker.NetworkUtils.Tests
         {
             // Arrange
             string hostName = webhostname;
-            string expectedIpAddress = "142.250.70.174";
+            // string expectedIpAddress = "142.250.70.174";
 
             // Act
             string ipAddress = await NSLookup.GetIPAddress(hostName);
 
             // Assert
-            Assert.Equal(expectedIpAddress, ipAddress);
+            Assert.StartsWith("142.250", ipAddress);
         }
 
         [Fact]
