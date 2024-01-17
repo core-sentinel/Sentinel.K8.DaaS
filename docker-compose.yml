@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  caas.k8s.worker.controller:
+    image: ${DOCKER_REGISTRY-}caask8sworkercontroller
+    build:
+      context: .
+      dockerfile: src/CaaS.K8s.Controller/Dockerfile

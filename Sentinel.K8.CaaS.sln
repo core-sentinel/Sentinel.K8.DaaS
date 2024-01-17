@@ -25,6 +25,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Tests.Helper", "Sentinel.Tests.Helper\Sentinel.Tests.Helper.csproj", "{BA814683-1E5A-44F6-A7B0-E4111CF53E13}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.Core.K8s", "src\Sentinel.Core.K8s\Sentinel.Core.K8s.csproj", "{6B538ADD-CDEC-458E-A243-0C2EE683F5C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.Core.BackgroundServices", "src\Sentinel.Core.BackgroundServices\Sentinel.Core.BackgroundServices.csproj", "{62329E4A-CB00-44DE-BE06-35EF7B33A2F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaaS.K8s.Worker.Controller", "src\CaaS.K8s.Controller\CaaS.K8s.Worker.Controller.csproj", "{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF62BD37-5476-4D51-91D7-DA3A1E3EC5BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +59,22 @@ Global
 		{BA814683-1E5A-44F6-A7B0-E4111CF53E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA814683-1E5A-44F6-A7B0-E4111CF53E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA814683-1E5A-44F6-A7B0-E4111CF53E13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B538ADD-CDEC-458E-A243-0C2EE683F5C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B538ADD-CDEC-458E-A243-0C2EE683F5C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B538ADD-CDEC-458E-A243-0C2EE683F5C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B538ADD-CDEC-458E-A243-0C2EE683F5C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62329E4A-CB00-44DE-BE06-35EF7B33A2F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62329E4A-CB00-44DE-BE06-35EF7B33A2F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62329E4A-CB00-44DE-BE06-35EF7B33A2F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62329E4A-CB00-44DE-BE06-35EF7B33A2F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF62BD37-5476-4D51-91D7-DA3A1E3EC5BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF62BD37-5476-4D51-91D7-DA3A1E3EC5BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF62BD37-5476-4D51-91D7-DA3A1E3EC5BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF62BD37-5476-4D51-91D7-DA3A1E3EC5BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +85,9 @@ Global
 		{72919A2D-D51D-4A19-9059-19009836A8AA} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
 		{4C1AC6AC-4F6E-4332-8393-DFB1E9D9E82D} = {04D834C0-F01D-48F9-9726-2C85AF42F9A4}
 		{BA814683-1E5A-44F6-A7B0-E4111CF53E13} = {04D834C0-F01D-48F9-9726-2C85AF42F9A4}
+		{6B538ADD-CDEC-458E-A243-0C2EE683F5C3} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
+		{62329E4A-CB00-44DE-BE06-35EF7B33A2F5} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
+		{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {12F5EFF8-B981-4B1F-BADE-D820FD4FEB56}
