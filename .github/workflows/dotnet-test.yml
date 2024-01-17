@@ -15,7 +15,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+        
     - name: print secrets
       run: |
           echo $DEV_ENV_FILE >> src/.env
@@ -23,19 +28,13 @@ jobs:
       shell: bash
       env:
         DEV_ENV_FILE : ${{secrets.APPSETTINGS}}
+    
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
        name: DEV_ENV_FILE
        path: src/.env
 
-
-    
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
