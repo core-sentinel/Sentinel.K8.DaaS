@@ -24,10 +24,12 @@ jobs:
     - name: print secrets
       run: |
           az version
+          az login --service-principal -t $Tenant_ID -u $Client_ID> -p $Client_Secret
       shell: bash
       env:
-        DEV_ENV_FILE : ${{secrets.APPSETTINGS}}        
-        
+        Tenant_ID  : ${{secrets.Tenant_ID}}   
+        Client_ID  : ${{secrets.Client_ID}}   
+        Client_Secret  : ${{secrets.Client_Secret}}   
     - name: print secrets
       run: |
           echo $DEV_ENV_FILE >> tests/Sentinel.NetworkUtils.Tests/appsettings.json
