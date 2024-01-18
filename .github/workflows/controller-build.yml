@@ -50,13 +50,13 @@ jobs:
 
       - name: View Docker Compose config
         run: |
-          export TAGVersion=${{ steps.meta.outputs.tags }}
+          export TAGVersion=${{github.ref_name}}
           export DOCKER_REGISTRY=mmercan
           docker-compose --file $dockercomposeLoc --log-level DEBUG config
 
       - name: Build Docker Image
         run: |
-          export TAGVersion=${{ steps.meta.outputs.tags }}
+          export TAGVersion=${{github.ref_name}}
           export DOCKER_REGISTRY=mmercan
           docker-compose --file $dockercomposeLoc --log-level DEBUG build
 
@@ -65,8 +65,8 @@ jobs:
           images=$(cat $dockercomposeLoc | grep 'image: ' | cut -d':' -f 2 | tr -d '"')
           for image in $images 
           do 
-            docker tag "${image}":"${{ steps.meta.outputs.tags }}" "${image}":"$GITHUB_RUN_ID"
-            docker tag "${image}":"${{ steps.meta.outputs.tags }}" "${image}":"latest"
+            docker tag "${image}":"${{github.ref_name}}" "${image}":"$GITHUB_RUN_ID"
+            docker tag "${image}":"${{github.ref_name}}" "${image}":"latest"
           done
 
       - name: list Images
