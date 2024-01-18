@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "caas-k8s-worker-controller.fullname" . }}-test-connection"
+  labels:
+    {{- include "caas-k8s-worker-controller.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "caas-k8s-worker-controller.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
