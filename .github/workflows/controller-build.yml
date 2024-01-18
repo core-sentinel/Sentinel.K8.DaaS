@@ -89,7 +89,7 @@ jobs:
 
       - name: custom packaging
         run: |
-          VERSION=v0.1.0
+          VERSION=${{github.ref_name}}
           rm -rf .cr-release-packages
           mkdir -p .cr-release-packages
           helm package charts/caas-k8s-worker-controller --app-version=${VERSION:1} --version=${VERSION:1} --destination=.cr-release-packages
