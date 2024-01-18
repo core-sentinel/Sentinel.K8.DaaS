@@ -92,6 +92,14 @@ jobs:
           mkdir -p .cr-release-packages
           helm package devops/deploy/helm/caas-k8s-worker-controller --app-version=${VERSION:1} --version=${VERSION:1} --destination=.cr-release-packages
 
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          skip_packaging: true
+        env:
+          charts_dir: devops/deploy/helm
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
