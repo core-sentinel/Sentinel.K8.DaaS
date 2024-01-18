@@ -1,7 +1,7 @@
 {{- $name := include "caas-k8s-worker-controller.fullname" . -}}
 {{- $cfgname := printf "%s-%s" $name "config" -}}
 
-{{- $imageversion :=   "V" .Chart.AppVersion -}}
+{{- $imageversion :=   printf "V%s" .Chart.AppVersion -}}
 
 
 apiVersion: apps/v1
