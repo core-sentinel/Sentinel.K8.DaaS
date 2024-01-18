@@ -2,7 +2,8 @@ name: CaaS K8s Controller
 
 on:
   push:
-    branches: [main, features/*]
+    tags:
+      - "*"
     paths:
       - src/CaaS.K8s.Worker.Controller/**
       - .github/workflows/controller-build.yml
