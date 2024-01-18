@@ -5,4 +5,4 @@ services:
     image: mmercan/caask8sworkercontroller-core:${TAGVersion}-prod-linux
     build:
       context: .
-      dockerfile: src/CaaS.K8s.Controller/Dockerfile
+      dockerfile: src/CaaS.K8s.Worker.Controller/Dockerfile

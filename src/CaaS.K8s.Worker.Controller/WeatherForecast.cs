@@ -1,4 +1,4 @@
-namespace CaaS.K8s.Controller
+namespace CaaS.K8s.Worker.Controller
 {
     public class WeatherForecast
     {

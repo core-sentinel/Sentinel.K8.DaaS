@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.Core.K8s", "src\Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.Core.BackgroundServices", "src\Sentinel.Core.BackgroundServices\Sentinel.Core.BackgroundServices.csproj", "{62329E4A-CB00-44DE-BE06-35EF7B33A2F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaaS.K8s.Worker.Controller", "src\CaaS.K8s.Controller\CaaS.K8s.Worker.Controller.csproj", "{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaaS.K8s.Worker.Controller", "src\CaaS.K8s.Worker.Controller\CaaS.K8s.Worker.Controller.csproj", "{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF62BD37-5476-4D51-91D7-DA3A1E3EC5BB}"
 EndProject

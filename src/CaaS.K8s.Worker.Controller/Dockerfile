@@ -8,10 +8,10 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/CaaS.K8s.Controller/CaaS.K8s.Worker.Controller.csproj", "src/CaaS.K8s.Controller/"]
-RUN dotnet restore "./src/CaaS.K8s.Controller/./CaaS.K8s.Worker.Controller.csproj"
+COPY ["src/CaaS.K8s.Worker.Controller/CaaS.K8s.Worker.Controller.csproj", "src/CaaS.K8s.Worker.Controller/"]
+RUN dotnet restore "./src/CaaS.K8s.Worker.Controller/./CaaS.K8s.Worker.Controller.csproj"
 COPY . .
-WORKDIR "/src/src/CaaS.K8s.Controller"
+WORKDIR "/src/src/CaaS.K8s.Worker.Controller"
 RUN dotnet build "./CaaS.K8s.Worker.Controller.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

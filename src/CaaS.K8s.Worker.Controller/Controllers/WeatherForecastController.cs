@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace CaaS.K8s.Controller.Controllers
+namespace CaaS.K8s.Worker.Controller.Controllers
 {
     [ApiController]
     [Route("[controller]")]
