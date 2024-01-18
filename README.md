@@ -1,1 +1,0 @@
-# Sentinel.K8.CaaS
