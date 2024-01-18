@@ -1,3 +1,7 @@
+{{- $name := include "caas-k8s-worker-controller.fullname" . -}}
+{{- $cfgname := printf "%s-%s" $name "config" -}}
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,6 +51,12 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+          {{- if .Values.configmap }}
+            - configMapRef:
+                name: {{ $cfgname }}
+          {{- end }}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

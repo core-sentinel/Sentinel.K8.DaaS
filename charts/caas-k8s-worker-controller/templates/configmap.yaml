@@ -1,0 +1,15 @@
+{{- if .Values.configmap -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "caas-k8s-worker-controller.fullname" . }}-config"
+  labels:
+    {{- include "caas-k8s-worker-controller.labels" . | nindent 4 }}
+data:
+ {{- if .Values.configmap -}}
+{{- range $key, $value := .Values.configmap }}
+ {{ $key }}: {{ default "" $value  | quote }}
+{{- end -}}
+{{- end }}
+
+{{- end }}
