@@ -90,7 +90,7 @@ jobs:
           VERSION=v0.1.0
           rm -rf .cr-release-packages
           mkdir -p .cr-release-packages
-          helm package devops/deploy/helm/caas-k8s-worker-controller --app-version=${VERSION:1} --version=${VERSION:1} --destination=.cr-release-packages
+          helm package charts/caas-k8s-worker-controller --app-version=${VERSION:1} --version=${VERSION:1} --destination=.cr-release-packages
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
