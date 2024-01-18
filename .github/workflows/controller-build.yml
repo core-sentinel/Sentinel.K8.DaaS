@@ -2,12 +2,12 @@ name: CaaS K8s Controller
 
 on:
   push:
-    branches: [main,features/*]
+    branches: [main, features/*]
     paths:
       - src/CaaS.K8s.Worker.Controller/**
       - devops/deploy/Helm/sentinel-healthcheck/charts/sentinel-api-healthmonitoring/**
   pull_request:
-    branches: [main,features/*]
+    branches: [main, features/*]
 
   workflow_dispatch:
     inputs:
@@ -65,6 +65,20 @@ jobs:
           do 
             docker image push --all-tags ${image}
           done
+
+  helmRelease:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
