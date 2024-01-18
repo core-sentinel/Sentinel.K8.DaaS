@@ -79,6 +79,18 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.8.1
+
+      - name: custom packaging
+        run: |
+          VERSION=${{github.ref_name}}
+          rm -rf .cr-release-packages
+          mkdir -p .cr-release-packages
+          helm package devops/deploy/helm/caas-k8s-worker-controller --app-version=${VERSION:1} --version=${VERSION:1} --destination=.cr-release-packages
+
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
