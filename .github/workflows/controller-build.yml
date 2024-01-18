@@ -5,7 +5,8 @@ on:
     branches: [main, features/*]
     paths:
       - src/CaaS.K8s.Worker.Controller/**
-      - devops/deploy/Helm/sentinel-healthcheck/charts/sentinel-api-healthmonitoring/**
+      - .github/workflows/controller-build.yml
+      - devops/deploy/helm/caas-k8s-worker-controller/**
   pull_request:
     branches: [main, features/*]
 
