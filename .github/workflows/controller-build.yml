@@ -86,7 +86,7 @@ jobs:
 
       - name: custom packaging
         run: |
-          VERSION=0.2.0
+          VERSION=v0.1.0
           rm -rf .cr-release-packages
           mkdir -p .cr-release-packages
           helm package devops/deploy/helm/caas-k8s-worker-controller --app-version=${VERSION:1} --version=${VERSION:1} --destination=.cr-release-packages
