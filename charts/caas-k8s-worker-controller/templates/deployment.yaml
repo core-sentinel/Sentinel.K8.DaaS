@@ -1,6 +1,8 @@
 {{- $name := include "caas-k8s-worker-controller.fullname" . -}}
 {{- $cfgname := printf "%s-%s" $name "config" -}}
 
+{{- $imageversion :=   "V" .Chart.AppVersion -}}
+
 
 apiVersion: apps/v1
 kind: Deployment
@@ -35,7 +37,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default $imageversion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -43,11 +45,11 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /isalive
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /isalive
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
