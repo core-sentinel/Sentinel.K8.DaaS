@@ -39,7 +39,7 @@ jobs:
           export DOCKER_REGISTRY=mmercan
           docker-compose --file $dockercomposeLoc --log-level DEBUG config
 
-      - name: Build Redis Docker Image
+      - name: Build Docker Image
         run: |
           export TAGVersion=01
           export DOCKER_REGISTRY=mmercan
