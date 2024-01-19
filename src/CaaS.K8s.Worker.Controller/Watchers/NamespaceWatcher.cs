@@ -84,7 +84,7 @@ namespace CaaS.K8s.Worker.Controller.Watchers
             newdeployment.Spec.Template.Spec.Containers.Add(new V1Container()
             {
                 Name = "caas-deployment",
-                Image = "nginx:1.7.9",
+                Image = "mmercan/caas-ui-blazor-core:latest",  //"nginx:1.7.9",
                 ImagePullPolicy = "IfNotPresent",
 
                 Ports = new List<V1ContainerPort>()

@@ -1,4 +1,4 @@
-name: CaaS K8s Controller
+name: CaaS UI Blazor Build
 
 on:
   push:
