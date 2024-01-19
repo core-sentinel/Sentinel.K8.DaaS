@@ -45,7 +45,7 @@ jobs:
         run: |
           export TAGVersion=${{github.ref_name}}
           export DOCKER_REGISTRY=mmercan
-          docker-compose --file $dockercomposeLoc --log-level DEBUG build caas.ui.blazor 
+          docker-compose --file $dockercomposeLoc --log-level DEBUG build 
 
       - name: tag Images
         run: |
