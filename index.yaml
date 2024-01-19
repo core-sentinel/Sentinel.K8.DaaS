@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   caas-k8s-worker-controller:
   - apiVersion: v2
+    appVersion: 4.6.0
+    created: "2024-01-19T03:09:51.48081986Z"
+    description: A Helm chart for Kubernetes
+    digest: 0acfa308e66db0a40d59ed24f1be7f1c834368a37e11b2a30f3f6883248dfda3
+    name: caas-k8s-worker-controller
+    type: application
+    urls:
+    - https://github.com/core-sentinel/Sentinel.K8.CaaS/releases/download/caas-k8s-worker-controller-4.6.0/caas-k8s-worker-controller-4.6.0.tgz
+    version: 4.6.0
+  - apiVersion: v2
     appVersion: 4.5.0
     created: "2024-01-18T12:10:04.395028591Z"
     description: A Helm chart for Kubernetes
@@ -101,4 +111,4 @@ entries:
     urls:
     - https://github.com/core-sentinel/Sentinel.K8.CaaS/releases/download/caas-k8s-worker-controller-0.1.0/caas-k8s-worker-controller-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-18T12:10:04.395068094Z"
+generated: "2024-01-19T03:09:51.480871286Z"
