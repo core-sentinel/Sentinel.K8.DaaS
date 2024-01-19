@@ -33,25 +33,41 @@ namespace CaaS.K8s.Worker.Controller.Watchers
 
         public override void Watch(WatchEventType Event, V1Namespace resource)
         {
+
+            var deploymentTask = _client.List<V1Deployment>(resource.Metadata.Name, "caas-deployment=enabled");
+            deploymentTask.Wait();
+            var deployments = deploymentTask.Result;
+
+
             if (resource.Metadata.Labels != null && resource.Metadata.Labels.ContainsKey("caas-injection") && resource.Metadata.Labels["caas-injection"] == "enabled")
             {
                 if (Event == WatchEventType.Added || Event == WatchEventType.Modified)
                 {
                     var ns = resource.Metadata.Name;
 
-                    var deploymentTask = _client.List<V1Deployment>(resource.Metadata.Name, "caas-deployment=enabled");
-                    deploymentTask.Wait();
-                    var deployments = deploymentTask.Result;
+
                     if (deployments == null || deployments.Count == 0)
                     {
                         _logger.LogInformation("deployment found for namespace {ns} a new one will be Created...", ns);
                         // Create a new Deployment
                         addDeployment(resource.Metadata.Name, _client);
+
+                        _logger.LogInformation($"New Deployment is Created in {ns}");
                     }
-                    _logger.LogInformation(deployments.Count().ToString());
+
                 }
                 _logger.LogInformation(resource.Name() + "has the caas-enabled=true Annotation");
 
+            }
+            else
+            {
+                if (deployments != null && deployments.Count > 0)
+                {
+                    _logger.LogInformation("deployment found for namespace {ns} a new one will be Deleted...", resource.Metadata.Name);
+                    // Create a new Deployment
+                    _client.Delete<V1Deployment>(deployments[0].Metadata.Name, resource.Metadata.Name);
+                    _logger.LogInformation($"Deployment is Deleted in {resource.Metadata.Name}");
+                }
             }
             _logger.LogInformation("Namespace watcher event: {type} :  {name}", Event, resource.Metadata.Name);
         }
@@ -97,7 +113,7 @@ namespace CaaS.K8s.Worker.Controller.Watchers
 
                     }
                 }
-            }) ;
+            });
 
 
             var deploy = client.Save<V1Deployment>(newdeployment);
