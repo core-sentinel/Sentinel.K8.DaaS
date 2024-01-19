@@ -42,7 +42,7 @@ namespace CaaS.K8s.Worker.Controller.Watchers
                     var deploymentTask = _client.List<V1Deployment>(resource.Metadata.Name, "caas-deployment=enabled");
                     deploymentTask.Wait();
                     var deployments = deploymentTask.Result;
-                    if (deployments == null)
+                    if (deployments == null || deployments.Count == 0)
                     {
                         _logger.LogInformation("deployment found for namespace {ns} a new one will be Created...", ns);
                         // Create a new Deployment
@@ -91,10 +91,13 @@ namespace CaaS.K8s.Worker.Controller.Watchers
                 {
                     new V1ContainerPort()
                     {
-                        ContainerPort = 80
+                        Name = "http",
+                        ContainerPort = 8080,
+                        Protocol= "TCP"
+
                     }
                 }
-            });
+            }) ;
 
 
             var deploy = client.Save<V1Deployment>(newdeployment);
