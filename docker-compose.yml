@@ -6,3 +6,4 @@ services:
     build:
       context: .
       dockerfile: src/CaaS.K8s.Worker.Controller/Dockerfile
+

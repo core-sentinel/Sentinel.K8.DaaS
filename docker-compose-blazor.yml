@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  caas.ui.blazor:
+    image: mmercan/caas-ui-blazor-core:${TAGVersion}
+    build:
+      context: .
+      dockerfile: ./src/CaaS.UI.Blazor/Dockerfile
+    ports:
+      - "8080"

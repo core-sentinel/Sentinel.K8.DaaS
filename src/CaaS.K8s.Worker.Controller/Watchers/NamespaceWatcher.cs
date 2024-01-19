@@ -44,7 +44,9 @@ namespace CaaS.K8s.Worker.Controller.Watchers
                     var deployments = deploymentTask.Result;
                     if (deployments == null)
                     {
+                        _logger.LogInformation("deployment found for namespace {ns} a new one will be Created...", ns);
                         // Create a new Deployment
+                        addDeployment(resource.Metadata.Name, _client);
                     }
                     _logger.LogInformation(deployments.Count().ToString());
                 }
@@ -52,6 +54,52 @@ namespace CaaS.K8s.Worker.Controller.Watchers
 
             }
             _logger.LogInformation("Namespace watcher event: {type} :  {name}", Event, resource.Metadata.Name);
+        }
+
+
+        public V1Deployment addDeployment(string @namespace, IKubernetesClient client)
+        {
+            var newdeployment = new V1Deployment();
+            newdeployment.Kind = "Deployment";
+            newdeployment.ApiVersion = "apps/v1";
+            newdeployment.Metadata = new V1ObjectMeta();
+            newdeployment.Metadata.Name = "caas-deployment";
+            newdeployment.Metadata.NamespaceProperty = @namespace;
+            newdeployment.Metadata.Labels = new Dictionary<string, string>();
+            newdeployment.Metadata.Labels.Add("caas-deployment", "enabled");
+            newdeployment.Spec = new V1DeploymentSpec();
+            newdeployment.Spec.Replicas = 1;
+            newdeployment.Spec.RevisionHistoryLimit = 1;
+            newdeployment.Spec.Selector = new V1LabelSelector();
+            newdeployment.Spec.Selector.MatchLabels = new Dictionary<string, string>();
+            newdeployment.Spec.Selector.MatchLabels.Add("app", "test-deployment");
+            newdeployment.Spec.Template = new V1PodTemplateSpec();
+            newdeployment.Spec.Template.Metadata = new V1ObjectMeta();
+            newdeployment.Spec.Template.Metadata.Labels = new Dictionary<string, string>();
+            newdeployment.Spec.Template.Metadata.Labels.Add("app", "test-deployment");
+            newdeployment.Spec.Template.Spec = new V1PodSpec();
+
+            //  newdeployment.Spec.Template.Spec.ServiceAccountName = "app";
+            newdeployment.Spec.Template.Spec.Containers = new List<V1Container>();
+            newdeployment.Spec.Template.Spec.Containers.Add(new V1Container()
+            {
+                Name = "caas-deployment",
+                Image = "nginx:1.7.9",
+                ImagePullPolicy = "IfNotPresent",
+
+                Ports = new List<V1ContainerPort>()
+                {
+                    new V1ContainerPort()
+                    {
+                        ContainerPort = 80
+                    }
+                }
+            });
+
+
+            var deploy = client.Save<V1Deployment>(newdeployment);
+            deploy.Wait();
+            return deploy.Result;
         }
     }
 }

@@ -34,6 +34,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
         app.MapGet("/isalive", () => "App is Alive!");
         app.Run();
     }
