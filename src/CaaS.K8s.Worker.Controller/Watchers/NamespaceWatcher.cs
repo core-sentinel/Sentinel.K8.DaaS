@@ -16,91 +16,134 @@ namespace CaaS.K8s.Worker.Controller.Watchers
     public class NamespaceWatcher : WatcherBackgroundService<V1Namespace>
     {
 
-
-        // protected override Task watcher(WatchEventType type, k8s.Models.V1Namespace item)
-        // {
-        //     _logger.LogInformation("Namespace watcher event: {type} :  {name}", type, item.Metadata.Name);
-        //     return Task.CompletedTask;
-        // }
-
         IKubernetesClient _client;
+        IConfiguration _configuration;
         public NamespaceWatcher(IConfiguration configuration, IKubernetesClient client,
         ILogger<WatcherBackgroundService<V1Namespace>> logger, IOptions<HealthCheckServiceOptions> hcoptions)
         : base(configuration, client, logger, hcoptions)
         {
             _client = client;
+            _configuration = configuration;
         }
 
         public override void Watch(WatchEventType Event, V1Namespace resource)
         {
-
             var deploymentTask = _client.List<V1Deployment>(resource.Metadata.Name, "caas-deployment=enabled");
             deploymentTask.Wait();
             var deployments = deploymentTask.Result;
-
-
-            if (resource.Metadata.Labels != null && resource.Metadata.Labels.ContainsKey("caas-injection") && resource.Metadata.Labels["caas-injection"] == "enabled")
+            if (Event == WatchEventType.Added || Event == WatchEventType.Modified)
             {
-                if (Event == WatchEventType.Added || Event == WatchEventType.Modified)
+                if (resource.Metadata.Labels != null && resource.Metadata.Labels.ContainsKey("caas-injection") && resource.Metadata.Labels["caas-injection"] == "enabled")
                 {
-                    var ns = resource.Metadata.Name;
-
-
+                    _logger.LogInformation("{ns} has the caas-enabled=true Annotation", resource.Metadata.Name);
                     if (deployments == null || deployments.Count == 0)
                     {
-                        _logger.LogInformation("deployment found for namespace {ns} a new one will be Created...", ns);
-                        // Create a new Deployment
-                        addDeployment(resource.Metadata.Name, _client);
-
-                        _logger.LogInformation($"New Deployment is Created in {ns}");
+                        try
+                        {
+                            _logger.LogInformation("deployment found for namespace {ns} a new one will be Created...", resource.Metadata.Name);
+                            AddDeployment(resource, _client);
+                            _logger.LogInformation($"New Deployment is Created in {resource.Metadata.Name}");
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError("new deployment can not be created for {ns} : {ex}", resource.Metadata.Name, ex.Message);
+                        }
                     }
-
                 }
-                _logger.LogInformation(resource.Name() + "has the caas-enabled=true Annotation");
-
-            }
-            else
-            {
-                if (deployments != null && deployments.Count > 0)
+                else
                 {
-                    _logger.LogInformation("deployment found for namespace {ns} a new one will be Deleted...", resource.Metadata.Name);
-                    // Create a new Deployment
-                    _client.Delete<V1Deployment>(deployments[0].Metadata.Name, resource.Metadata.Name);
-                    _logger.LogInformation($"Deployment is Deleted in {resource.Metadata.Name}");
+                    if (deployments != null && deployments.Count > 0)
+                    {
+                        try
+                        {
+                            RemoveDeployment(resource.Metadata.Name, deployments, _client);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError("deployment can not be deleted for {ns} : {ex}", resource.Metadata.Name, ex.Message);
+                        }
+                    }
                 }
             }
             _logger.LogInformation("Namespace watcher event: {type} :  {name}", Event, resource.Metadata.Name);
         }
 
-
-        public V1Deployment addDeployment(string @namespace, IKubernetesClient client)
+        public V1Deployment AddDeployment(V1Namespace resource, IKubernetesClient client)
         {
+            var image = "mmercan/caas-ui-blazor-core";
+            var tag = "latest";
+            int portnumber = 8080;
+
+            string caasPodIdentity = null;
+            string? caasServiceAccount = null;
+            if (resource.Metadata.Labels.ContainsKey("caas-podidentity"))
+            {
+                caasPodIdentity = resource.Metadata.Labels["caas-podidentity"];
+            }
+
+            if (resource.Metadata.Labels.ContainsKey("caas-service-account"))
+            {
+                caasServiceAccount = resource.Metadata.Labels["caas-service-account"];
+            }
+
+            if (_configuration["blazorimage"] != null)
+            {
+                image = _configuration["blazorimage"];
+            }
+            if (_configuration["blazorimagetag"] != null)
+            {
+                tag = _configuration["blazorimagetag"];
+            }
+
+            if (_configuration["blazorport"] != null)
+            {
+
+                if (Int32.TryParse(_configuration["blazorport"], out portnumber))
+                {
+                    _logger.LogInformation("port captured from config and assinged");
+                }
+                else
+                {
+                    _logger.LogInformation("port captured from config portnumber can not converted to int");
+                }
+            }
+
             var newdeployment = new V1Deployment();
             newdeployment.Kind = "Deployment";
             newdeployment.ApiVersion = "apps/v1";
             newdeployment.Metadata = new V1ObjectMeta();
             newdeployment.Metadata.Name = "caas-deployment";
-            newdeployment.Metadata.NamespaceProperty = @namespace;
+            newdeployment.Metadata.NamespaceProperty = resource.Metadata.Name;
             newdeployment.Metadata.Labels = new Dictionary<string, string>();
             newdeployment.Metadata.Labels.Add("caas-deployment", "enabled");
+
             newdeployment.Spec = new V1DeploymentSpec();
             newdeployment.Spec.Replicas = 1;
             newdeployment.Spec.RevisionHistoryLimit = 1;
             newdeployment.Spec.Selector = new V1LabelSelector();
             newdeployment.Spec.Selector.MatchLabels = new Dictionary<string, string>();
-            newdeployment.Spec.Selector.MatchLabels.Add("app", "test-deployment");
+            newdeployment.Spec.Selector.MatchLabels.Add("app", "caas-deployment");
             newdeployment.Spec.Template = new V1PodTemplateSpec();
             newdeployment.Spec.Template.Metadata = new V1ObjectMeta();
             newdeployment.Spec.Template.Metadata.Labels = new Dictionary<string, string>();
-            newdeployment.Spec.Template.Metadata.Labels.Add("app", "test-deployment");
+            newdeployment.Spec.Template.Metadata.Labels.Add("app", "caas-deployment");
             newdeployment.Spec.Template.Spec = new V1PodSpec();
 
-            //  newdeployment.Spec.Template.Spec.ServiceAccountName = "app";
+            if (caasServiceAccount != null)
+            {
+                newdeployment.Metadata.Labels.Add("azure.workload.identity/use", "true");
+                newdeployment.Spec.Template.Spec.ServiceAccountName = caasServiceAccount;
+            }
+            newdeployment.Spec.Template.Metadata.Annotations = new Dictionary<string, string>();
+            if (caasPodIdentity != null)
+            {
+                newdeployment.Spec.Template.Metadata.Labels.Add("aadpodidbinding", caasPodIdentity);
+            }
             newdeployment.Spec.Template.Spec.Containers = new List<V1Container>();
             newdeployment.Spec.Template.Spec.Containers.Add(new V1Container()
             {
                 Name = "caas-deployment",
-                Image = "mmercan/caas-ui-blazor-core:latest",  //"nginx:1.7.9",
+                Image = image + ":" + tag,  //"nginx:1.7.9",
                 ImagePullPolicy = "IfNotPresent",
 
                 Ports = new List<V1ContainerPort>()
@@ -108,17 +151,37 @@ namespace CaaS.K8s.Worker.Controller.Watchers
                     new V1ContainerPort()
                     {
                         Name = "http",
-                        ContainerPort = 8080,
+                        ContainerPort = portnumber,
                         Protocol= "TCP"
 
                     }
                 }
             });
 
+            newdeployment.Spec.Template.Spec.NodeSelector = new Dictionary<string, string>();
+            newdeployment.Spec.Template.Spec.NodeSelector.Add("beta.kubernetes.io/os", "linux");
+
 
             var deploy = client.Save<V1Deployment>(newdeployment);
             deploy.Wait();
             return deploy.Result;
+        }
+
+        public void RemoveDeployment(string @namespace, IList<V1Deployment> deployments, IKubernetesClient client)
+        {
+            _logger.LogInformation("deployment found for namespace {ns} a new one will be Deleted...", @namespace);
+            if (deployments[0].Metadata.Name == "caas-deployment")
+            {
+                var deploymentTask = _client.Delete<V1Deployment>(deployments[0].Metadata.Name, @namespace);
+                deploymentTask.Wait();
+                _logger.LogInformation($"Deployment is Deleted in {@namespace}");
+
+            }
+            else
+            {
+                _logger.LogInformation($"Deployment is not Deleted in {@namespace} because it is not created by caas");
+            }
+
         }
     }
 }
