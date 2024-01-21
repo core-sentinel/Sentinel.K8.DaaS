@@ -4,7 +4,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "caas.k8s.worker.controller": "StartDebugging"
+        "daas.k8s.worker.controller": "StartDebugging"
       }
     }
   }

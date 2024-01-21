@@ -1,0 +1,6 @@
+@DaaS.K8s.Worker.Controller_HostAddress = http://localhost:5283
+
+GET {{DaaS.K8s.Worker.Controller_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

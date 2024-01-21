@@ -44,9 +44,9 @@ jobs:
         DEV_ENV_FILE : ${{secrets.APPSETTINGS}}
     
     - name: Restore dependencies
-      run: dotnet restore Sentinel.K8.CaaS.sln
+      run: dotnet restore Sentinel.K8.DaaS.sln
     - name: Build
-      run: dotnet build Sentinel.K8.CaaS.sln --no-restore
+      run: dotnet build Sentinel.K8.DaaS.sln --no-restore
     - name: Test
-      run: dotnet test Sentinel.K8.CaaS.sln --collect "Code Coverage" --no-build --verbosity normal
+      run: dotnet test Sentinel.K8.DaaS.sln --collect "Code Coverage" --no-build --verbosity normal
 

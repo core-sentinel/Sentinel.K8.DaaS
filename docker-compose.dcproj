@@ -7,7 +7,7 @@
     <ProjectGuid>af62bd37-5476-4d51-91d7-da3a1e3ec5bb</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>caas.k8s.worker.controller</DockerServiceName>
+    <DockerServiceName>daas.k8s.worker.controller</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
