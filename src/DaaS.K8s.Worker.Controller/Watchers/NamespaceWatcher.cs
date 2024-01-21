@@ -16,6 +16,19 @@ namespace DaaS.K8s.Worker.Controller.Watchers
     public class NamespaceWatcher : WatcherBackgroundService<V1Namespace>
     {
 
+        public static string ControllerName = "";
+        public static string DaasName = "daas-deployment";
+        public static string DaasLabelName = "daas-deployment";
+        public static string DaasLabelValue = "enabled";
+        public static string DaasLabelCombined = "daas-deployment=enabled";
+        public static string DaasNamespaceLabelName = "daas-injection";
+        public static string DaasNamespaceLabelValue = "enabled";
+
+        public static string DaasImage = "mmercan/daas-ui-blazor-core";
+        public static string DaasTag = "latest";
+        public static int DaasPortNumber = 8080;
+
+
         IKubernetesClient _client;
         IConfiguration _configuration;
         public NamespaceWatcher(IConfiguration configuration, IKubernetesClient client,
@@ -28,12 +41,12 @@ namespace DaaS.K8s.Worker.Controller.Watchers
 
         public override void Watch(WatchEventType Event, V1Namespace resource)
         {
-            var deploymentTask = _client.List<V1Deployment>(resource.Metadata.Name, "daas-deployment=enabled");
+            var deploymentTask = _client.List<V1Deployment>(resource.Metadata.Name, DaasLabelCombined);
             deploymentTask.Wait();
             var deployments = deploymentTask.Result;
             if (Event == WatchEventType.Added || Event == WatchEventType.Modified)
             {
-                if (resource.Metadata.Labels != null && resource.Metadata.Labels.ContainsKey("daas-injection") && resource.Metadata.Labels["daas-injection"] == "enabled")
+                if (resource.Metadata.Labels != null && resource.Metadata.Labels.ContainsKey(DaasNamespaceLabelName) && resource.Metadata.Labels[DaasNamespaceLabelName] == DaasNamespaceLabelValue)
                 {
                     _logger.LogInformation("{ns} has the daas-enabled=true Annotation", resource.Metadata.Name);
                     if (deployments == null || deployments.Count == 0)
@@ -70,9 +83,9 @@ namespace DaaS.K8s.Worker.Controller.Watchers
 
         public V1Deployment AddDeployment(V1Namespace resource, IKubernetesClient client)
         {
-            var image = "mmercan/daas-ui-blazor-core";
-            var tag = "latest";
-            int portnumber = 8080;
+            var image = DaasImage;
+            var tag = DaasTag;
+            int portnumber = DaasPortNumber;
 
             string daasPodIdentity = null;
             string? daasServiceAccount = null;
@@ -112,21 +125,21 @@ namespace DaaS.K8s.Worker.Controller.Watchers
             newdeployment.Kind = "Deployment";
             newdeployment.ApiVersion = "apps/v1";
             newdeployment.Metadata = new V1ObjectMeta();
-            newdeployment.Metadata.Name = "daas-deployment";
+            newdeployment.Metadata.Name = DaasName; ;
             newdeployment.Metadata.NamespaceProperty = resource.Metadata.Name;
             newdeployment.Metadata.Labels = new Dictionary<string, string>();
-            newdeployment.Metadata.Labels.Add("daas-deployment", "enabled");
+            newdeployment.Metadata.Labels.Add(DaasLabelName, DaasLabelValue);
 
             newdeployment.Spec = new V1DeploymentSpec();
             newdeployment.Spec.Replicas = 1;
             newdeployment.Spec.RevisionHistoryLimit = 1;
             newdeployment.Spec.Selector = new V1LabelSelector();
             newdeployment.Spec.Selector.MatchLabels = new Dictionary<string, string>();
-            newdeployment.Spec.Selector.MatchLabels.Add("app", "daas-deployment");
+            newdeployment.Spec.Selector.MatchLabels.Add("app", DaasName);
             newdeployment.Spec.Template = new V1PodTemplateSpec();
             newdeployment.Spec.Template.Metadata = new V1ObjectMeta();
             newdeployment.Spec.Template.Metadata.Labels = new Dictionary<string, string>();
-            newdeployment.Spec.Template.Metadata.Labels.Add("app", "daas-deployment");
+            newdeployment.Spec.Template.Metadata.Labels.Add("app", DaasName);
             newdeployment.Spec.Template.Spec = new V1PodSpec();
 
             if (daasServiceAccount != null)
@@ -142,8 +155,8 @@ namespace DaaS.K8s.Worker.Controller.Watchers
             newdeployment.Spec.Template.Spec.Containers = new List<V1Container>();
             newdeployment.Spec.Template.Spec.Containers.Add(new V1Container()
             {
-                Name = "daas-deployment",
-                Image = image + ":" + tag,  //"nginx:1.7.9",
+                Name = DaasName,
+                Image = image + ":" + tag,
                 ImagePullPolicy = "IfNotPresent",
 
                 Ports = new List<V1ContainerPort>()
@@ -170,7 +183,7 @@ namespace DaaS.K8s.Worker.Controller.Watchers
         public void RemoveDeployment(string @namespace, IList<V1Deployment> deployments, IKubernetesClient client)
         {
             _logger.LogInformation("deployment found for namespace {ns} a new one will be Deleted...", @namespace);
-            if (deployments[0].Metadata.Name == "daas-deployment")
+            if (deployments[0].Metadata.Name == DaasName)
             {
                 var deploymentTask = _client.Delete<V1Deployment>(deployments[0].Metadata.Name, @namespace);
                 deploymentTask.Wait();
