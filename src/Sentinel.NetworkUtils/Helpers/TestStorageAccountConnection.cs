@@ -40,7 +40,7 @@ public static class TestStorageAccountConnection
             }
             else
             {
-                containerClient = new BlobContainerClient(connectionString, containerName);
+                containerClient = new BlobContainerClient(connectionString: connectionString, containerName);
             }
             await containerClient.CreateIfNotExistsAsync();
             return new TestNetConnectionResponse(CheckAccessRequestResourceType.StrorageAccount, true, sw.ElapsedMilliseconds);
