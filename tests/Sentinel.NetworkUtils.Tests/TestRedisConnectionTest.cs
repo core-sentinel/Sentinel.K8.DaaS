@@ -33,7 +33,7 @@ namespace Sentinel.Worker.NetworkUtils.Tests
             SuccessRedisConnectionStrings = config["SuccessRedisConnectionStrings"];
             FailureRedisConnectionStrings = config["FailureRedisConnectionStrings"];
             cachePrincipalConnectionString = config["CachePrincipalConnectionString"];
-            
+
             successPrincipalTenantId = config["successPrincipalTenantId"];
             successPrincipalPrincipalId = config["successPrincipalPrincipalId"];
             successPrincipalClientId = config["successPrincipalClientId"];
@@ -115,10 +115,10 @@ namespace Sentinel.Worker.NetworkUtils.Tests
                 PrincipalId = successPrincipalPrincipalId,
                 ClientId = successPrincipalClientId,
                 ClientSecret = successPrincipalClientSecret,
-                UserName = successPrincipalUserName
+                // UserName = successPrincipalUserName
             };
             // Act
-            var result = await TestRedisConnection.TestConnection(connectionString, useMSI, principal);
+            var result = await TestRedisConnection.TestConnection(connectionString, useMSI, principal, successPrincipalUserName);
 
             // Assert
             Assert.True(result.IsConnected);

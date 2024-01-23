@@ -72,6 +72,7 @@ namespace Sentinel.NetworkUtils.Models
     public class RedisDetails
     {
         public string? ConnectionString { get; set; } = default!;
+        public string? RedisUserName { get;set; } = default!;
     }
 
     public class SQLServerDetails

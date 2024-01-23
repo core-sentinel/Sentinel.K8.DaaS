@@ -80,7 +80,7 @@ public class ConnectivityCheckService
         }
         else
         {
-            additionalResult = await TestRedisConnection.TestConnection(request.RedisDetails.ConnectionString, request.UseMSI, request.ServicePrincipal);
+            additionalResult = await TestRedisConnection.TestConnection(request.RedisDetails.ConnectionString, request.UseMSI, request.ServicePrincipal, request.RedisDetails.RedisUserName);
         }
         return additionalResult;
     }

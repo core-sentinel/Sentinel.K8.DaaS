@@ -102,6 +102,10 @@
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" id="connectionstring_redis" placeholder="Connection String" @bind="request.RedisDetails.ConnectionString">
                                 </div>
+
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="redisusername" placeholder="User Name" @bind="request.RedisDetails.RedisUserName">
+                            </div>
                             </div>
                             break;
                         case 5:
@@ -254,7 +258,7 @@
     private string selectedCategoryText;
     private string SelectedAuthenticationType { get; set; } = "None";
     private bool disableSendButton = false;
-    private CheckAccessRequest request = new CheckAccessRequest();
+    private CheckAccessRequest request = new CheckAccessRequest{Port=443};
     private CheckAccessResponse checkAccessResponse;
 
 
