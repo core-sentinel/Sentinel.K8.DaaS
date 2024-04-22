@@ -144,7 +144,7 @@ namespace DaaS.K8s.Worker.Controller.Watchers
 
             if (daasServiceAccount != null)
             {
-                newdeployment.Metadata.Labels.Add("azure.workload.identity/use", "true");
+                newdeployment.Spec.Template.Metadata.Labels.Add("azure.workload.identity/use", "true");
                 newdeployment.Spec.Template.Spec.ServiceAccountName = daasServiceAccount;
             }
             newdeployment.Spec.Template.Metadata.Annotations = new Dictionary<string, string>();
