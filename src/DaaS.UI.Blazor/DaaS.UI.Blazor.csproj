@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -19,11 +19,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="TabBlazor" Version="0.8.11-alpha"/>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sentinel.NetworkUtils\Sentinel.NetworkUtils.csproj" />
-    <ProjectReference Include="..\TabBlazor\TabBlazor.csproj" />
   </ItemGroup>
 
 </Project>
