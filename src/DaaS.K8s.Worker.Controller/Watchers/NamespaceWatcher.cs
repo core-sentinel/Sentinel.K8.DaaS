@@ -194,7 +194,6 @@ namespace DaaS.K8s.Worker.Controller.Watchers
             {
                 _logger.LogInformation($"Deployment is not Deleted in {@namespace} because it is not created by daas");
             }
-
         }
     }
 }
