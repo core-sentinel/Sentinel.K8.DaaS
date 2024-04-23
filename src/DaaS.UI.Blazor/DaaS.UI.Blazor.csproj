@@ -16,13 +16,14 @@
     <PackageReference Include="Blazor-ApexCharts" Version="2.2.1" />
     <PackageReference Include="ClosedXML" Version="0.104.0-preview2" />
     <PackageReference Include="ColorCode.HTML" Version="2.0.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.4" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-    <PackageReference Include="TabBlazor" Version="0.8.11-alpha"/>
+    <PackageReference Include="TabBlazor" Version="0.8.11-alpha" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sentinel.Core.TokenGenerator\Sentinel.Core.TokenGenerator.csproj" />
     <ProjectReference Include="..\Sentinel.NetworkUtils\Sentinel.NetworkUtils.csproj" />
   </ItemGroup>
 

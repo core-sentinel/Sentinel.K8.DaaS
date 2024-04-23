@@ -1,0 +1,72 @@
+﻿@page "/token-generator"
+@using Sentinel.NetworkUtils.Models
+<div class="row">
+    <div class="col-md-6">
+
+        <Card Size="CardSize.Medium">
+            <CardHeader>
+                <h3>Token Generator</h3>
+            </CardHeader>
+            <CardBody>
+                <div class="row g-3">
+
+                    <div class="col-md-12">
+                        <label for="state" class="form-label">Authentication</label>
+                        <select class="form-select" id="authselect" required="" @bind="SelectedAuthenticationType">
+                            <option value="UseMSI">Use Managed Identity</option>
+                            <option value="SP">Use Service Principal</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <label for="firstName" class="form-label">Audience</label>
+                        <input type="text" class="form-control" id="url" placeholder="Audience" @bind="request.Url">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="country" class="form-label">Category</label>
+                       @*  <select class="form-select" id="category" @onchange="categoryChanged">
+                            @foreach (var cat in connectivityCheckService.Categories)
+                            {
+                                <option value="@cat.Key">@cat.Value</option>
+                            }
+                        </select> *@
+                    </div>
+
+
+                </div>
+
+
+                @if (SelectedAuthenticationType == "SP")
+                {
+                    <hr class="my-4">
+                    <h4> Service Principal</h4>
+
+                    <div class="row g-3">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="request.ServicePrincipal.TenantId">
+                        </div>
+
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="sp_clientid" placeholder="Client ID" @bind="request.ServicePrincipal.ClientId">
+                        </div>
+
+                        <div class="col-sm-12">
+                            <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
+                        </div>
+                    </div>
+                }
+
+                <hr class="my-4">
+
+            </CardBody>
+        </Card>
+    </div>
+</div>
+
+@code {
+    string SelectedAuthenticationType = "UseMSI";
+    private CheckAccessRequest request = new CheckAccessRequest { Port = 443 };
+
+}
+
