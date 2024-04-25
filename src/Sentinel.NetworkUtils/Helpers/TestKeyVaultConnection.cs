@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Sentinel.NetworkUtils.Models;
+using System.Diagnostics;
 
 namespace Sentinel.NetworkUtils.Helpers;
 
@@ -37,6 +33,12 @@ public static class TestKeyVaultConnection
             await foreach (SecretProperties secret in allSecrets)
             {
                 Console.WriteLine($"IterateSecretsWithAwaitForeachAsync: {secret.Name}");
+
+                var response = await client.GetSecretAsync(secret.Name, cancellationToken: new CancellationToken()).ConfigureAwait(false);
+
+                Console.WriteLine(response.Value.Value?.Length.ToString());
+
+
             }
             return new TestNetConnectionResponse(CheckAccessRequestResourceType.KeyVault, true, sw.ElapsedMilliseconds);
         }
