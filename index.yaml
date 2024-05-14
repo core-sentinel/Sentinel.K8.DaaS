@@ -143,6 +143,16 @@ entries:
     version: 0.1.0
   daas-k8s-worker-controller:
   - apiVersion: v2
+    appVersion: 5.10.0
+    created: "2024-05-14T02:38:47.321600764Z"
+    description: A Helm chart for Kubernetes
+    digest: fc1dda41f3561cbb8c21d7fcd247dcc70e1cec4af4015fe998ca263733261109
+    name: daas-k8s-worker-controller
+    type: application
+    urls:
+    - https://github.com/core-sentinel/Sentinel.K8.DaaS/releases/download/daas-k8s-worker-controller-5.10.0/daas-k8s-worker-controller-5.10.0.tgz
+    version: 5.10.0
+  - apiVersion: v2
     appVersion: 5.9.0
     created: "2024-04-25T11:57:50.719413991Z"
     description: A Helm chart for Kubernetes
@@ -222,4 +232,4 @@ entries:
     urls:
     - https://github.com/core-sentinel/Sentinel.K8.DaaS/releases/download/daas-k8s-worker-controller-5.1.0/daas-k8s-worker-controller-5.1.0.tgz
     version: 5.1.0
-generated: "2024-04-25T11:57:50.719473271Z"
+generated: "2024-05-14T02:38:47.321669772Z"
