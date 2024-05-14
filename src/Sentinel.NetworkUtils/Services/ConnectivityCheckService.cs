@@ -1,11 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Sentinel.NetworkUtils.Helpers;
+﻿using Sentinel.NetworkUtils.Helpers;
 using Sentinel.NetworkUtils.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sentinel.NetworkUtils.Services;
 public class ConnectivityCheckService
@@ -26,6 +20,9 @@ public class ConnectivityCheckService
         TestNetConnectionResponse additionalResult = null;
         switch (request.ResourceType)
         {
+            case CheckAccessRequestResourceType.Http:
+                additionalResult = await checkHttpRequest(request);
+                break;
             case CheckAccessRequestResourceType.StrorageAccount:
                 additionalResult = await checkStorageAccount(request);
                 break;
@@ -112,6 +109,24 @@ public class ConnectivityCheckService
             additionalResult = await TestStorageAccountConnection.TestConnection(request.StrorageAccountDetails.ConnectionString, request.StrorageAccountDetails.containerName, request.UseMSI, request.ServicePrincipal);
         }
 
+        return additionalResult;
+    }
+
+
+    private static async Task<TestNetConnectionResponse> checkHttpRequest(CheckAccessRequest request)
+    {
+        HttpMethod httpMethod = HttpMethod.Get;
+        switch (request.HttpRequestDetails?.HttpMethod?.ToLower())
+        {
+            case "get": httpMethod = HttpMethod.Get; break;
+            case "post": httpMethod = HttpMethod.Post; break;
+            case "put": httpMethod = HttpMethod.Put; break;
+            case "delete": httpMethod = HttpMethod.Delete; break;
+            case "head": httpMethod = HttpMethod.Head; break;
+            default:
+                break;
+        }
+        var additionalResult = await TestHttpRequest.TestConnection(request.HttpRequestDetails.Url, httpMethod, request.UseMSI, request.ServicePrincipal);
         return additionalResult;
     }
 }

@@ -49,9 +49,33 @@
                             <hr class="my-4">
                             <h4 class="mb-3">General</h4>
                             break;
-                        case 1:
+                    case 1:
+                        <hr class="my-4">
+                        <h4 class="mb-3">HTTP</h4>
+                        <p> @(request.HttpRequestDetails.Url)  @(request.HttpRequestDetails.HttpMethod)</p>
+                         <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="firstName" class="form-label">URL</label>
+                            <input type="text" class="form-control" id="url" placeholder="URL" @bind="request.HttpRequestDetails.Url">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="state" class="form-label">Http Method</label>
+                                <select class="form-select" id="authselect" required="" @bind="request.HttpRequestDetails.HttpMethod">
+                                <option value="Get">Get</option>
+                                <option value="Post">Post</option>
+                                <option value="Put">Put</option>
+                                <option value="Delete">Delete</option>
+                                <option value="Head">Head</option>
+                            </select>
+                        </div>
+                        </div>
+
+                        break;
+                        case 2:
                             <hr class="my-4">
                             <h4 class="mb-3">Storage Account</h4>
+                            
 
                             <Alert BackgroundColor="TablerColor.Info">
                              <div class="text-secondary">
@@ -68,7 +92,7 @@
                                 </div>
                             </div>
                             break;
-                        case 2:
+                        case 3:
                             <hr class="my-4">
                             <h4 class="mb-3">Key Vault</h4>
                             <Alert BackgroundColor="TablerColor.Info">
@@ -82,7 +106,7 @@
                                 </div>
                             </div>
                             break;
-                        case 3:
+                        case 4:
                             <hr class="my-4">
                             <h4 class="mb-3">Service Bus</h4>
                             <div class="row g-3">
@@ -95,7 +119,7 @@
                                 </div>
                             </div>
                             break;
-                        case 4:
+                        case 5:
                             <hr class="my-4">
                             <h4 class="mb-3">Redis</h4>
                             <div class="row g-3">
@@ -108,7 +132,7 @@
                             </div>
                             </div>
                             break;
-                        case 5:
+                        case 6:
                             <hr class="my-4">
                             <h4 class="mb-3">Event Hub</h4>
                             <div class="row g-3">
@@ -121,11 +145,11 @@
                                 </div>
                             </div>
                             break;
-                        case 6:
+                        case 7:
                             <hr class="my-4">
                             <h4 class="mb-3">Cosmos DB</h4>
                             break;
-                        case 7:
+                        case 8:
                             <hr class="my-4">
                             <h4 class="mb-3">SQL Server</h4>
                             <div class="row g-3">
@@ -257,6 +281,7 @@
     private int selectedCategoryValue;
     private string selectedCategoryText;
     private string SelectedAuthenticationType { get; set; } = "None";
+    // private string httpMethod { get; set; } = "Get";
     private bool disableSendButton = false;
     private CheckAccessRequest request = new CheckAccessRequest{Port=443};
     private CheckAccessResponse checkAccessResponse;
@@ -280,39 +305,43 @@
                 request.ResourceType = CheckAccessRequestResourceType.General;
                 break;
             case 1:
+                request.Url = "";
+                request.Port = 443;
+                request.ResourceType = CheckAccessRequestResourceType.Http;
+                break;
+            case 2:
                 request.ResourceType = CheckAccessRequestResourceType.StrorageAccount;
                 request.Url = ".blob.core.windows.net";
                 request.Port = 443;
                 break;
-            case 2:
+            case 3:
                 request.ResourceType = CheckAccessRequestResourceType.KeyVault;
                 request.Url = ".vault.azure.net";
                 request.Port = 443;
 
                 break;
-            case 3:
+            case 4:
                 request.Url = ".servicebus.windows.net";
                 request.Port = 443;
                 request.ResourceType = CheckAccessRequestResourceType.General;
 
                 break;
-            case 4:
+            case 5:
                 request.ResourceType = CheckAccessRequestResourceType.Redis;
                 request.Url = ".redis.cache.windows.net";
                 request.Port = 6380;
                 break;
-            case 5:
+            case 6:
                 request.ResourceType = CheckAccessRequestResourceType.EventHub;
                 request.Url = ".servicebus.windows.net";
                 request.Port = 5671;
                 break;
-            case 6:
+            case 7:
                 request.ResourceType = CheckAccessRequestResourceType.CosmosDB;
-
                 request.Url = ".documents.azure.com";
                 request.Port = 443;
                 break;
-            case 7:
+            case 8:
                 request.ResourceType = CheckAccessRequestResourceType.SQLServer;
                 request.Url = ".database.windows.net";
                 request.Port = 1433;

@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Sentinel.NetworkUtils.Models
 {
     public enum CheckAccessRequestResourceType
     {
         General,
+        Http,
         StrorageAccount,
         KeyVault,
         ServiceBus,
@@ -37,19 +33,27 @@ namespace Sentinel.NetworkUtils.Models
 
         public EventHubDetails? EventHubDetails { get; set; } = default!;
 
+        public HttpRequestDetails? HttpRequestDetails { get; set; } = default!;
 
         public CheckAccessRequest()
         {
             ServicePrincipal = new ServicePrincipal();
-            
+            HttpRequestDetails = new HttpRequestDetails();
             StrorageAccountDetails = new StrorageAccountDetails();
             ServiceBusDetails = new ServiceBusDetails();
             RedisDetails = new RedisDetails();
             SQLServerDetails = new SQLServerDetails();
             KeyVaultDetails = new KeyVaultDetails();
+
             EventHubDetails = new EventHubDetails();
         }
 
+    }
+
+    public class HttpRequestDetails
+    {
+        public string? Url { get; set; }
+        public string? HttpMethod { get; set; } = default!;
     }
 
     public class KeyVaultDetails
@@ -72,7 +76,7 @@ namespace Sentinel.NetworkUtils.Models
     public class RedisDetails
     {
         public string? ConnectionString { get; set; } = default!;
-        public string? RedisUserName { get;set; } = default!;
+        public string? RedisUserName { get; set; } = default!;
     }
 
     public class SQLServerDetails
