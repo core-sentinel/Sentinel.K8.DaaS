@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Azure.Identity;
-using Microsoft.AspNetCore.DataProtection;
-using StackExchange.Redis;
 using Sentinel.NetworkUtils.Models;
+using StackExchange.Redis;
 using System.Diagnostics;
 
 namespace Sentinel.NetworkUtils.Helpers;
@@ -49,8 +44,14 @@ public static class TestRedisConnection
             {
                 connection = ConnectionMultiplexer.Connect(connectionString);
             }
+
             var status = connection.GetStatus();
             var dbs = connection.GetDatabase();
+            var isConnected = connection.IsConnected;
+            Console.WriteLine("Redis Connection status: " + status);
+            Console.WriteLine("Redis Connection dbs: " + dbs);
+            Console.WriteLine("Redis Connection isConnected: " + isConnected);
+
             // connection.WaitAll(connection.GetServer(connectionString).PingAsync());
             return new TestNetConnectionResponse(CheckAccessRequestResourceType.Redis, connection.IsConnected, sw.ElapsedMilliseconds);
             //return true;

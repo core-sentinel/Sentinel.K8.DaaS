@@ -59,14 +59,23 @@
 
                 <hr class="my-4">
 
+
+                <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" @onclick="send_clicked">Send</Button>
+
+
             </CardBody>
         </Card>
     </div>
 </div>
 
 @code {
+    bool disableSendButton = false;
     string SelectedAuthenticationType = "UseMSI";
     private CheckAccessRequest request = new CheckAccessRequest { Port = 443 };
-
+    
+    private void send_clicked(MouseEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
 }
 
