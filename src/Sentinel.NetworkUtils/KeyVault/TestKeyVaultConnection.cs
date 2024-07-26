@@ -4,7 +4,7 @@ using Azure.Security.KeyVault.Secrets;
 using Sentinel.NetworkUtils.Models;
 using System.Diagnostics;
 
-namespace Sentinel.NetworkUtils.Helpers;
+namespace Sentinel.NetworkUtils.KeyVault;
 
 public static class TestKeyVaultConnection
 {

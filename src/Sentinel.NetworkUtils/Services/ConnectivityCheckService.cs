@@ -1,16 +1,25 @@
-﻿using Sentinel.NetworkUtils.Helpers;
+﻿using MediatR;
+using Sentinel.NetworkUtils.Helpers;
+using Sentinel.NetworkUtils.KeyVault;
 using Sentinel.NetworkUtils.Models;
+using Sentinel.NetworkUtils.Redis;
 
 namespace Sentinel.NetworkUtils.Services;
 public class ConnectivityCheckService
 {
+    private readonly IMediator _mediator;
     public Dictionary<int, string> Categories;
 
 
-    public ConnectivityCheckService()
+    public ConnectivityCheckService(IMediator mediator)
     {
+        _mediator = mediator;
+
         Categories = Enum.GetValues(typeof(CheckAccessRequestResourceType))
      .Cast<CheckAccessRequestResourceType>().ToDictionary(t => (int)t, t => t.ToString());
+
+
+
     }
 
     public async Task<CheckAccessResponse> ConnectionCheck(CheckAccessRequest request)
@@ -68,8 +77,9 @@ public class ConnectivityCheckService
         return additionalResult;
     }
 
-    private static async Task<TestNetConnectionResponse> checkRedis(CheckAccessRequest request)
+    private async Task<TestNetConnectionResponse> checkRedis(CheckAccessRequest request)
     {
+
         TestNetConnectionResponse additionalResult = null;
         if (request.RedisDetails == null)
         {
@@ -77,6 +87,8 @@ public class ConnectivityCheckService
         }
         else
         {
+
+            var qq = await _mediator.Send(new RedisConnectionCheckCommand(request.RedisDetails.ConnectionString, request.UseMSI, request.ServicePrincipal, request.RedisDetails.RedisUserName));
             additionalResult = await TestRedisConnection.TestConnection(request.RedisDetails.ConnectionString, request.UseMSI, request.ServicePrincipal, request.RedisDetails.RedisUserName);
         }
         return additionalResult;

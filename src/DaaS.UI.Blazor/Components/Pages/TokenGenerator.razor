@@ -1,4 +1,5 @@
 ﻿@page "/token-generator"
+@using Sentinel.Core.TokenGenerator
 @using Sentinel.NetworkUtils.Models
 <div class="row">
     <div class="col-md-6">
@@ -20,23 +21,13 @@
 
                     <div class="col-sm-12">
                         <label for="firstName" class="form-label">Audience</label>
-                        <input type="text" class="form-control" id="url" placeholder="Audience" @bind="request.Url">
+                        <input type="text" class="form-control" id="audience" placeholder="Audience" @bind="request.Audience">
                     </div>
 
                     <div class="col-md-6">
                         <label for="country" class="form-label">Category</label>
-                       @*  <select class="form-select" id="category" @onchange="categoryChanged">
-                            @foreach (var cat in connectivityCheckService.Categories)
-                            {
-                                <option value="@cat.Key">@cat.Value</option>
-                            }
-                        </select> *@
                     </div>
-
-
                 </div>
-
-
                 @if (SelectedAuthenticationType == "SP")
                 {
                     <hr class="my-4">
@@ -69,13 +60,19 @@
 </div>
 
 @code {
+
+    [Inject]
+    private ISender mediator { get; set; }
+
     bool disableSendButton = false;
     string SelectedAuthenticationType = "UseMSI";
-    private CheckAccessRequest request = new CheckAccessRequest { Port = 443 };
-    
+    private TokenGenCommand request = new TokenGenCommand {  };
+
     private void send_clicked(MouseEventArgs e)
     {
-        throw new NotImplementedException();
+        if (SelectedAuthenticationType == "UseMSI")
+            request.UseMSI = true;
+        mediator.Send(request);
     }
 }
 

@@ -1,9 +1,9 @@
 using Xunit;
-using Sentinel.NetworkUtils.Helpers;
 using Sentinel.NetworkUtils.Models;
 using Sentinel.Tests.Helper;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit.Abstractions;
+using Sentinel.NetworkUtils.KeyVault;
 
 namespace Sentinel.Worker.NetworkUtils.Tests
 {

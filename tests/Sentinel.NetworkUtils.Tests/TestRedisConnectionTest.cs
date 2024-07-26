@@ -1,7 +1,5 @@
-using Xunit;
-using Sentinel.NetworkUtils.Helpers;
 using Sentinel.NetworkUtils.Models;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
+using Sentinel.NetworkUtils.Redis;
 using Sentinel.Tests.Helper;
 using Xunit.Abstractions;
 

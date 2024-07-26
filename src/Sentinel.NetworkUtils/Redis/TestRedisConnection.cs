@@ -3,7 +3,7 @@ using Sentinel.NetworkUtils.Models;
 using StackExchange.Redis;
 using System.Diagnostics;
 
-namespace Sentinel.NetworkUtils.Helpers;
+namespace Sentinel.NetworkUtils.Redis;
 /// <summary>
 /// Helper class for testing Redis connection.
 /// </summary>
@@ -19,6 +19,7 @@ public static class TestRedisConnection
     public static async Task<TestNetConnectionResponse> TestConnection(string connectionString, bool useMSI = false, ServicePrincipal principal = null, string redisUsername = null)
     {
         var sw = Stopwatch.StartNew();
+        StringWriter connectionLog = new();
         try
         {
             ConnectionMultiplexer connection = null;
@@ -27,22 +28,23 @@ public static class TestRedisConnection
                 // StringWriter connectionLog = new();
                 var credential = new ClientSecretCredential(principal.TenantId, principal.ClientId, principal.ClientSecret);
                 var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithTokenCredentialAsync(redisUsername, credential);
+                //  var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithTokenCredentialAsync(redisUsername, credential);
                 //var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithServicePrincipalAsync(clientId: principal.ClientId, principalId: principal.PrincipalId, tenantId: principal.TenantId, secret: principal.ClientSecret);
                 configurationOptions.AbortOnConnectFail = true; // Fail fast for the purposes of this sample. In production code, this should remain false to retry connections on startup
                                                                 //  LogTokenEvents(configurationOptions);
-                connection = ConnectionMultiplexer.Connect(configurationOptions);
+                connection = ConnectionMultiplexer.Connect(configurationOptions, connectionLog);
             }
             else if (useMSI)
             {
-                var credential = new DefaultAzureCredential();
+                var credential = new DefaultAzureCredential(true);
                 var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithTokenCredentialAsync(redisUsername, credential);
                 configurationOptions.AbortOnConnectFail = true; // Fail fast for the purposes of this sample. In production code, this should remain false to retry connections on startup
                                                                 //  LogTokenEvents(configurationOptions);
-                connection = ConnectionMultiplexer.Connect(configurationOptions);
+                connection = ConnectionMultiplexer.Connect(configurationOptions, connectionLog);
             }
             else
             {
-                connection = ConnectionMultiplexer.Connect(connectionString);
+                connection = ConnectionMultiplexer.Connect(connectionString, connectionLog);
             }
 
             var status = connection.GetStatus();
