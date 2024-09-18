@@ -2,6 +2,7 @@ using Azure.Identity;
 using Sentinel.NetworkUtils.Models;
 using StackExchange.Redis;
 using System.Diagnostics;
+using System.Net;
 
 namespace Sentinel.NetworkUtils.Redis;
 /// <summary>
@@ -54,8 +55,23 @@ public static class TestRedisConnection
             Console.WriteLine("Redis Connection dbs: " + dbs);
             Console.WriteLine("Redis Connection isConnected: " + isConnected);
 
+            string message = "";
+
+
+            //connection.GetServer(connectionString).Ping();
+            IDatabase db = connection.GetDatabase();
+            EndPoint endPoint = connection.GetEndPoints().First();
+            RedisKey[] keys = connection.GetServer(endPoint).Keys(pattern: "*").ToArray();
+            Console.WriteLine("Redis Connection keys: " + keys.Length);
+            foreach (var key in keys)
+            {
+                Console.WriteLine(" - " + key);
+                message = message + key + ", ";
+            }
+
+
             // connection.WaitAll(connection.GetServer(connectionString).PingAsync());
-            return new TestNetConnectionResponse(CheckAccessRequestResourceType.Redis, connection.IsConnected, sw.ElapsedMilliseconds);
+            return new TestNetConnectionResponse(CheckAccessRequestResourceType.Redis, connection.IsConnected, message, sw.ElapsedMilliseconds);
             //return true;
         }
         catch (Exception ex)

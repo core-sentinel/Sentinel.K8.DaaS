@@ -2,9 +2,9 @@
 using Sentinel.Core.HealthProbe.Http.ContentHelpers;
 
 namespace Sentinel.Core.HealthProbe.Http;
-public class HttpHealthProbeCommandHandler : IRequestHandler<HttpHealthProbeCommand, HttpHealthProbeResponse>
+public class HttpHealthProbeRequestHandler : IRequestHandler<HttpHealthProbeRequest, HttpHealthProbeResponse>
 {
-    public Task<HttpHealthProbeResponse> Handle(HttpHealthProbeCommand request, CancellationToken cancellationToken)
+    public Task<HttpHealthProbeResponse> Handle(HttpHealthProbeRequest request, CancellationToken cancellationToken)
     {
         HttpHealthProbeResponse response = new();
 

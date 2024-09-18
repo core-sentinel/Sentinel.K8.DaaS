@@ -2,7 +2,7 @@
 
 namespace Sentinel.Core.HealthProbe.Http
 {
-    public class HttpHealthProbeValidator : AbstractValidator<HttpHealthProbeCommand>
+    public class HttpHealthProbeValidator : AbstractValidator<HttpHealthProbeRequest>
     {
 
         public HttpHealthProbeValidator()

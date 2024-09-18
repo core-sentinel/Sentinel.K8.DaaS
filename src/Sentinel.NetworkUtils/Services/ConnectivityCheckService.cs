@@ -88,7 +88,7 @@ public class ConnectivityCheckService
         else
         {
 
-            var qq = await _mediator.Send(new RedisConnectionCheckCommand(request.RedisDetails.ConnectionString, request.UseMSI, request.ServicePrincipal, request.RedisDetails.RedisUserName));
+            var qq = await _mediator.Send(new RedisConnectionCheckRequest(request.RedisDetails.ConnectionString, request.UseMSI, request.ServicePrincipal, request.RedisDetails.RedisUserName));
             additionalResult = await TestRedisConnection.TestConnection(request.RedisDetails.ConnectionString, request.UseMSI, request.ServicePrincipal, request.RedisDetails.RedisUserName);
         }
         return additionalResult;

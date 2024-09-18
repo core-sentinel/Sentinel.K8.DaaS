@@ -4,16 +4,16 @@ using Sentinel.NetworkUtils.Models;
 namespace Sentinel.NetworkUtils.Redis;
 //public record RedisConnectionCheckCommand(string ConnectionString, bool UseMSI, ServicePrincipal? Principal, string? RedisUsername) : IRequest<RedisConnectionCheckResponse>;
 
-public class RedisConnectionCheckCommand : IRequest<TestNetConnectionResponse>
+public class RedisConnectionCheckRequest : IRequest<TestNetConnectionResponse>
 {
     private ServicePrincipal? servicePrincipal;
 
-    public RedisConnectionCheckCommand()
+    public RedisConnectionCheckRequest()
     {
 
     }
 
-    public RedisConnectionCheckCommand(string? connectionString, bool useMSI, ServicePrincipal? servicePrincipal, string? redisUserName)
+    public RedisConnectionCheckRequest(string? connectionString, bool useMSI, ServicePrincipal? servicePrincipal, string? redisUserName)
     {
         ConnectionString = connectionString;
         UseMSI = useMSI;

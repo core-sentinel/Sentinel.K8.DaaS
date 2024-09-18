@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 
 namespace Sentinel.NetworkUtils.Redis;
-public class RedisConnectionCheckValidator : AbstractValidator<RedisConnectionCheckCommand>
+public class RedisConnectionCheckValidator : AbstractValidator<RedisConnectionCheckRequest>
 {
     public RedisConnectionCheckValidator()
     {

@@ -1,5 +1,5 @@
 ﻿namespace Sentinel.NetworkUtils.SQL;
 
-public class SQLConnectionCheckCommand
+public class SQLConnectionCheckRequest
 {
 }

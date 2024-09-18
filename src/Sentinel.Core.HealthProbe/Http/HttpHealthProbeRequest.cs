@@ -2,7 +2,7 @@
 
 namespace Sentinel.Core.HealthProbe.Http;
 
-public class HttpHealthProbeCommand : IRequest<HttpHealthProbeResponse>
+public class HttpHealthProbeRequest : IRequest<HttpHealthProbeResponse>
 {
     public bool IsItHeathCheck { get; set; }
     public string Url { get; set; }

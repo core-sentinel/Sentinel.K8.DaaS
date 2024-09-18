@@ -1,6 +1,6 @@
 ﻿namespace Sentinel.NetworkUtils.KeyVault
 {
-    internal class KeyVaultConnectionCheckCommandHandler
+    internal class KeyVaultConnectionCheckRequest
     {
     }
 }
