@@ -28,7 +28,7 @@ public static class TestRedisConnection
             {
                 // StringWriter connectionLog = new();
                 var credential = new ClientSecretCredential(principal.TenantId, principal.ClientId, principal.ClientSecret);
-                var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithTokenCredentialAsync(redisUsername, credential);
+                var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithTokenCredentialAsync(credential);
                 //  var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithTokenCredentialAsync(redisUsername, credential);
                 //var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithServicePrincipalAsync(clientId: principal.ClientId, principalId: principal.PrincipalId, tenantId: principal.TenantId, secret: principal.ClientSecret);
                 configurationOptions.AbortOnConnectFail = true; // Fail fast for the purposes of this sample. In production code, this should remain false to retry connections on startup
@@ -38,7 +38,7 @@ public static class TestRedisConnection
             else if (useMSI)
             {
                 var credential = new DefaultAzureCredential(true);
-                var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithTokenCredentialAsync(redisUsername, credential);
+                var configurationOptions = await ConfigurationOptions.Parse(connectionString).ConfigureForAzureWithTokenCredentialAsync(credential);
                 configurationOptions.AbortOnConnectFail = true; // Fail fast for the purposes of this sample. In production code, this should remain false to retry connections on startup
                                                                 //  LogTokenEvents(configurationOptions);
                 connection = ConnectionMultiplexer.Connect(configurationOptions, connectionLog);

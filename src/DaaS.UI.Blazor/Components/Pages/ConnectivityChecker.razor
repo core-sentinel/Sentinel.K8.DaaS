@@ -1,6 +1,16 @@
 ﻿@page "/connectivity-checker"
-@using Sentinel.NetworkUtils.Models
-@using Sentinel.NetworkUtils.Services
+@using Sentinel.ConnectionChecks.ConnectionCheck.AzureAppConfig
+@using Sentinel.ConnectionChecks.ConnectionCheck.CosmosDB
+@using Sentinel.ConnectionChecks.ConnectionCheck.EventHub
+@using Sentinel.ConnectionChecks.ConnectionCheck.General
+@using Sentinel.ConnectionChecks.ConnectionCheck.KeyVault
+@using Sentinel.ConnectionChecks.ConnectionCheck.Redis
+@using Sentinel.ConnectionChecks.ConnectionCheck.SQL
+@using Sentinel.ConnectionChecks.ConnectionCheck.ServiceBus
+@using Sentinel.ConnectionChecks.ConnectionCheck.StorageAccount
+@using Sentinel.ConnectionChecks.Models
+
+
 
 <div class="row">
     <div class="col-8">
@@ -10,163 +20,87 @@
                 <h3>Check Connectivity</h3>
             </CardHeader>
             <CardBody>
-                
-                    <div class="row g-3">
-                        <div class="col-sm-9">
-                            <label for="firstName" class="form-label">URL</label>
-                            <input type="text" class="form-control" id="url" placeholder="URL" @bind="request.Url">
-                        </div>
 
-                        <div class="col-sm-3">
-                            <label for="lastName" class="form-label">Port</label>
-                            <input type="number" class="form-control" id="port" placeholder="Port" @bind="request.Port">
-                        </div>
-
-
-                        <div class="col-md-6">
-                            <label for="country" class="form-label">Category</label>
-                            <select class="form-select" id="category" @onchange="categoryChanged">
-                                @foreach (var cat in connectivityCheckService.Categories)
-                                {
-                                    <option value="@cat.Key">@cat.Value</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="state" class="form-label">Authentication</label>
-                            <select class="form-select" id="authselect" required="" @bind="SelectedAuthenticationType">
-                                <option value="None">None</option>
-                                <option value="UseMSI">Use Managed Identity</option>
-                                <option value="SP">Use Service Principal</option>
-                            </select>
-                        </div>
+                <div class="row g-3">
+                    <div class="col-sm-9">
+                        <label for="firstName" class="form-label">URL</label>
+                        <input type="text" class="form-control" id="url" placeholder="URL" @bind="request.Url">
                     </div>
 
-                    @switch (selectedCategoryValue)
-                    {
-                        case 0:
-                            <hr class="my-4">
-                            <h4 class="mb-3">General</h4>
-                            break;
-                    case 1:
-                        <hr class="my-4">
-                        <h4 class="mb-3">HTTP</h4>
-                        <p> @(request.HttpRequestDetails.Url)  @(request.HttpRequestDetails.HttpMethod)</p>
-                         <div class="row g-3">
-                        <div class="col-sm-6">
-                            <label for="firstName" class="form-label">URL</label>
-                            <input type="text" class="form-control" id="url" placeholder="URL" @bind="request.HttpRequestDetails.Url">
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <label for="state" class="form-label">Http Method</label>
-                                <select class="form-select" id="authselect" required="" @bind="request.HttpRequestDetails.HttpMethod">
-                                <option value="Get">Get</option>
-                                <option value="Post">Post</option>
-                                <option value="Put">Put</option>
-                                <option value="Delete">Delete</option>
-                                <option value="Head">Head</option>
-                            </select>
-                        </div>
-                        </div>
+                    <div class="col-sm-3">
+                        <label for="lastName" class="form-label">Port</label>
+                        <input type="number" class="form-control" id="port" placeholder="Port" @bind="request.Port">
+                    </div>
 
-                        break;
-                        case 2:
-                            <hr class="my-4">
-                            <h4 class="mb-3">Storage Account</h4>
-                            
 
-                            <Alert BackgroundColor="TablerColor.Info">
-                             <div class="text-secondary">
-                                    Container Name and Connection string is required if MSI or Service Service Principal is used just use the domain name
-                             </div>
-                            </Alert>
+                    <div class="col-md-6">
+                        <label for="country" class="form-label">Category</label>
+                        <select class="form-select" id="category" @onchange="categoryChanged">
+                            @foreach (var cat in RequestResourceTypeHelper.Categories)
+                            {
+                                <option value="@cat.Key">@cat.Value</option>
+                            }
+                        </select>
+                    </div>
 
-                            <div class="row g-3">
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" name="connectionstring_sa"  placeholder="Connection String" @bind="request.StrorageAccountDetails.ConnectionString">
-                                </div>
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" name="containername" placeholder="Container Name" @bind="request.StrorageAccountDetails.containerName">
-                                </div>
-                            </div>
-                            break;
-                        case 3:
-                            <hr class="my-4">
-                            <h4 class="mb-3">Key Vault</h4>
-                            <Alert BackgroundColor="TablerColor.Info">
-                                <div class="text-secondary">
-                                    just the key vault name not the URL
-                                </div>
-                            </Alert>
-                            <div class="row g-3">
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" name="keyvaultname" placeholder="Key Vault Name" @bind="request.KeyVaultDetails.KeyVaultName">
-                                </div>
-                            </div>
-                            break;
-                        case 4:
-                            <hr class="my-4">
-                            <h4 class="mb-3">Service Bus</h4>
-                            <div class="row g-3">
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="connectionstring_sb" placeholder="Connection String" @bind="request.ServiceBusDetails.ConnectionString">
-                                </div>
+                    <div class="col-md-6">
+                        <label for="state" class="form-label">Authentication</label>
+                        <select class="form-select" id="authselect" required="" @bind="SelectedAuthenticationType">
+                            <option value="None">None</option>
+                            <option value="UseMSI">Use Managed Identity</option>
+                            <option value="SP">Use Service Principal</option>
+                        </select>
+                    </div>
+                </div>
+                @if (request is AzureAppConfigConnectionCheckRequest req1)
+                {
+                    <AzureAppConfigConnectionCheckUI RequestValue=@req1 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is CosmosDBConnectionCheckRequest req2)
+                {
+                    <CosmosDBConnectionCheckUI RequestValue=@req2 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is EventHubConnectionCheckRequest req3)
+                {
+                    <EventHubConnectionCheckUI RequestValue=@req3 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is EventHubConnectionCheckRequest req4)
+                {
+                    <EventHubConnectionCheckUI RequestValue=@req4 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is GeneralConnectionCheckRequest req5)
+                {
+                    <GeneralConnectionCheckUI RequestValue=@req5 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is HttpConnectionCheckRequest req6)
+                {
+                    <HttpConnectionCheckUI RequestValue=@req6 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is KeyVaultConnectionCheckRequest req7)
+                {
+                    <KeyVaultConnectionCheckUI RequestValue=@req7 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is RedisConnectionCheckRequest req8)
+                {
+                    <RedisConnectionCheckUI RequestValue=@req8 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is ServiceBusConnectionCheckRequest req9)
+                {
+                    <ServiceBusConnectionCheckUI RequestValue=@req9 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is SQLConnectionCheckRequest req10)
+                {
+                    <SQLConnectionCheckUI RequestValue=@req10 RequestValueChanged="ComponentUpdated" />
+                }
+                @if (request is StorageAccountConnectionCheckRequest req11)
+                {
+                    <StorageAccountConnectionCheckUI RequestValue=@req11 RequestValueChanged="ComponentUpdated" />
+                }
 
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="queuename" placeholder="Queue Name" @bind="request.ServiceBusDetails.QueueName">
-                                </div>
-                            </div>
-                            break;
-                        case 5:
-                            <hr class="my-4">
-                            <h4 class="mb-3">Redis</h4>
-                            <div class="row g-3">
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="connectionstring_redis" placeholder="Connection String" @bind="request.RedisDetails.ConnectionString">
-                                </div>
-
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" id="redisusername" placeholder="User Name" @bind="request.RedisDetails.RedisUserName">
-                            </div>
-                            </div>
-                            break;
-                        case 6:
-                            <hr class="my-4">
-                            <h4 class="mb-3">Event Hub</h4>
-                            <div class="row g-3">
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="connectionstring_eh" placeholder="Connection String" @bind="request.EventHubDetails.ConnectionString">
-                                </div>
-
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="eventhubname" placeholder="Event Hub Name" @bind="request.EventHubDetails.EventHubName">
-                                </div>
-                            </div>
-                            break;
-                        case 7:
-                            <hr class="my-4">
-                            <h4 class="mb-3">Cosmos DB</h4>
-                            break;
-                        case 8:
-                            <hr class="my-4">
-                            <h4 class="mb-3">SQL Server</h4>
-                            <div class="row g-3">
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="connectionstring_sql" placeholder="Connection String" @bind="request.SQLServerDetails.ConnectionString">
-                                </div>
-                            </div>
-                            break;
-                        default:
-                            break;
-
-                    }
-
-                    @if (SelectedAuthenticationType == "SP")
-                    {
-                        <hr class="my-4">
-                        <h4> Service Principal</h4>
+                @if (SelectedAuthenticationType == "SP")
+                {
+                    <hr class="my-4">
+                    <h4> Service Principal</h4>
 
                     <div class="row g-3">
                         <div class="col-sm-12">
@@ -181,14 +115,10 @@
                             <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
                         </div>
                     </div>
-                    }
+                }
 
-                    <hr class="my-4">
-
-            
+                <hr class="my-4">
                 <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" @onclick="send_clicked">Send</Button>
-
-
             </CardBody>
         </Card>
     </div>
@@ -197,18 +127,16 @@
 
 
     <div class="col-4">
-
-        @if(checkAccessResponse != null && checkAccessResponse.netResult != null)
+        @if (checkAccessResponse != null && checkAccessResponse.netResult != null)
         {
-            
             @if (checkAccessResponse.netResult.IsConnected)
             {
                 <Card Size="CardSize.Default" StatusStart="TablerColor.Green">
                     <CardBody>
                         <CardTitle>
-                                <h3>Connected  </h3>
-                                <h4>NetResponseTime: @checkAccessResponse.netResult.ElapsedMilliseconds</h4>
-                               <h4> IP @checkAccessResponse.ipaddress</h4>
+                            <h3>Connected  </h3>
+                            <h4>NetResponseTime: @checkAccessResponse.netResult.ElapsedMilliseconds</h4>
+                            <h4> IP @checkAccessResponse.ipaddress</h4>
                         </CardTitle>
                         @* Card Body *@
                     </CardBody>
@@ -220,7 +148,7 @@
             {
                 <Card Size="CardSize.Default" StatusStart="TablerColor.Danger">
                     <CardHeader>
-                        <h3>Connectiviy Failed</h3> 
+                        <h3>Connectiviy Failed</h3>
                     </CardHeader>
                     <CardBody>
 
@@ -233,7 +161,7 @@
             }
         }
 
-        @if (checkAccessResponse !=null && checkAccessResponse.additionalResult != null)
+        @if (checkAccessResponse != null && checkAccessResponse.additionalResult != null)
         {
             @if (checkAccessResponse.additionalResult.IsConnected == true)
             {
@@ -275,7 +203,7 @@
 
 @code {
 
-    [Inject] ConnectivityCheckService connectivityCheckService { get; set; }
+    // [Inject] ConnectivityCheckService connectivityCheckService { get; set; }
 
 
     private int selectedCategoryValue;
@@ -283,9 +211,10 @@
     private string SelectedAuthenticationType { get; set; } = "None";
     // private string httpMethod { get; set; } = "Get";
     private bool disableSendButton = false;
-    private CheckAccessRequest request = new CheckAccessRequest{Port=443};
+    private IBasicCheckAccessRequest request = new GeneralConnectionCheckRequest(); //= new CheckAccessRequest { Port = 443 };
     private CheckAccessResponse checkAccessResponse;
 
+    private int currentCount = 43;
 
     protected override Task OnInitializedAsync()
     {
@@ -295,56 +224,38 @@
     private void categoryChanged(ChangeEventArgs e)
     {
         selectedCategoryValue = Convert.ToInt32(e.Value);
-        selectedCategoryText = connectivityCheckService.Categories[selectedCategoryValue];
+        selectedCategoryText = RequestResourceTypeHelper.Categories[selectedCategoryValue];
 
         switch (selectedCategoryValue)
         {
             case 0:
-                request.Url = "";
-                request.Port = 443;
-                request.ResourceType = CheckAccessRequestResourceType.General;
+                request = new GeneralConnectionCheckRequest();//.ResourceType = CheckAccessRequestResourceType.General;
                 break;
             case 1:
-                request.Url = "";
-                request.Port = 443;
-                request.ResourceType = CheckAccessRequestResourceType.Http;
+                request = new HttpConnectionCheckRequest();
                 break;
             case 2:
-                request.ResourceType = CheckAccessRequestResourceType.StrorageAccount;
-                request.Url = ".blob.core.windows.net";
-                request.Port = 443;
+                request = new StorageAccountConnectionCheckRequest();
                 break;
             case 3:
-                request.ResourceType = CheckAccessRequestResourceType.KeyVault;
-                request.Url = ".vault.azure.net";
-                request.Port = 443;
-
+                request = new KeyVaultConnectionCheckRequest();
                 break;
             case 4:
-                request.Url = ".servicebus.windows.net";
-                request.Port = 443;
-                request.ResourceType = CheckAccessRequestResourceType.General;
-
+                request = new ServiceBusConnectionCheckRequest();
                 break;
             case 5:
-                request.ResourceType = CheckAccessRequestResourceType.Redis;
-                request.Url = ".redis.cache.windows.net";
-                request.Port = 6380;
+                request = new RedisConnectionCheckRequest();
                 break;
             case 6:
-                request.ResourceType = CheckAccessRequestResourceType.EventHub;
-                request.Url = ".servicebus.windows.net";
-                request.Port = 5671;
+                request = new EventHubConnectionCheckRequest();
+
                 break;
             case 7:
-                request.ResourceType = CheckAccessRequestResourceType.CosmosDB;
-                request.Url = ".documents.azure.com";
-                request.Port = 443;
+                request = new CosmosDBConnectionCheckRequest();
                 break;
             case 8:
-                request.ResourceType = CheckAccessRequestResourceType.SQLServer;
-                request.Url = ".database.windows.net";
-                request.Port = 1433;
+                request = new SQLConnectionCheckRequest();
+
                 break;
             default:
                 break;
@@ -360,11 +271,17 @@
         {
             request.UseMSI = true;
         }
-       
-        checkAccessResponse = await connectivityCheckService.ConnectionCheck(request);
-        Console.WriteLine(checkAccessResponse.netResult.IsConnected.ToString());
+
+        // checkAccessResponse = await connectivityCheckService.ConnectionCheck(request);
+        // Console.WriteLine(checkAccessResponse.netResult.IsConnected.ToString());
         disableSendButton = false;
-      
-       
+
+
+    }
+
+    private void ComponentUpdated()
+    {
+        StateHasChanged();
+        // Code logic for the ComponentUpdated method
     }
 }

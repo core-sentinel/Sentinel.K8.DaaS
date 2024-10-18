@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using TabBlazor
+@using TabBlazor.Services
+@using MediatR
+@using Sentinel.ConnectionChecks;
+
+
+<hr class="my-4">
+<h4 class="mb-3">Storage Account</h4>
+
+
+<Alert BackgroundColor="TablerColor.Info">
+    <div class="text-secondary">
+        Container Name and Connection string is required if MSI or Service Service Principal is used just use the domain name
+    </div>
+</Alert>
+
+<div class="row g-3">
+    <div class="col-sm-12">
+        <input type="text" class="form-control" name="connectionstring_sa" placeholder="Connection String" @bind="RequestValue.ConnectionString">
+    </div>
+    <div class="col-sm-12">
+        <input type="text" class="form-control" name="containername" placeholder="Container Name" @bind="RequestValue.containerName">
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string URL { get; set; }
+
+    [Parameter]
+    public StorageAccountConnectionCheckRequest RequestValue { get; set; }
+
+
+    [Parameter]
+    public EventCallback<StorageAccountConnectionCheckRequest> RequestValueChanged { get; set; }
+
+    private async Task UrlChanged(ChangeEventArgs e)
+    {
+
+        RequestValue.Url = e.Value.ToString();
+        await RequestValueChanged.InvokeAsync(RequestValue);
+        this.StateHasChanged();
+    }
+}

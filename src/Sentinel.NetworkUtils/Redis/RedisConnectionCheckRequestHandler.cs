@@ -6,7 +6,18 @@ internal class RedisConnectionCheckRequestHandler : IRequestHandler<RedisConnect
 {
     public Task<TestNetConnectionResponse> Handle(RedisConnectionCheckRequest request, CancellationToken cancellationToken)
     {
-        var result = TestRedisConnection.TestConnection(request.ConnectionString, request.UseMSI, request.Principal, request.RedisUsername);
+        var result = TestRedisConnection.TestConnection(request.ConnectionString, request.UseMSI, request.ServicePrincipal, request.RedisUsername);
         return result;
+    }
+}
+
+
+
+internal class IIdentityRequestHandler : IRequestHandler<IBasicCheckAccessRequest, TestNetConnectionResponse>
+{
+    public Task<TestNetConnectionResponse> Handle(IBasicCheckAccessRequest request, CancellationToken cancellationToken)
+    {
+        var result = new TestNetConnectionResponse();
+        return Task.FromResult(result);
     }
 }

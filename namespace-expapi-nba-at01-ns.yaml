@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: "2024-04-24T02:37:46Z"
+  labels:
+    application: Next_Best_Action_Experience_Api
+    costcentre: Project_Delivery_Hub_386062
+    environment: dev
+    istio-injection: enabled
+    k8slens-edit-resource-version: v1
+    kubernetes.io/metadata.name: expapi-nba-at01-ns
+    name: expapi-nba-at01-ns
+    rbac-mgr-bau: edit
+    rbac-mgr-developers: edit
+    rbac-mgr-devops: edit
+    rbac-mgr-testers: view
+    stream: STREAM
+    technicalcontact: matt.mercan
+    daas-injection: enabled
+  name: expapi-nba-at01-ns
+  resourceVersion: "195621559"
+  uid: 4acadd59-71f7-4b4d-b065-7d4d3ce4ea3c
+spec:
+  finalizers:
+    - kubernetes
+status:
+  phase: Active

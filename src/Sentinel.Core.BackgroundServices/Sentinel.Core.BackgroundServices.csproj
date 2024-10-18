@@ -8,11 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="Turquoise.HealthChecks.Common" Version="2.2.1-ci-20220708.1" />
+    <PackageReference Include="Turquoise.HealthChecks.Common" Version="3.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
-    <PackageReference Include="KubernetesClient" Version="13.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageReference Include="KubernetesClient" Version="15.0.1" />
   </ItemGroup>
 
 </Project>

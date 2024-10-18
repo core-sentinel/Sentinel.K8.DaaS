@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Reflection;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -36,6 +33,18 @@ namespace Sentinel.Core.K8s.Watchers
             return key != default
                 ? renamedValue
                 : _yamlNaming.Apply(value);
+        }
+
+        public string Reverse(string value)
+        {
+
+            var (key, renamedValue) = _rename.FirstOrDefault(
+              p =>
+                  string.Equals(value, p.Value, StringComparison.InvariantCultureIgnoreCase));
+
+            return key != default
+                ? renamedValue
+                : _yamlNaming.Reverse(value);
         }
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)

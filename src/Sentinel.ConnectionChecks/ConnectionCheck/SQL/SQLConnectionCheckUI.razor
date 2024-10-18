@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+
+@using MediatR
+@using Sentinel.ConnectionChecks;
+
+
+<hr class="my-4">
+<h4 class="mb-3">SQL Server</h4>
+<div class="row g-3">
+    <div class="col-sm-12">
+        <input type="text" class="form-control" id="connectionstring_sql" placeholder="Connection String" @bind="RequestValue.ConnectionString">
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string URL { get; set; }
+
+    [Parameter]
+    public SQLConnectionCheckRequest RequestValue { get; set; }
+
+
+    [Parameter]
+    public EventCallback<SQLConnectionCheckRequest> RequestValueChanged { get; set; }
+
+    private async Task UrlChanged(ChangeEventArgs e)
+    {
+
+        RequestValue.Url = e.Value.ToString();
+        await RequestValueChanged.InvokeAsync(RequestValue);
+        this.StateHasChanged();
+    }
+}

@@ -2,7 +2,6 @@ using DaaS.UI.Blazor.Components;
 using DaaS.UI.Blazor.Services;
 using Sentinel.Core.TokenGenerator;
 using Sentinel.NetworkUtils;
-using Sentinel.NetworkUtils.Services;
 using TabBlazor;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +20,7 @@ builder.Services.AddTabler()
               .AddSingleton<AppService>();
 
 builder.Services.AddHttpClient();
-builder.Services.AddSingleton<ConnectivityCheckService>();
+// builder.Services.AddSingleton<ConnectivityCheckService>();
 
 var app = builder.Build();
 

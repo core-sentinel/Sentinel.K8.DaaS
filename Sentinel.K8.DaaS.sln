@@ -33,7 +33,9 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.Core.TokenGenerator", "src\Sentinel.Core.TokenGenerator\Sentinel.Core.TokenGenerator.csproj", "{52B13E9A-291B-4427-885B-A947FBEE3747}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Core.HealthProbe", "src\Sentinel.Core.HealthProbe\Sentinel.Core.HealthProbe.csproj", "{45482EF2-3AED-458F-B1FE-2AAD0400E727}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.Core.HealthProbe", "src\Sentinel.Core.HealthProbe\Sentinel.Core.HealthProbe.csproj", "{45482EF2-3AED-458F-B1FE-2AAD0400E727}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.ConnectionChecks", "src\Sentinel.ConnectionChecks\Sentinel.ConnectionChecks.csproj", "{83DDDF38-374A-4211-ADAC-03A73A4BC67A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{45482EF2-3AED-458F-B1FE-2AAD0400E727}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45482EF2-3AED-458F-B1FE-2AAD0400E727}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45482EF2-3AED-458F-B1FE-2AAD0400E727}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83DDDF38-374A-4211-ADAC-03A73A4BC67A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83DDDF38-374A-4211-ADAC-03A73A4BC67A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83DDDF38-374A-4211-ADAC-03A73A4BC67A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83DDDF38-374A-4211-ADAC-03A73A4BC67A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{FFF34B9C-6039-4E8C-9F50-100FE8A0E89E} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
 		{52B13E9A-291B-4427-885B-A947FBEE3747} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
 		{45482EF2-3AED-458F-B1FE-2AAD0400E727} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
+		{83DDDF38-374A-4211-ADAC-03A73A4BC67A} = {68A7D98E-0DD8-4B77-8BC8-8B496B124A09}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {12F5EFF8-B981-4B1F-BADE-D820FD4FEB56}
