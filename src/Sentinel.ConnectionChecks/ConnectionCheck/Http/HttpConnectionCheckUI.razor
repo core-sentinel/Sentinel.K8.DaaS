@@ -17,11 +17,9 @@
     <h4 class="mb-3">HTTP</h4>
     <p> @(RequestValue.Url)  @(RequestValue.HttpMethod)</p>
     <div class="row g-3">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <label for="url" class="form-label">URL</label>
-          @*   <input type="text" class="form-control" id="url" placeholder="URL" @bind-value="RequestValue.Url">  *@
-
-           <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged> 
+            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged> 
         </div>
 
          <div class="col-md-6">
@@ -36,6 +34,27 @@
         </div>
 
     </div>
+
+    <div class="row g-3">
+        <div class="col-md-2">
+            <label for="url" class="form-label">Headers key</label>
+            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged>
+        </div>
+        <div class="col-md-2">
+            <label for="url" class="form-label">Headers value</label>
+            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged>
+        </div>
+        <div class="col-md-2">
+            <Button BackgroundColor="TablerColor.Red"  Size="ButtonSize.Small">Small</Button>
+        </div>
+       @*  <div class="col-md-6">
+            <label for="state" class="form-label">Content-Type</label>
+            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged>
+        </div> *@
+
+    </div>
+
+
 </div>
 
 @code {

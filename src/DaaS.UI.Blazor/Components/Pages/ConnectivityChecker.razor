@@ -1,15 +1,4 @@
 ﻿@page "/connectivity-checker"
-@using Sentinel.ConnectionChecks.ConnectionCheck.AzureAppConfig
-@using Sentinel.ConnectionChecks.ConnectionCheck.CosmosDB
-@using Sentinel.ConnectionChecks.ConnectionCheck.EventHub
-@using Sentinel.ConnectionChecks.ConnectionCheck.General
-@using Sentinel.ConnectionChecks.ConnectionCheck.KeyVault
-@using Sentinel.ConnectionChecks.ConnectionCheck.Redis
-@using Sentinel.ConnectionChecks.ConnectionCheck.SQL
-@using Sentinel.ConnectionChecks.ConnectionCheck.ServiceBus
-@using Sentinel.ConnectionChecks.ConnectionCheck.StorageAccount
-@using Sentinel.ConnectionChecks.Models
-
 
 
 <div class="row">
@@ -23,8 +12,15 @@
 
                 <div class="row g-3">
                     <div class="col-sm-9">
-                        <label for="firstName" class="form-label">URL</label>
-                        <input type="text" class="form-control" id="url" placeholder="URL" @bind="request.Url">
+                         @if (request is HttpConnectionCheckRequest)
+                        {
+                            <label for="url" class="form-label">URL</label>
+                        }
+                        else
+                        {
+                            <label for="url" class="form-label">Domain</label>
+                        }
+                        <input type="text" class="form-control" id="url" placeholder="Domain" @bind="request.Url">
                     </div>
 
                     <div class="col-sm-3">
@@ -68,9 +64,9 @@
                 {
                     <EventHubConnectionCheckUI RequestValue=@req4 RequestValueChanged="ComponentUpdated" />
                 }
-                @if (request is GeneralConnectionCheckRequest req5)
+                @if (request is TcpPingConnectionCheckRequest req5)
                 {
-                    <GeneralConnectionCheckUI RequestValue=@req5 RequestValueChanged="ComponentUpdated" />
+                    <TcpPingConnectionCheckUI RequestValue=@req5 RequestValueChanged="ComponentUpdated" />
                 }
                 @if (request is HttpConnectionCheckRequest req6)
                 {
@@ -123,20 +119,17 @@
         </Card>
     </div>
 
-
-
-
     <div class="col-4">
-        @if (checkAccessResponse != null && checkAccessResponse.netResult != null)
+        @if (tcpPingConnectionResponse != null )
         {
-            @if (checkAccessResponse.netResult.IsConnected)
+            @if (tcpPingConnectionResponse.IsConnected)
             {
                 <Card Size="CardSize.Default" StatusStart="TablerColor.Green">
                     <CardBody>
                         <CardTitle>
                             <h3>Connected  </h3>
-                            <h4>NetResponseTime: @checkAccessResponse.netResult.ElapsedMilliseconds</h4>
-                            <h4> IP @checkAccessResponse.ipaddress</h4>
+                            <h4>NetResponseTime: @tcpPingConnectionResponse.ElapsedMilliseconds</h4>
+                           @*  <h4> IP @tcpPingConnectionResponse.ipaddress</h4> *@
                         </CardTitle>
                         @* Card Body *@
                     </CardBody>
@@ -144,7 +137,7 @@
             }
 
 
-            @if (checkAccessResponse.netResult.IsConnected == false)
+            @if (tcpPingConnectionResponse.IsConnected == false)
             {
                 <Card Size="CardSize.Default" StatusStart="TablerColor.Danger">
                     <CardHeader>
@@ -152,44 +145,44 @@
                     </CardHeader>
                     <CardBody>
 
-                        <h4> <b> IP:  </b> @checkAccessResponse.ipaddress</h4>
-                        <h4>NetResponseTime: @checkAccessResponse.netResult.ElapsedMilliseconds</h4>
+                        <h4> <b> IP:  </b> @tcpPingConnectionResponse.IPAddress</h4>
+                        <h4>NetResponseTime: @tcpPingConnectionResponse.ElapsedMilliseconds</h4>
                         <br />
-                        @checkAccessResponse.netResult.Message
+                        @tcpPingConnectionResponse.Message
                     </CardBody>
                 </Card>
             }
         }
 
-        @if (checkAccessResponse != null && checkAccessResponse.additionalResult != null)
+        @if (additionalConnectionResponse != null)
         {
-            @if (checkAccessResponse.additionalResult.IsConnected == true)
+            @if (additionalConnectionResponse.IsConnected == true)
             {
-                @if (checkAccessResponse.additionalResult.IsConnected == true)
+                @if (additionalConnectionResponse.IsConnected == true)
                 {
                     <Card Size="CardSize.Default" StatusStart="TablerColor.Green">
                         <CardHeader>
-                            <h3> Success @checkAccessResponse.additionalResult.CategoryTypeName</h3>
+                            <h3> Success @additionalConnectionResponse.CategoryTypeName</h3>
                         </CardHeader>
                         <CardBody>
-                            <h4>NetResponseTime: @checkAccessResponse.additionalResult.ElapsedMilliseconds</h4>
+                            <h4>NetResponseTime: @additionalConnectionResponse.ElapsedMilliseconds</h4>
                             <br />
-                            @checkAccessResponse.additionalResult.Message
+                            @additionalConnectionResponse.Message
                         </CardBody>
                     </Card>
                 }
             }
 
-            @if (checkAccessResponse.additionalResult.IsConnected == false)
+            @if (additionalConnectionResponse.IsConnected == false)
             {
                 <Card Size="CardSize.Default" StatusStart="TablerColor.Danger">
                     <CardHeader>
-                        <h3> Failed @checkAccessResponse.additionalResult.CategoryTypeName</h3>
+                        <h3> Failed @additionalConnectionResponse.CategoryTypeName</h3>
                     </CardHeader>
                     <CardBody>
-                        <h4>NetResponseTime: @checkAccessResponse.additionalResult.ElapsedMilliseconds</h4>
+                        <h4>NetResponseTime: @additionalConnectionResponse.ElapsedMilliseconds</h4>
                         <br />
-                        @checkAccessResponse.additionalResult.Message
+                        @additionalConnectionResponse.Message
                     </CardBody>
                 </Card>
             }
@@ -202,34 +195,39 @@
 
 
 @code {
+    [Inject] IMediator mediator { get; set; }=default!;
 
-    // [Inject] ConnectivityCheckService connectivityCheckService { get; set; }
 
-
-    private int selectedCategoryValue;
-    private string selectedCategoryText;
+    private int selectedCategoryValue;    
     private string SelectedAuthenticationType { get; set; } = "None";
-    // private string httpMethod { get; set; } = "Get";
+
     private bool disableSendButton = false;
-    private IBasicCheckAccessRequest request = new GeneralConnectionCheckRequest(); //= new CheckAccessRequest { Port = 443 };
-    private CheckAccessResponse checkAccessResponse;
+    private IBasicCheckAccessRequest request = new TcpPingConnectionCheckRequest();
 
-    private int currentCount = 43;
+    private string IPaddress;
+    private TestNetConnectionResponse tcpPingConnectionResponse;
+    private TestNetConnectionResponse additionalConnectionResponse;
 
-    protected override Task OnInitializedAsync()
-    {
-        return Task.CompletedTask;
-    }
+
+    // private string selectedCategoryText;
+    // private string httpMethod { get; set; } = "Get";
+    // private CheckAccessResponse checkAccessResponse;
+    // private int currentCount = 43;
+
+    // protected override Task OnInitializedAsync()
+    // {
+    //     return Task.CompletedTask;
+    // }
 
     private void categoryChanged(ChangeEventArgs e)
     {
         selectedCategoryValue = Convert.ToInt32(e.Value);
-        selectedCategoryText = RequestResourceTypeHelper.Categories[selectedCategoryValue];
+        // selectedCategoryText = RequestResourceTypeHelper.Categories[selectedCategoryValue];
 
         switch (selectedCategoryValue)
         {
             case 0:
-                request = new GeneralConnectionCheckRequest();//.ResourceType = CheckAccessRequestResourceType.General;
+                request = new TcpPingConnectionCheckRequest();
                 break;
             case 1:
                 request = new HttpConnectionCheckRequest();
@@ -248,14 +246,12 @@
                 break;
             case 6:
                 request = new EventHubConnectionCheckRequest();
-
                 break;
             case 7:
                 request = new CosmosDBConnectionCheckRequest();
                 break;
             case 8:
                 request = new SQLConnectionCheckRequest();
-
                 break;
             default:
                 break;
@@ -272,8 +268,24 @@
             request.UseMSI = true;
         }
 
-        // checkAccessResponse = await connectivityCheckService.ConnectionCheck(request);
-        // Console.WriteLine(checkAccessResponse.netResult.IsConnected.ToString());
+
+
+
+        tcpPingConnectionResponse = await mediator.Send(request);
+        Console.WriteLine(tcpPingConnectionResponse.IsConnected.ToString());
+
+        if (request.Url == null || request.Url.StartsWith("http"))
+        {
+            HttpConnectionCheckRequest req = new HttpConnectionCheckRequest{HttpMethod = "Get", Url = request.Url, Port = request.Port};
+            additionalConnectionResponse = await mediator.Send(req);
+        }
+
+        if(request is not TcpPingConnectionCheckRequest)
+        {
+            additionalConnectionResponse = await mediator.Send(request);
+        }
+        
+        
         disableSendButton = false;
 
 

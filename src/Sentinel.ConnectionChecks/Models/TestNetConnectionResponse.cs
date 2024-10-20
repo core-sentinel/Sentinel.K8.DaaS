@@ -7,6 +7,8 @@ public class TestNetConnectionResponse
     public string CategoryTypeName { get; set; }
     public int CategoryTypeID { get; set; }
 
+    public string IPAddress { get; set; }
+
     public long ElapsedMilliseconds { get; set; }
 
     public TestNetConnectionResponse()

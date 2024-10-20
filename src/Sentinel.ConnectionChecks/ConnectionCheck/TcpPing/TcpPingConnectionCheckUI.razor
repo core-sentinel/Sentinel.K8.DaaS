@@ -14,7 +14,7 @@
 
 <div>
     <hr class="my-4">
-    <h4 class="mb-3">General</h4>
+    <h4 class="mb-3">TCP PING</h4>
     <p> @(RequestValue.Url)  </p>
     <div class="row g-3">
         <div class="col-sm-6">
@@ -31,11 +31,11 @@
     public string URL { get; set; }
 
     [Parameter]
-    public GeneralConnectionCheckRequest RequestValue { get; set; }
+    public TcpPingConnectionCheckRequest RequestValue { get; set; }
 
 
     [Parameter]
-    public EventCallback<GeneralConnectionCheckRequest> RequestValueChanged { get; set; }
+    public EventCallback<TcpPingConnectionCheckRequest> RequestValueChanged { get; set; }
 
     private async Task UrlChanged(ChangeEventArgs e)
     {

@@ -2,7 +2,7 @@
 
 public enum CheckAccessRequestResourceType
 {
-    General,
+    TcpPing,
     Http,
     StrorageAccount,
     KeyVault,
