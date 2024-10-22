@@ -66,7 +66,7 @@ public static class TestRedisConnection
             foreach (var key in keys)
             {
                 Console.WriteLine(" - " + key);
-                message = message + key + ", ";
+                message = message + key + "\n";
             }
 
 

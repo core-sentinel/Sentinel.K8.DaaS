@@ -6,7 +6,7 @@ internal class StorageAccountConnectionCheckRequestHandler : IRequestHandler<Sto
 {
     public Task<TestNetConnectionResponse> Handle(StorageAccountConnectionCheckRequest request, CancellationToken cancellationToken)
     {
-        return Task.FromResult(new TestNetConnectionResponse());
+        return TestStorageAccountConnection.TestConnection(request);
     }
 }
 

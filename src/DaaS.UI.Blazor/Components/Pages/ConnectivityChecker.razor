@@ -129,7 +129,7 @@
                         <CardTitle>
                             <h3>Connected  </h3>
                             <h4>NetResponseTime: @tcpPingConnectionResponse.ElapsedMilliseconds</h4>
-                           @*  <h4> IP @tcpPingConnectionResponse.ipaddress</h4> *@
+                            <h4> IP @tcpPingConnectionResponse.IPAddress</h4>
                         </CardTitle>
                         @* Card Body *@
                     </CardBody>
@@ -143,10 +143,9 @@
                     <CardHeader>
                         <h3>Connectiviy Failed</h3>
                     </CardHeader>
-                    <CardBody>
-
-                        <h4> <b> IP:  </b> @tcpPingConnectionResponse.IPAddress</h4>
+                    <CardBody>                       
                         <h4>NetResponseTime: @tcpPingConnectionResponse.ElapsedMilliseconds</h4>
+                        <h4> <b> IP:  </b> @tcpPingConnectionResponse.IPAddress</h4>
                         <br />
                         @tcpPingConnectionResponse.Message
                     </CardBody>
@@ -167,7 +166,9 @@
                         <CardBody>
                             <h4>NetResponseTime: @additionalConnectionResponse.ElapsedMilliseconds</h4>
                             <br />
-                            @additionalConnectionResponse.Message
+                            <span style="white-space: pre-line">
+                                @additionalConnectionResponse.Message
+                            </span>
                         </CardBody>
                     </Card>
                 }
@@ -270,8 +271,8 @@
 
 
 
-
-        tcpPingConnectionResponse = await mediator.Send(request);
+        var tcprequest = new TcpPingConnectionCheckRequest { Url = request.Url, Port = request.Port };
+        tcpPingConnectionResponse = await mediator.Send(tcprequest);
         Console.WriteLine(tcpPingConnectionResponse.IsConnected.ToString());
 
         if (request.Url == null || request.Url.StartsWith("http"))
@@ -283,6 +284,7 @@
         if(request is not TcpPingConnectionCheckRequest)
         {
             additionalConnectionResponse = await mediator.Send(request);
+            var ops = true;
         }
         
         

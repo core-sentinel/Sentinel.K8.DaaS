@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
-using Microsoft.Extensions.Azure;
 using Sentinel.NetworkUtils.Models;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Sentinel.NetworkUtils.Helpers;
 public static class TestServiceBusConnection
@@ -40,6 +36,12 @@ public static class TestServiceBusConnection
                 // var tt = new Azure.Messaging.ServiceBus.Administration.rviceBusAdministrationClient(connectionString);//.CreateFromConnectionString(connectionString);
             }
             var rts = await serviceBusAdministrationClient.GetQueueRuntimePropertiesAsync(queueName);
+
+
+            var dic = rts.GetType()
+              .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+           .ToDictionary(prop => prop.Name, prop => (string)prop.GetValue(rts, null));
+
             // serviceBusAdministrationClient.
 
             return new TestNetConnectionResponse(CheckAccessRequestResourceType.ServiceBus, true, sw.ElapsedMilliseconds);

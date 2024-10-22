@@ -14,6 +14,27 @@
 
 <hr class="my-4">
 <h4 class="mb-3">Cosmos DB</h4>
+<div class="row g-3">
+    <div class="col-sm-12">
+        <label for="lastName" class="form-label">Connection String</label>
+        <input type="text" class="form-control" id="connectionstring_redis" placeholder="Connection String" @bind="RequestValue.ConnectionString">
+    </div>
+
+</div>
+
+<div class="row g-3">
+
+    <div class="col-sm-6">
+        <label for="lastName" class="form-label">Database Name</label>
+        <input type="text" class="form-control" id="connectionstring_redis" placeholder="Database Name" @bind="RequestValue.DatabaseName">
+    </div>
+    <div class="col-sm-6">
+        <label for="lastName" class="form-label">Container Name</label>
+        <input type="text" class="form-control" id="connectionstring_redis" placeholder="Container Name" @bind="RequestValue.ContainerName">
+    </div>
+
+</div>
+
 
 @code {
     [Parameter]

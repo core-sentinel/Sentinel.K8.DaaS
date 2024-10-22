@@ -10,6 +10,11 @@ public class CosmosDBConnectionCheckRequest : IRequest<TestNetConnectionResponse
     public bool UseMSI { get; set; }
     public ServicePrincipal? ServicePrincipal { get; set; }
 
+    public string DatabaseName { get; set; } = "";
+    public string ContainerName { get; set; } = "";
+
+    public string ConnectionString { get; set; } = string.Empty;
+
     public CosmosDBConnectionCheckRequest()
     {
         ServicePrincipal = new ServicePrincipal();
