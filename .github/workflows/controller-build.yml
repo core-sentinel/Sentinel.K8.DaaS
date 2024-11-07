@@ -45,7 +45,7 @@ jobs:
         run: |
           export TAGVersion=${{github.ref_name}}
           export DOCKER_REGISTRY=mmercan
-          docker --log-level=debug compose --file $dockercomposeLoc --log-level DEBUG build 
+          docker --log-level=debug compose --file $dockercomposeLoc build 
 
       - name: tag Images
         run: |
