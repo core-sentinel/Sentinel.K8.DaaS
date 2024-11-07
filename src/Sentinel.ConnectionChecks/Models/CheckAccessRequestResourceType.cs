@@ -11,6 +11,7 @@ public enum CheckAccessRequestResourceType
     EventHub,
     CosmosDB,
     SQLServer,
+    AzureAppConfig,
 }
 
 public static class RequestResourceTypeHelper

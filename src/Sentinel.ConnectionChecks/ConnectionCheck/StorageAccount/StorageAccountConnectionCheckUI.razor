@@ -25,12 +25,81 @@
 
 <div class="row g-3">
     <div class="col-sm-12">
-        <input type="text" class="form-control" name="connectionstring_sa" placeholder="Connection String" @bind="RequestValue.ConnectionString">
-    </div>
-    <div class="col-sm-12">
-        <input type="text" class="form-control" name="containername" placeholder="Container Name" @bind="RequestValue.containerName">
+        <label for="storageaccountaame" class="form-label">Storage Account Name</label>
+        <input type="text" class="form-control" name="storageaccountaame" placeholder="Storage Account Name" @bind="RequestValue.StorageAccountName">
     </div>
 </div>
+@if ( RequestValue.SelectedAuthenticationType == "None")
+{
+    <div class="row g-3">
+        <div class="col-sm-12">
+            <label for="connectionstring_sa" class="form-label">Connection String</label>
+            <input type="text" class="form-control" name="connectionstring_sa" placeholder="Connection String" @bind="RequestValue.ConnectionString">
+        </div>
+    </div>
+}
+<hr class="my-4">
+
+
+<div class="row g-3">
+    <div class="col-sm-9">
+        <input type="text" class="form-control" name="containername" placeholder="Container Name" @bind="RequestValue.containerName">
+    </div>
+    <div class="col-sm-3" style="margin-top:25px">
+        <Checkbox Label="Test Blob Storage" @bind-Value="RequestValue.TestBlobStorage" Switch />
+    </div>
+</div>
+
+
+<div class="row g-3">
+    <div class="col-sm-9">
+        @* <input type="text" class="form-control" name="containername" placeholder="Container Name" @bind="RequestValue.containerName"> *@
+    </div>
+    <div class="col-sm-3" style="margin-top:25px">
+        <Checkbox Label="Test Static Website" @bind-Value="RequestValue.TestStaticwebsite" Switch />
+    </div>
+</div>
+
+
+<div class="row g-3">
+    <div class="col-sm-9">
+       @*  <input type="text" class="form-control" name="containername" placeholder="Container Name" @bind="RequestValue.containerName"> *@
+    </div>
+    <div class="col-sm-3" style="margin-top:25px">
+        <Checkbox Label="Test DataLake Storage" @bind-Value="RequestValue.TestDataLakeStorage" Switch />
+    </div>
+</div>
+
+
+<div class="row g-3">
+    <div class="col-sm-9">
+        <input type="text" class="form-control" name="containername" placeholder="Fileshare Name" @bind="RequestValue.FileshareName">
+    </div>
+    <div class="col-sm-3" style="margin-top:25px">
+        <Checkbox Label="Test Azure Files" @bind-Value="RequestValue.TestAzureFiles" Switch />
+    </div>
+</div>
+
+
+<div class="row g-3">
+    <div class="col-sm-9">
+        <input type="text" class="form-control" name="containername" placeholder="Queue Name" @bind="RequestValue.QueueName">
+    </div>
+     <div class="col-sm-3" style="margin-top:25px">
+        <Checkbox Label="Test Queue Storage" @bind-Value="RequestValue.TestQueueStorage" Switch />
+    </div>
+</div>
+
+
+<div class="row g-3">
+    <div class="col-sm-9">
+        <input type="text" class="form-control" name="containername" placeholder="Table Name" @bind="RequestValue.TableName">
+    </div>
+    <div class="col-sm-3" style="margin-top:25px">
+        <Checkbox Label="Test Table Storage" @bind-Value="RequestValue.TestTableStorage" Switch />
+    </div>
+</div>
+
 
 @code {
     [Parameter]

@@ -26,7 +26,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Sentinel.ConnectionChecks\Sentinel.ConnectionChecks.csproj" />
     <ProjectReference Include="..\Sentinel.Core.TokenGenerator\Sentinel.Core.TokenGenerator.csproj" />
-    <ProjectReference Include="..\Sentinel.NetworkUtils\Sentinel.NetworkUtils.csproj" />
   </ItemGroup>
 
 </Project>

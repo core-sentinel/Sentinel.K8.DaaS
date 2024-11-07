@@ -41,13 +41,33 @@
 
                     <div class="col-md-6">
                         <label for="state" class="form-label">Authentication</label>
-                        <select class="form-select" id="authselect" required="" @bind="SelectedAuthenticationType">
+                        <select class="form-select" id="authselect" required="" @bind="request.SelectedAuthenticationType">
                             <option value="None">None</option>
                             <option value="UseMSI">Use Managed Identity</option>
                             <option value="SP">Use Service Principal</option>
                         </select>
                     </div>
                 </div>
+                @if (request.SelectedAuthenticationType == "SP")
+                {
+                    <hr class="my-4">
+                    <h4> Service Principal</h4>
+
+                    <div class="row g-3">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="request.ServicePrincipal.TenantId">
+                        </div>
+
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="sp_clientid" placeholder="Client ID" @bind="request.ServicePrincipal.ClientId">
+                        </div>
+
+                        <div class="col-sm-12">
+                            <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
+                        </div>
+                    </div>
+                }
+
                 @if (request is AzureAppConfigConnectionCheckRequest req1)
                 {
                     <AzureAppConfigConnectionCheckUI RequestValue=@req1 RequestValueChanged="ComponentUpdated" />
@@ -92,27 +112,6 @@
                 {
                     <StorageAccountConnectionCheckUI RequestValue=@req11 RequestValueChanged="ComponentUpdated" />
                 }
-
-                @if (SelectedAuthenticationType == "SP")
-                {
-                    <hr class="my-4">
-                    <h4> Service Principal</h4>
-
-                    <div class="row g-3">
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="request.ServicePrincipal.TenantId">
-                        </div>
-
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="sp_clientid" placeholder="Client ID" @bind="request.ServicePrincipal.ClientId">
-                        </div>
-
-                        <div class="col-sm-12">
-                            <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
-                        </div>
-                    </div>
-                }
-
                 <hr class="my-4">
                 <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" @onclick="send_clicked">Send</Button>
             </CardBody>
@@ -157,21 +156,18 @@
         {
             @if (additionalConnectionResponse.IsConnected == true)
             {
-                @if (additionalConnectionResponse.IsConnected == true)
-                {
-                    <Card Size="CardSize.Default" StatusStart="TablerColor.Green">
-                        <CardHeader>
-                            <h3> Success @additionalConnectionResponse.CategoryTypeName</h3>
-                        </CardHeader>
-                        <CardBody>
-                            <h4>NetResponseTime: @additionalConnectionResponse.ElapsedMilliseconds</h4>
-                            <br />
-                            <span style="white-space: pre-line">
-                                @additionalConnectionResponse.Message
-                            </span>
-                        </CardBody>
-                    </Card>
-                }
+                <Card Size="CardSize.Default" StatusStart="TablerColor.Green">
+                    <CardHeader>
+                        <h3> Success @additionalConnectionResponse.CategoryTypeName</h3>
+                    </CardHeader>
+                    <CardBody>
+                        <h4>NetResponseTime: @additionalConnectionResponse.ElapsedMilliseconds</h4>
+                        <br />
+                        <span style="white-space: pre-line">
+                            @additionalConnectionResponse.Message
+                        </span>
+                    </CardBody>
+                </Card>
             }
 
             @if (additionalConnectionResponse.IsConnected == false)
@@ -187,6 +183,12 @@
                     </CardBody>
                 </Card>
             }
+            if(additionalConnectionResponse.ExtraResultRazorContentType != null)
+            {
+                <DynamicComponent Type="@additionalConnectionResponse.ExtraResultRazorContentType" Parameters="@additionalConnectionResponse.ExtraResultDictionary" />
+              
+                
+            }
         }
     </div>
 </div>
@@ -200,7 +202,6 @@
 
 
     private int selectedCategoryValue;    
-    private string SelectedAuthenticationType { get; set; } = "None";
 
     private bool disableSendButton = false;
     private IBasicCheckAccessRequest request = new TcpPingConnectionCheckRequest();
@@ -209,16 +210,6 @@
     private TestNetConnectionResponse tcpPingConnectionResponse;
     private TestNetConnectionResponse additionalConnectionResponse;
 
-
-    // private string selectedCategoryText;
-    // private string httpMethod { get; set; } = "Get";
-    // private CheckAccessResponse checkAccessResponse;
-    // private int currentCount = 43;
-
-    // protected override Task OnInitializedAsync()
-    // {
-    //     return Task.CompletedTask;
-    // }
 
     private void categoryChanged(ChangeEventArgs e)
     {
@@ -263,8 +254,8 @@
     {
         disableSendButton = true;
         Console.WriteLine(request.Url + ":" + request.Port.ToString());
-        Console.WriteLine(selectedCategoryValue.ToString() + " " + SelectedAuthenticationType);
-        if (SelectedAuthenticationType == "UseMSI")
+        Console.WriteLine(selectedCategoryValue.ToString() + " " + request.SelectedAuthenticationType);
+        if (request.SelectedAuthenticationType == "UseMSI")
         {
             request.UseMSI = true;
         }
@@ -283,14 +274,19 @@
 
         if(request is not TcpPingConnectionCheckRequest)
         {
-            additionalConnectionResponse = await mediator.Send(request);
+            additionalConnectionResponse = await mediator.Send(request) as TestNetConnectionResponse;
+
+           // additionalConnectionResponse = await mediator.Send(request);
+           
+            
+            
             var ops = true;
         }
-        
-        
+
+
         disableSendButton = false;
 
-
+       
     }
 
     private void ComponentUpdated()

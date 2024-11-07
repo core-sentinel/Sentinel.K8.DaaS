@@ -12,6 +12,7 @@ public class RedisConnectionCheckRequest : IRequest<TestNetConnectionResponse>, 
     public string ConnectionString { get; set; }
     public bool UseMSI { get; set; }
     public ServicePrincipal? ServicePrincipal { get; set; }
+    public string SelectedAuthenticationType { get; set; } = "None";
     public string? RedisUsername { get; set; }
 
 

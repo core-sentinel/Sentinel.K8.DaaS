@@ -2,11 +2,15 @@
 using Sentinel.ConnectionChecks.Models;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.StorageAccount;
-internal class StorageAccountConnectionCheckRequestHandler : IRequestHandler<StorageAccountConnectionCheckRequest, TestNetConnectionResponse>
+internal class StorageAccountConnectionCheckRequestHandler : IRequestHandler<StorageAccountConnectionCheckRequest, TestNetConnectionResponse<StorageAccountExtraResponse>>
 {
-    public Task<TestNetConnectionResponse> Handle(StorageAccountConnectionCheckRequest request, CancellationToken cancellationToken)
+    public Task<TestNetConnectionResponse<StorageAccountExtraResponse>> Handle(StorageAccountConnectionCheckRequest request, CancellationToken cancellationToken)
     {
-        return TestStorageAccountConnection.TestConnection(request);
+
+        var test = new TestStorageAccountConnection(request);
+
+        return test.TestConnection();
     }
 }
 
+// StorageAccountConnectionResponse
