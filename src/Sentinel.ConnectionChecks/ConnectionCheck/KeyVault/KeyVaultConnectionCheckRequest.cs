@@ -12,6 +12,8 @@ public class KeyVaultConnectionCheckRequest : IRequest<TestNetConnectionResponse
     public string SelectedAuthenticationType { get; set; } = "None";
     public string? KeyVaultName { get; set; } = default!;
 
+    public Type AdditionalRequestRazorContentType { get => typeof(KeyVaultConnectionCheckUI); }
+
     public KeyVaultConnectionCheckRequest()
     {
         ServicePrincipal = new ServicePrincipal();

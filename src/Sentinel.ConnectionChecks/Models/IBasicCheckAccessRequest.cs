@@ -10,5 +10,7 @@
 
         bool UseMSI { get; set; }
         ServicePrincipal? ServicePrincipal { get; set; }
+
+        Type? AdditionalRequestRazorContentType { get; }
     }
 }

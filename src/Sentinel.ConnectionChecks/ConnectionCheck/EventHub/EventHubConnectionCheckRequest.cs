@@ -9,6 +9,8 @@ public class EventHubConnectionCheckRequest : IRequest<TestNetConnectionResponse
     public int Port { get; set; } = 5671;
     public bool UseMSI { get; set; }
     public ServicePrincipal? ServicePrincipal { get; set; }
+    public Type AdditionalRequestRazorContentType { get => typeof(EventHubConnectionCheckUI); }
+
     public string SelectedAuthenticationType { get; set; } = "None";
     public string? ConnectionString { get; set; } = default!;
     public string? EventHubName { get; set; } = default!;

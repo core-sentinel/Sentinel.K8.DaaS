@@ -13,6 +13,8 @@ public class TcpPingConnectionCheckRequest : IRequest<TestNetConnectionResponse>
     public bool UseMSI { get; set; }
     public ServicePrincipal? ServicePrincipal { get; set; }
 
+    public Type AdditionalRequestRazorContentType { get => typeof(TcpPingConnectionCheckUI); }
+
     public string SelectedAuthenticationType { get; set; } = "None";
     public string Protocol { get; set; } = "TCP";
     public TcpPingConnectionCheckRequest()

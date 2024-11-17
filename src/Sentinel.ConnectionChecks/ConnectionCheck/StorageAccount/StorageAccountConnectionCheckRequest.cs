@@ -10,6 +10,9 @@ public class StorageAccountConnectionCheckRequest : IRequest<TestNetConnectionRe
     public int Port { get; set; } = 443;
     public bool UseMSI { get; set; }
     public ServicePrincipal? ServicePrincipal { get; set; }
+
+    public Type AdditionalRequestRazorContentType { get => typeof(StorageAccountConnectionCheckUI); }
+
     public string SelectedAuthenticationType { get; set; } = "None";
 
     public string StorageAccountName { get; set; } = default!;

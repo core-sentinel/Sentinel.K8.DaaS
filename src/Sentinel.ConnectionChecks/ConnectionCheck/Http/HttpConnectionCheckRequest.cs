@@ -10,6 +10,8 @@ public class HttpConnectionCheckRequest : IRequest<TestNetConnectionResponse>, I
     public int Port { get; set; } = 443;
     public bool UseMSI { get; set; }
     public ServicePrincipal? ServicePrincipal { get; set; }
+
+    public Type AdditionalRequestRazorContentType { get => typeof(HttpConnectionCheckUI); }
     public string SelectedAuthenticationType { get; set; } = "None";
     public HttpConnectionCheckRequest()
     {

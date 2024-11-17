@@ -67,8 +67,13 @@
                         </div>
                     </div>
                 }
-
-                @if (request is AzureAppConfigConnectionCheckRequest req1)
+                @if(request.AdditionalRequestRazorContentType !=null)
+                {
+                    <DynamicComponent Type="@request.AdditionalRequestRazorContentType" Parameters="@requestDictionary" />
+                }
+                    
+                
+@*                 @if (request is AzureAppConfigConnectionCheckRequest req1)
                 {
                     <AzureAppConfigConnectionCheckUI RequestValue=@req1 RequestValueChanged="ComponentUpdated" />
                 }
@@ -111,7 +116,7 @@
                 @if (request is StorageAccountConnectionCheckRequest req11)
                 {
                     <StorageAccountConnectionCheckUI RequestValue=@req11 RequestValueChanged="ComponentUpdated" />
-                }
+                } *@
                 <hr class="my-4">
                 <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" @onclick="send_clicked">Send</Button>
             </CardBody>
@@ -205,10 +210,17 @@
 
     private bool disableSendButton = false;
     private IBasicCheckAccessRequest request = new TcpPingConnectionCheckRequest();
+    public Dictionary<string, object> requestDictionary { get; set; } = new Dictionary<string, object>();
 
     private string IPaddress;
     private TestNetConnectionResponse tcpPingConnectionResponse;
     private TestNetConnectionResponse additionalConnectionResponse;
+
+    public ConnectivityChecker()
+    {
+        requestDictionary = new Dictionary<string, object>();
+        requestDictionary.Add("RequestValue", request);
+    }
 
 
     private void categoryChanged(ChangeEventArgs e)
@@ -220,30 +232,48 @@
         {
             case 0:
                 request = new TcpPingConnectionCheckRequest();
+                requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             case 1:
                 request = new HttpConnectionCheckRequest();
+                requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             case 2:
                 request = new StorageAccountConnectionCheckRequest();
+                requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             case 3:
                 request = new KeyVaultConnectionCheckRequest();
+                requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             case 4:
                 request = new ServiceBusConnectionCheckRequest();
+                requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             case 5:
                 request = new RedisConnectionCheckRequest();
+                requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             case 6:
                 request = new EventHubConnectionCheckRequest();
+                  requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             case 7:
                 request = new CosmosDBConnectionCheckRequest();
+                requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             case 8:
                 request = new SQLConnectionCheckRequest();
+                requestDictionary = new Dictionary<string, object>();
+                requestDictionary.Add("RequestValue", request);
                 break;
             default:
                 break;
