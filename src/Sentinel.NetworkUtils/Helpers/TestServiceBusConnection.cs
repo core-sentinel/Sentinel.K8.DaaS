@@ -40,7 +40,13 @@ public static class TestServiceBusConnection
 
             var dic = rts.GetType()
               .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-           .ToDictionary(prop => prop.Name, prop => (string)prop.GetValue(rts, null));
+           .ToDictionary(prop => prop.Name, prop => prop.GetValue(rts, null).ToString());
+
+            // var dic = rts.GetType()
+            //   .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            //.ToDictionary(prop => prop.Name, prop => (QueueRuntimeProperties)prop.GetValue(rts, null));
+
+            // 'Azure.Messaging.ServiceBus.Administration.QueueRuntimeProperties'
 
             // serviceBusAdministrationClient.
 

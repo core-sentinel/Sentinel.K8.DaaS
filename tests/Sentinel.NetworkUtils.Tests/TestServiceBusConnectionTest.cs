@@ -1,7 +1,5 @@
-using Xunit;
 using Sentinel.NetworkUtils.Helpers;
 using Sentinel.NetworkUtils.Models;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Sentinel.Tests.Helper;
 using Xunit.Abstractions;
 
@@ -64,7 +62,7 @@ public class TestServiceBusConnectionTest
         bool useMSI = false;
 
         // Act
-        var result = await TestServiceBusConnection.TestConnection(connectionString, "tests", useMSI);
+        var result = await TestServiceBusConnection.TestConnection(connectionString, "testqueue", useMSI);
 
         // Assert
         Assert.True(result.IsConnected);
@@ -85,7 +83,7 @@ public class TestServiceBusConnectionTest
         };
 
         // Act
-        var result = await TestServiceBusConnection.TestConnection(connectionString, "tests", useMSI, principal);
+        var result = await TestServiceBusConnection.TestConnection(connectionString, "testqueue", useMSI, principal);
 
         // Assert
         Assert.True(result.IsConnected);
@@ -106,7 +104,7 @@ public class TestServiceBusConnectionTest
         };
 
         // Act
-        var result = await TestServiceBusConnection.TestConnection(connectionString, "tests", useMSI, principal);
+        var result = await TestServiceBusConnection.TestConnection(connectionString, "testqueue", useMSI, principal);
 
         // Assert
         Assert.False(result.IsConnected);
@@ -121,7 +119,7 @@ public class TestServiceBusConnectionTest
         bool useMSI = true;
 
         // Act
-        var result = await TestServiceBusConnection.TestConnection(connectionString, "tests", useMSI);
+        var result = await TestServiceBusConnection.TestConnection(connectionString, "testqueue", useMSI);
 
         // Assert
         Assert.True(result.IsConnected);
@@ -135,7 +133,7 @@ public class TestServiceBusConnectionTest
         bool useMSI = false;
 
         // Act
-        var result = await TestServiceBusConnection.TestConnection(connectionString, "tests", useMSI);
+        var result = await TestServiceBusConnection.TestConnection(connectionString, "testqueue", useMSI);
 
         // Assert
         Assert.False(result.IsConnected);
