@@ -3,6 +3,7 @@ using Sentinel.ConnectionChecks.Models;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.EventHub;
 
+[ConnectionCheck(Name = "EventHub", Order = 7)]
 public class EventHubConnectionCheckRequest : IRequest<TestNetConnectionResponse>, IBasicCheckAccessRequest
 {
     public string Url { get; set; } = ".servicebus.windows.net";

@@ -31,7 +31,7 @@ internal class TestStorageAccountConnection
         {
             StringBuilder sb = new StringBuilder();
 
-            var result = new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, true, sb.ToString(), sw.ElapsedMilliseconds);
+            var result = new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", true, sb.ToString(), sw.ElapsedMilliseconds);
             result.ExtraResultRazorContentType = typeof(StorageAccountConnectionCheckUIResult);
 
 
@@ -67,7 +67,7 @@ internal class TestStorageAccountConnection
         catch (Exception ex)
         {
             //throw e;
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, false, ex.Message, sw.ElapsedMilliseconds);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", false, ex.Message, sw.ElapsedMilliseconds);
 
         }
         finally
@@ -130,12 +130,12 @@ internal class TestStorageAccountConnection
                 var client = GetBlobContainerClient(req);
             }
 
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, true, sb.ToString(), sw.ElapsedMilliseconds, IPAddress);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", true, sb.ToString(), sw.ElapsedMilliseconds, IPAddress);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, false, ex.Message, sw.ElapsedMilliseconds, IPAddress);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", false, ex.Message, sw.ElapsedMilliseconds, IPAddress);
         }
     }
 
@@ -171,12 +171,12 @@ internal class TestStorageAccountConnection
                 //var client = GetBlobContainerClient(req);
             }
 
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, true, sb.ToString(), sw.ElapsedMilliseconds, IPAddress);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", true, sb.ToString(), sw.ElapsedMilliseconds, IPAddress);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, false, ex.Message, sw.ElapsedMilliseconds, IPAddress);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", false, ex.Message, sw.ElapsedMilliseconds, IPAddress);
         }
     }
 
@@ -211,12 +211,12 @@ internal class TestStorageAccountConnection
                 //var client = GetBlobContainerClient(req);
             }
 
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, true, sb.ToString(), sw.ElapsedMilliseconds, IPAddress);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", true, sb.ToString(), sw.ElapsedMilliseconds, IPAddress);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, false, ex.Message, sw.ElapsedMilliseconds, IPAddress);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", false, ex.Message, sw.ElapsedMilliseconds, IPAddress);
         }
     }
 
@@ -250,12 +250,12 @@ internal class TestStorageAccountConnection
                 //var client = GetBlobContainerClient(req);
             }
 
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, true, sb.ToString(), sw.ElapsedMilliseconds, IPAddress);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", true, sb.ToString(), sw.ElapsedMilliseconds, IPAddress);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return new TestNetConnectionResponse<StorageAccountExtraResponse>(CheckAccessRequestResourceType.StrorageAccount, false, ex.Message, sw.ElapsedMilliseconds, IPAddress);
+            return new TestNetConnectionResponse<StorageAccountExtraResponse>("StrorageAccount", false, ex.Message, sw.ElapsedMilliseconds, IPAddress);
         }
     }
 

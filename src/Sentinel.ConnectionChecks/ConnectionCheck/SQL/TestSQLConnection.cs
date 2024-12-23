@@ -46,12 +46,12 @@ internal static class TestSQLConnection
                     stringBuilder.AppendLine(tableInfo);
                 }
 
-                return Task.FromResult(new TestNetConnectionResponse(CheckAccessRequestResourceType.SQLServer, true, stringBuilder.ToString(), sw.ElapsedMilliseconds));
+                return Task.FromResult(new TestNetConnectionResponse("SQLServer", true, stringBuilder.ToString(), sw.ElapsedMilliseconds));
             }
         }
         catch (Exception ex)
         {
-            return Task.FromResult(new TestNetConnectionResponse(CheckAccessRequestResourceType.SQLServer, false, ex.Message, sw.ElapsedMilliseconds));
+            return Task.FromResult(new TestNetConnectionResponse("SQLServer", false, ex.Message, sw.ElapsedMilliseconds));
         }
         finally { sw.Stop(); }
     }

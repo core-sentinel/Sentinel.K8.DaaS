@@ -3,6 +3,7 @@ using Sentinel.ConnectionChecks.Models;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.StorageAccount;
 
+[ConnectionCheck(Name = "StrorageAccount", Order = 3)]
 public class StorageAccountConnectionCheckRequest : IRequest<TestNetConnectionResponse<StorageAccountExtraResponse>>, IBasicCheckAccessRequest
 {
 

@@ -4,6 +4,7 @@ using Sentinel.ConnectionChecks.Models;
 namespace Sentinel.ConnectionChecks.ConnectionCheck.Redis;
 //public record RedisConnectionCheckCommand(string ConnectionString, bool UseMSI, ServicePrincipal? Principal, string? RedisUsername) : IRequest<RedisConnectionCheckResponse>;
 
+[ConnectionCheck(Name = "Redis", Order = 6)]
 public class RedisConnectionCheckRequest : IRequest<TestNetConnectionResponse>, IBasicCheckAccessRequest
 {
     public string Url { get; set; } = ".redis.cache.windows.net";

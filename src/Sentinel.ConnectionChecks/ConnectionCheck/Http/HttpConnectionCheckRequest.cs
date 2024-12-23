@@ -3,6 +3,7 @@ using Sentinel.ConnectionChecks.Models;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.Http;
 
+[ConnectionCheck(Name = "Http", Order = 2)]
 public class HttpConnectionCheckRequest : IRequest<TestNetConnectionResponse>, IBasicCheckAccessRequest
 {
     public string? Url { get; set; } = "https://";

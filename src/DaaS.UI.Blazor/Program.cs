@@ -22,6 +22,13 @@ builder.Services.AddTabler()
 builder.Services.AddHttpClient();
 // builder.Services.AddSingleton<ConnectivityCheckService>();
 
+//ConnectionCheckDiscovery discovery = new ConnectionCheckDiscovery();
+//discovery.ScanForConnectionCheckTypes(typeof(ConnectionChecksAssemblyMarker));
+builder.Services.AddSingleton<ConnectionCheckDiscovery>((s) =>
+{
+    return new ConnectionCheckDiscovery(typeof(ConnectionChecksAssemblyMarker));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

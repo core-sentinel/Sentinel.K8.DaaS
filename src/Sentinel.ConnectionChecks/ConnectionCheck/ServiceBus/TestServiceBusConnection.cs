@@ -52,11 +52,11 @@ internal static class TestServiceBusConnection
 
             // serviceBusAdministrationClient.
 
-            return new TestNetConnectionResponse(CheckAccessRequestResourceType.ServiceBus, true, stringBuilder.ToString(), sw.ElapsedMilliseconds);
+            return new TestNetConnectionResponse("ServiceBus", true, stringBuilder.ToString(), sw.ElapsedMilliseconds);
         }
         catch (Exception ex)
         {
-            return new TestNetConnectionResponse(CheckAccessRequestResourceType.ServiceBus, false, ex.Message, sw.ElapsedMilliseconds);
+            return new TestNetConnectionResponse("ServiceBus", false, ex.Message, sw.ElapsedMilliseconds);
         }
         finally { sw.Stop(); }
     }

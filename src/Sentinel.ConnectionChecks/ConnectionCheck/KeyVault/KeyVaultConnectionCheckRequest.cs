@@ -2,7 +2,7 @@
 using Sentinel.ConnectionChecks.Models;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.KeyVault;
-
+[ConnectionCheck(Name = "KeyVault", Order = 4)]
 public class KeyVaultConnectionCheckRequest : IRequest<TestNetConnectionResponse>, IBasicCheckAccessRequest
 {
     public string Url { get; set; } = ".vault.azure.net";

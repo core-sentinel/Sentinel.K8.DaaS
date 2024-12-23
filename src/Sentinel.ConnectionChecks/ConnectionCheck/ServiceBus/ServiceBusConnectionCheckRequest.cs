@@ -3,6 +3,7 @@ using Sentinel.ConnectionChecks.Models;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.ServiceBus;
 
+[ConnectionCheck(Name = "ServiceBus", Order = 5)]
 public class ServiceBusConnectionCheckRequest : IRequest<TestNetConnectionResponse>, IBasicCheckAccessRequest
 {
     public string Url { get; set; } = ".servicebus.windows.net";

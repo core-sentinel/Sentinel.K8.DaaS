@@ -19,12 +19,12 @@ namespace Sentinel.ConnectionChecks.ConnectionCheck.TcpPing
                     tcpClient.Close();
                     tcpClient.Dispose();
 
-                    return new TestNetConnectionResponse(CheckAccessRequestResourceType.TcpPing, true, sw.ElapsedMilliseconds);
+                    return new TestNetConnectionResponse("TcpPing", true, sw.ElapsedMilliseconds);
                 }
             }
             catch (Exception ex)
             {
-                return new TestNetConnectionResponse(CheckAccessRequestResourceType.TcpPing, false, ex.Message, sw.ElapsedMilliseconds);
+                return new TestNetConnectionResponse("TcpPing", false, ex.Message, sw.ElapsedMilliseconds);
             }
             finally { sw.Stop(); }
         }

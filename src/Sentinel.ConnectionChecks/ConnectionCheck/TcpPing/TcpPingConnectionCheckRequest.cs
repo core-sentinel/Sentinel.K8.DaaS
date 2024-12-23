@@ -3,6 +3,7 @@ using Sentinel.ConnectionChecks.Models;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.TcpPing;
 
+[ConnectionCheck(Name = "TcpPing", Order = 1)]
 public class TcpPingConnectionCheckRequest : IRequest<TestNetConnectionResponse>, IBasicCheckAccessRequest
 {
     public string Url { get; set; } = "";

@@ -9,6 +9,13 @@ namespace Sentinel.ConnectionChecks.ConnectionCheck.CosmosDB
     {
         public static async Task<TestNetConnectionResponse> TestConnectionAsync(CosmosDBConnectionCheckRequest request)
         {
+            // Azure Cosmos DB for NoSQL
+            // Azure Cosmos DB for MongoDB
+            // Azure Cosmos DB for Table
+            // Azure Cosmos DB for Apache Gremlin
+            // Azure Cosmos DB for Apache Cassandra
+            // Azure Cosmos DB for PostgreSQL
+
             try
             {
                 if (request.ConnectionString.Contains("mongodb://"))
@@ -56,12 +63,20 @@ namespace Sentinel.ConnectionChecks.ConnectionCheck.CosmosDB
 
 
 
-                    return new TestNetConnectionResponse(CheckAccessRequestResourceType.CosmosDB, true, stringBuilder.ToString(), 0);
+                    return new TestNetConnectionResponse("CosmosDB", true, stringBuilder.ToString(), 0);
                 }
-                else
+                //else if (request.ConnectionString.Contains("AccountEndpoint="))
+                //{
+
+                //}
+                else // if (request.ConnectionString.Contains("https://"))
                 {
+                    MongoUrl mangoUrl = new MongoUrl(request.ConnectionString);
+                    Uri url = new Uri(request.ConnectionString);
+                    var client = new MongoClient(mangoUrl);
 
-
+                    // var client = new MongoClient(new MongoClientSettings {  })
+                    client.ListDatabaseNames().ToList();
 
                     var cosmosClient = new CosmosClient(connectionString: request.ConnectionString);
 
@@ -77,12 +92,12 @@ namespace Sentinel.ConnectionChecks.ConnectionCheck.CosmosDB
                         results.AddRange(response);
                     }
 
-                    return new TestNetConnectionResponse(CheckAccessRequestResourceType.CosmosDB, true, 0);
+                    return new TestNetConnectionResponse("CosmosDB", true, 0);
                 }
             }
             catch (Exception ex)
             {
-                return new TestNetConnectionResponse(CheckAccessRequestResourceType.CosmosDB, false, 0);
+                return new TestNetConnectionResponse("CosmosDB", false, 0);
             }
         }
     }

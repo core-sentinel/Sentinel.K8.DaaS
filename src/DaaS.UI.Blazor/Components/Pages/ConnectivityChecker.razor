@@ -12,7 +12,7 @@
 
                 <div class="row g-3">
                     <div class="col-sm-9">
-                         @if (request is HttpConnectionCheckRequest)
+                        @if (request is HttpConnectionCheckRequest)
                         {
                             <label for="url" class="form-label">URL</label>
                         }
@@ -32,7 +32,7 @@
                     <div class="col-md-6">
                         <label for="country" class="form-label">Category</label>
                         <select class="form-select" id="category" @onchange="categoryChanged">
-                            @foreach (var cat in RequestResourceTypeHelper.Categories)
+                            @foreach (var cat in connectionCheckDiscovery.Categories)
                             {
                                 <option value="@cat.Key">@cat.Value</option>
                             }
@@ -71,52 +71,6 @@
                 {
                     <DynamicComponent Type="@request.AdditionalRequestRazorContentType" Parameters="@requestDictionary" />
                 }
-                    
-                
-@*                 @if (request is AzureAppConfigConnectionCheckRequest req1)
-                {
-                    <AzureAppConfigConnectionCheckUI RequestValue=@req1 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is CosmosDBConnectionCheckRequest req2)
-                {
-                    <CosmosDBConnectionCheckUI RequestValue=@req2 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is EventHubConnectionCheckRequest req3)
-                {
-                    <EventHubConnectionCheckUI RequestValue=@req3 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is EventHubConnectionCheckRequest req4)
-                {
-                    <EventHubConnectionCheckUI RequestValue=@req4 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is TcpPingConnectionCheckRequest req5)
-                {
-                    <TcpPingConnectionCheckUI RequestValue=@req5 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is HttpConnectionCheckRequest req6)
-                {
-                    <HttpConnectionCheckUI RequestValue=@req6 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is KeyVaultConnectionCheckRequest req7)
-                {
-                    <KeyVaultConnectionCheckUI RequestValue=@req7 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is RedisConnectionCheckRequest req8)
-                {
-                    <RedisConnectionCheckUI RequestValue=@req8 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is ServiceBusConnectionCheckRequest req9)
-                {
-                    <ServiceBusConnectionCheckUI RequestValue=@req9 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is SQLConnectionCheckRequest req10)
-                {
-                    <SQLConnectionCheckUI RequestValue=@req10 RequestValueChanged="ComponentUpdated" />
-                }
-                @if (request is StorageAccountConnectionCheckRequest req11)
-                {
-                    <StorageAccountConnectionCheckUI RequestValue=@req11 RequestValueChanged="ComponentUpdated" />
-                } *@
                 <hr class="my-4">
                 <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" @onclick="send_clicked">Send</Button>
             </CardBody>
@@ -191,8 +145,8 @@
             if(additionalConnectionResponse.ExtraResultRazorContentType != null)
             {
                 <DynamicComponent Type="@additionalConnectionResponse.ExtraResultRazorContentType" Parameters="@additionalConnectionResponse.ExtraResultDictionary" />
-              
-                
+
+                <span>message</span>
             }
         }
     </div>
@@ -204,7 +158,7 @@
 
 @code {
     [Inject] IMediator mediator { get; set; }=default!;
-
+    [Inject] ConnectionCheckDiscovery connectionCheckDiscovery { get; set; } = default!;
 
     private int selectedCategoryValue;    
 
@@ -225,59 +179,10 @@
 
     private void categoryChanged(ChangeEventArgs e)
     {
-        selectedCategoryValue = Convert.ToInt32(e.Value);
-        // selectedCategoryText = RequestResourceTypeHelper.Categories[selectedCategoryValue];
+        request = connectionCheckDiscovery.CreateCheckAccessRequest(e.Value.ToString());
+        requestDictionary = new Dictionary<string, object>();
+        requestDictionary.Add("RequestValue", request);
 
-        switch (selectedCategoryValue)
-        {
-            case 0:
-                request = new TcpPingConnectionCheckRequest();
-                requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            case 1:
-                request = new HttpConnectionCheckRequest();
-                requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            case 2:
-                request = new StorageAccountConnectionCheckRequest();
-                requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            case 3:
-                request = new KeyVaultConnectionCheckRequest();
-                requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            case 4:
-                request = new ServiceBusConnectionCheckRequest();
-                requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            case 5:
-                request = new RedisConnectionCheckRequest();
-                requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            case 6:
-                request = new EventHubConnectionCheckRequest();
-                  requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            case 7:
-                request = new CosmosDBConnectionCheckRequest();
-                requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            case 8:
-                request = new SQLConnectionCheckRequest();
-                requestDictionary = new Dictionary<string, object>();
-                requestDictionary.Add("RequestValue", request);
-                break;
-            default:
-                break;
-        }
 
     }
     private async Task send_clicked(MouseEventArgs e)
@@ -306,11 +211,13 @@
         {
             additionalConnectionResponse = await mediator.Send(request) as TestNetConnectionResponse;
 
-           // additionalConnectionResponse = await mediator.Send(request);
-           
-            
-            
+            // additionalConnectionResponse = await mediator.Send(request);
+
+
+
             var ops = true;
+        }else{
+            additionalConnectionResponse = null;
         }
 
 

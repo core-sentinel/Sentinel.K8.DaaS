@@ -5,7 +5,6 @@ public class TestNetConnectionResponse
     public string? Message { get; set; }
 
     public string CategoryTypeName { get; set; }
-    public int CategoryTypeID { get; set; }
 
     public string IPAddress { get; set; } = "";
 
@@ -21,20 +20,18 @@ public class TestNetConnectionResponse
 
     }
 
-    public TestNetConnectionResponse(CheckAccessRequestResourceType categoryType, bool isConnected, long elapsedMilliseconds)
+    public TestNetConnectionResponse(string categoryType, bool isConnected, long elapsedMilliseconds)
     {
         IsConnected = isConnected;
         ElapsedMilliseconds = elapsedMilliseconds;
-        CategoryTypeID = Convert.ToInt32(categoryType);
         CategoryTypeName = categoryType.ToString();
     }
 
-    public TestNetConnectionResponse(CheckAccessRequestResourceType categoryType, bool isConnected, string message, long elapsedMilliseconds = 0)
+    public TestNetConnectionResponse(string categoryType, bool isConnected, string message, long elapsedMilliseconds = 0)
     {
         IsConnected = isConnected;
         ElapsedMilliseconds = elapsedMilliseconds;
         Message = message;
-        CategoryTypeID = Convert.ToInt32(categoryType);
         CategoryTypeName = categoryType.ToString();
 
 
@@ -53,7 +50,7 @@ public class TestNetConnectionResponse<T> : TestNetConnectionResponse where T : 
         AddExtraResultToDictionary();
     }
 
-    public TestNetConnectionResponse(CheckAccessRequestResourceType categoryType, bool isConnected, long elapsedMilliseconds)
+    public TestNetConnectionResponse(string categoryType, bool isConnected, long elapsedMilliseconds)
         : base(categoryType, isConnected, elapsedMilliseconds)
     {
         AddExtraResultToDictionary();
@@ -61,14 +58,14 @@ public class TestNetConnectionResponse<T> : TestNetConnectionResponse where T : 
 
     }
 
-    public TestNetConnectionResponse(CheckAccessRequestResourceType categoryType, bool isConnected, string message, long elapsedMilliseconds = 0, string iPAddress = "")
+    public TestNetConnectionResponse(string categoryType, bool isConnected, string message, long elapsedMilliseconds = 0, string iPAddress = "")
         : base(categoryType, isConnected, message, elapsedMilliseconds)
     {
         AddExtraResultToDictionary();
         IPAddress = iPAddress;
     }
 
-    public TestNetConnectionResponse(CheckAccessRequestResourceType categoryType, bool isConnected, long elapsedMilliseconds, T extraResult)
+    public TestNetConnectionResponse(string categoryType, bool isConnected, long elapsedMilliseconds, T extraResult)
         : base(categoryType, isConnected, elapsedMilliseconds)
     {
         ExtraResult = extraResult;
@@ -76,7 +73,7 @@ public class TestNetConnectionResponse<T> : TestNetConnectionResponse where T : 
         AddExtraResultToDictionary();
     }
 
-    public TestNetConnectionResponse(CheckAccessRequestResourceType categoryType, bool isConnected, string message, long elapsedMilliseconds, T extraResult)
+    public TestNetConnectionResponse(string categoryType, bool isConnected, string message, long elapsedMilliseconds, T extraResult)
         : base(categoryType, isConnected, message, elapsedMilliseconds)
     {
 

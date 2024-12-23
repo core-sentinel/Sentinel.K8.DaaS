@@ -2,6 +2,8 @@
 using Sentinel.ConnectionChecks.Models;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.AzureAppConfig;
+
+[ConnectionCheck(Name = "AzureAppConfig", Order = 10)]
 public class AzureAppConfigConnectionCheckRequest : IRequest<TestNetConnectionResponse>, IBasicCheckAccessRequest
 {
     public string Url { get; set; } = "";

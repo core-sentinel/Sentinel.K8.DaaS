@@ -71,12 +71,12 @@ public static class TestRedisConnection
 
 
             // connection.WaitAll(connection.GetServer(connectionString).PingAsync());
-            return new TestNetConnectionResponse(CheckAccessRequestResourceType.Redis, connection.IsConnected, message, sw.ElapsedMilliseconds);
+            return new TestNetConnectionResponse("Redis", connection.IsConnected, message, sw.ElapsedMilliseconds);
             //return true;
         }
         catch (Exception ex)
         {
-            return new TestNetConnectionResponse(CheckAccessRequestResourceType.Redis, false, ex.Message);
+            return new TestNetConnectionResponse("Redis", false, ex.Message);
         }
         finally { sw.Stop(); }
     }

@@ -43,11 +43,11 @@ public static class TestKeyVaultConnection
 
 
             }
-            return new TestNetConnectionResponse(CheckAccessRequestResourceType.KeyVault, true, stringBuilder.ToString(), sw.ElapsedMilliseconds);
+            return new TestNetConnectionResponse("KeyVault", true, stringBuilder.ToString(), sw.ElapsedMilliseconds);
         }
         catch (Exception ex)
         {
-            return new TestNetConnectionResponse(CheckAccessRequestResourceType.KeyVault, false, ex.Message, sw.ElapsedMilliseconds);
+            return new TestNetConnectionResponse("KeyVault", false, ex.Message, sw.ElapsedMilliseconds);
         }
         finally { sw.Stop(); }
     }
