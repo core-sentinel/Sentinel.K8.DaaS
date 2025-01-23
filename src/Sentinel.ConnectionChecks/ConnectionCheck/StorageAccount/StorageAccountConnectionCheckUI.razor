@@ -27,6 +27,8 @@
     <div class="col-sm-12">
         <label for="storageaccountaame" class="form-label">Storage Account Name</label>
         <input type="text" class="form-control" name="storageaccountaame" placeholder="Storage Account Name" @bind="RequestValue.StorageAccountName">
+
+        <ValidationMessage class="alert alert-danger" For="@(() => RequestValue.StorageAccountName)" />
     </div>
 </div>
 @if ( RequestValue.SelectedAuthenticationType == "None")

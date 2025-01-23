@@ -13,21 +13,22 @@ public static class TestKeyVaultConnection
     public static async Task<TestNetConnectionResponse> TestConnection(KeyVaultConnectionCheckRequest request)
     {
         var sw = Stopwatch.StartNew();
-        var keyVaultUrl = $"https://{request.KeyVaultName}.vault.azure.net";
-        SecretClient client = null;
-        if (request.ServicePrincipal != null && request.ServicePrincipal.ClientId != null && request.ServicePrincipal.ClientSecret != null && request.ServicePrincipal.TenantId != null)
-        {
-            var credential = new ClientSecretCredential(request.ServicePrincipal.TenantId, request.ServicePrincipal.ClientId, request.ServicePrincipal.ClientSecret);
-            client = new SecretClient(new Uri(keyVaultUrl), credential);
-        }
-        else
-        {
-            client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
-        }
-
-
         try
         {
+            var keyVaultUrl = $"https://{request.KeyVaultName}.vault.azure.net";
+            SecretClient client = null;
+            if (request.ServicePrincipal != null && request.ServicePrincipal.ClientId != null && request.ServicePrincipal.ClientSecret != null && request.ServicePrincipal.TenantId != null)
+            {
+                var credential = new ClientSecretCredential(request.ServicePrincipal.TenantId, request.ServicePrincipal.ClientId, request.ServicePrincipal.ClientSecret);
+                client = new SecretClient(new Uri(keyVaultUrl), credential);
+            }
+            else
+            {
+                client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+            }
+
+
+
 
             AsyncPageable<SecretProperties> allSecrets = client.GetPropertiesOfSecretsAsync();
             StringBuilder stringBuilder = new StringBuilder();

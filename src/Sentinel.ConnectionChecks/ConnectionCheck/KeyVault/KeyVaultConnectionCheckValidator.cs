@@ -6,7 +6,7 @@ public class KeyVaultConnectionCheckValidator : AbstractValidator<KeyVaultConnec
     public KeyVaultConnectionCheckValidator()
     {
         RuleFor(x => x.Url).NotEmpty().WithMessage("URL string is required.");
-
+        RuleFor(x => x.KeyVaultName).NotEmpty().WithMessage("Key vault name is required.");
     }
 }
 

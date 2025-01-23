@@ -23,6 +23,7 @@
 <div class="row g-3">
     <div class="col-sm-12">
         <input type="text" class="form-control" name="keyvaultname" placeholder="Key Vault Name" @bind="RequestValue.KeyVaultName">
+        <ValidationMessage class="alert alert-danger" For="@(() => RequestValue.KeyVaultName)" />
     </div>
 </div>
 

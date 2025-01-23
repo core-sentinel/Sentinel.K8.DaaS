@@ -14,15 +14,10 @@
 
 <div>
     <hr class="my-4">
-    <h4 class="mb-3">HTTP</h4>
-    <p> @(RequestValue.Url)  @(RequestValue.HttpMethod)</p>
+    <h4 class="mb-3">HTTP    ---------> @(RequestValue.HttpMethod) @(RequestValue.Url) </h4>
+    
     <div class="row g-3">
-        <div class="col-md-6">
-            <label for="url" class="form-label">URL</label>
-            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged> 
-        </div>
-
-         <div class="col-md-6">
+        <div class="col-md-3">
             <label for="state" class="form-label">Http Method</label>
             <select class="form-select" id="authselect" @bind="RequestValue.HttpMethod">
                 <option value="Get">Get</option>
@@ -32,8 +27,26 @@
                 <option value="Head">Head</option>
             </select>
         </div>
-
+        <div class="col-md-9">
+            <label for="url" class="form-label">URL</label>
+            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged> 
+        </div>
     </div>
+    @if (RequestValue.SelectedAuthenticationType == "UseMSI")
+    {
+
+        <div class="row g-3">
+
+            <div class="col-md-12">
+                <label for="url" class="form-label">Client ID</label>
+                <input type="text" class="form-control" id="clientid" placeholder="ClientId" value="@RequestValue.ServicePrincipal.ClientId">
+            </div>
+        </div>
+
+    }
+    <hr class="my-4">
+
+
 
     <div class="row g-3">
         <div class="col-md-2">

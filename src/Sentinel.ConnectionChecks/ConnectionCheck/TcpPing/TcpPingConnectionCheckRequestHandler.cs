@@ -10,6 +10,10 @@ internal class TcpPingConnectionCheckRequestHandler : IRequestHandler<TcpPingCon
         if (request.Domain.Contains("http://") || request.Domain.Contains("https://"))
         {
             request.Domain = request.Domain.Replace("http://", "").Replace("https://", "");
+            if (request.Domain.Split("/").Length > 1)
+            {
+                request.Domain = request.Domain.Split("/")[0];
+            }
             request.Protocol = "http";
         }
         var ipaddress = await NSLookup.GetIPAddress(request.Domain);

@@ -6,21 +6,20 @@ using System.Security.Cryptography.X509Certificates;
 namespace Sentinel.Core.HealthProbe.Http;
 public class HttpRequestBuilder
 {
-    private HttpMethod method = null;
+    private HttpMethod method = HttpMethod.Get;
     private string requestUri = "";
-    private HttpContent content = null;
+    private HttpContent? content = null;
     private string bearerToken = "";
     private string acceptHeader = "application/json";
     private TimeSpan timeout = new TimeSpan(0, 0, 15);
     private bool allowAutoRedirect = false;
-    private string base64Certificate = null;
-    private string certificatePassword = null;
-    private string subscriptionKey = null;
+    private string? base64Certificate = null;
+    private string? certificatePassword = null;
+    private string? subscriptionKey = null;
 
-    Dictionary<string, string> headers = null;
-
-    ILogger logger = null;
-    private string requestContentType;
+    Dictionary<string, string>? headers = null;
+    ILogger? logger = null;
+    private string? requestContentType;
 
     public HttpRequestBuilder()
     {

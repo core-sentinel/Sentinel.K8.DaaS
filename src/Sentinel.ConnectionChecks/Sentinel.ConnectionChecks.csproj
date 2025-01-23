@@ -29,6 +29,10 @@
     <PackageReference Include="TabBlazor" Version="0.14.10-beta" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Sentinel.Core.HealthProbe\Sentinel.Core.HealthProbe.csproj" />
+  </ItemGroup>
+
 
 
 </Project>

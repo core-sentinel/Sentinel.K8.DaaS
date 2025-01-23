@@ -13,18 +13,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazor-ApexCharts" Version="4.0.0" />
-    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="Blazor-ApexCharts" Version="5.0.1" />
+    <PackageReference Include="Blazored.FluentValidation" Version="2.2.0" />
+    <PackageReference Include="ClosedXML" Version="0.105.0-rc" />
     <PackageReference Include="ColorCode.HTML" Version="2.0.15" />
     <PackageReference Include="MediatR" Version="12.4.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageReference Include="TabBlazor" Version="0.14.10-beta" />
+    <PackageReference Include="TabBlazor" Version="0.14.26-beta" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sentinel.ConnectionChecks\Sentinel.ConnectionChecks.csproj" />
+    <ProjectReference Include="..\Sentinel.Core.HealthProbe\Sentinel.Core.HealthProbe.csproj" />
     <ProjectReference Include="..\Sentinel.Core.TokenGenerator\Sentinel.Core.TokenGenerator.csproj" />
   </ItemGroup>
 

@@ -10,69 +10,86 @@
             </CardHeader>
             <CardBody>
 
-                <div class="row g-3">
-                    <div class="col-sm-9">
-                        @if (request is HttpConnectionCheckRequest)
-                        {
-                            <label for="url" class="form-label">URL</label>
-                        }
-                        else
-                        {
-                            <label for="url" class="form-label">Domain</label>
-                        }
-                        <input type="text" class="form-control" id="url" placeholder="Domain" @bind="request.Url">
-                    </div>
-
-                    <div class="col-sm-3">
-                        <label for="lastName" class="form-label">Port</label>
-                        <input type="number" class="form-control" id="port" placeholder="Port" @bind="request.Port">
-                    </div>
-
-
-                    <div class="col-md-6">
-                        <label for="country" class="form-label">Category</label>
-                        <select class="form-select" id="category" @onchange="categoryChanged">
-                            @foreach (var cat in connectionCheckDiscovery.Categories)
-                            {
-                                <option value="@cat.Key">@cat.Value</option>
-                            }
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="state" class="form-label">Authentication</label>
-                        <select class="form-select" id="authselect" required="" @bind="request.SelectedAuthenticationType">
-                            <option value="None">None</option>
-                            <option value="UseMSI">Use Managed Identity</option>
-                            <option value="SP">Use Service Principal</option>
-                        </select>
-                    </div>
-                </div>
-                @if (request.SelectedAuthenticationType == "SP")
-                {
-                    <hr class="my-4">
-                    <h4> Service Principal</h4>
+                <EditForm Model="@request" OnValidSubmit="@SubmitValidForm">
+                    <FluentValidationValidator />
+                    <ValidationSummary />
 
                     <div class="row g-3">
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="request.ServicePrincipal.TenantId">
+                        <div class="col-sm-9">
+                            @if (request is HttpConnectionCheckRequest)
+                            {
+                                <label for="url" class="form-label">URL</label>
+                            }
+                            else
+                            {
+                                <label for="url" class="form-label">Domain</label>
+                            }
+                            <input type="text" class="form-control" id="url" placeholder="Domain" @bind="request.Url">
+                            <ValidationMessage class="alert alert-danger" For="@(() => request.Url)" />
                         </div>
 
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="sp_clientid" placeholder="Client ID" @bind="request.ServicePrincipal.ClientId">
+                        <div class="col-sm-3">
+                            <label for="lastName" class="form-label">Port</label>
+                            <input type="number" class="form-control" id="port" placeholder="Port" @bind="request.Port">
                         </div>
 
-                        <div class="col-sm-12">
-                            <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
+
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">Category</label>
+
+                            <select class="form-select" id="category" @bind="selectedCategoryValue" @bind:after="categoryChanged">
+                                @foreach (var cat in connectionCheckDiscovery.Categories)
+                                {
+                                    <option value="@cat.Key">@cat.Value</option>
+                                }
+                            </select> 
+
+                           @*  <select class="form-select" id="category"  @onchange="categoryChanged">
+                                @foreach (var cat in connectionCheckDiscovery.Categories)
+                                {
+                                    <option value="@cat.Key">@cat.Value</option>
+                                }
+                            </select> *@
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="state" class="form-label">Authentication</label>
+                            <select class="form-select" id="authselect" required="" @bind="request.SelectedAuthenticationType">
+                                <option value="None">None</option>
+                                <option value="UseMSI">Use Managed Identity</option>
+                                <option value="SP">Use Service Principal</option>
+                            </select>
                         </div>
                     </div>
-                }
-                @if(request.AdditionalRequestRazorContentType !=null)
-                {
-                    <DynamicComponent Type="@request.AdditionalRequestRazorContentType" Parameters="@requestDictionary" />
-                }
-                <hr class="my-4">
-                <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" @onclick="send_clicked">Send</Button>
+                    @if (request.SelectedAuthenticationType == "SP")
+                    {
+                        <hr class="my-4">
+                        <h4> Service Principal</h4>
+
+                        <div class="row g-3">
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="request.ServicePrincipal.TenantId">
+                            </div>
+
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="sp_clientid" placeholder="Client ID" @bind="request.ServicePrincipal.ClientId">
+                            </div>
+
+                            <div class="col-sm-12">
+                                <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
+                            </div>
+                        </div>
+                    }
+                    @if(request.AdditionalRequestRazorContentType !=null)
+                    {
+                        <DynamicComponent Type="@request.AdditionalRequestRazorContentType" Parameters="@requestDictionary" />
+                    }
+                    <hr class="my-4">
+                    @if(disableSendButton){
+                        <Progress Color="TablerColor.Purple" Indeterminate />
+                    }
+                    <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" Disabled="disableSendButton" Type="ButtonType.Submit" Text="Send" />
+                </EditForm>
             </CardBody>
         </Card>
     </div>
@@ -160,7 +177,7 @@
     [Inject] IMediator mediator { get; set; }=default!;
     [Inject] ConnectionCheckDiscovery connectionCheckDiscovery { get; set; } = default!;
 
-    private int selectedCategoryValue;    
+    private string selectedCategoryValue;    
 
     private bool disableSendButton = false;
     private IBasicCheckAccessRequest request = new TcpPingConnectionCheckRequest();
@@ -174,22 +191,44 @@
     {
         requestDictionary = new Dictionary<string, object>();
         requestDictionary.Add("RequestValue", request);
+
+
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        selectedCategoryValue = connectionCheckDiscovery.Categories.Keys.First();
+    }
+
+    private void categoryChanged()
+    {
+        request = connectionCheckDiscovery.CreateCheckAccessRequest(selectedCategoryValue);
+        requestDictionary = new Dictionary<string, object>();
+        requestDictionary.Add("RequestValue", request);
+    }
 
     private void categoryChanged(ChangeEventArgs e)
     {
         request = connectionCheckDiscovery.CreateCheckAccessRequest(e.Value.ToString());
         requestDictionary = new Dictionary<string, object>();
         requestDictionary.Add("RequestValue", request);
+        selectedCategoryValue = e.Value.ToString();
 
 
     }
-    private async Task send_clicked(MouseEventArgs e)
+
+
+    private void ComponentUpdated()
     {
+        StateHasChanged();
+        // Code logic for the ComponentUpdated method
+    }
+
+    private async Task SubmitValidForm(){
         disableSendButton = true;
         Console.WriteLine(request.Url + ":" + request.Port.ToString());
-        Console.WriteLine(selectedCategoryValue.ToString() + " " + request.SelectedAuthenticationType);
+        // Console.WriteLine(selectedCategoryValue.ToString() + " " + request.SelectedAuthenticationType);
         if (request.SelectedAuthenticationType == "UseMSI")
         {
             request.UseMSI = true;
@@ -207,11 +246,11 @@
 
         if (request.Url == null || request.Url.StartsWith("http"))
         {
-            HttpConnectionCheckRequest req = new HttpConnectionCheckRequest{HttpMethod = "Get", Url = request.Url, Port = request.Port};
+            HttpConnectionCheckRequest req = new HttpConnectionCheckRequest { HttpMethod = "Get", Url = request.Url, Port = request.Port };
             additionalConnectionResponse = await mediator.Send(req);
         }
 
-        if(request is not TcpPingConnectionCheckRequest)
+        if (request is not TcpPingConnectionCheckRequest)
         {
             additionalConnectionResponse = await mediator.Send(request) as TestNetConnectionResponse;
 
@@ -220,19 +259,13 @@
 
 
             var ops = true;
-        }else{
+        }
+        else
+        {
             additionalConnectionResponse = null;
         }
 
 
         disableSendButton = false;
-
-       
-    }
-
-    private void ComponentUpdated()
-    {
-        StateHasChanged();
-        // Code logic for the ComponentUpdated method
     }
 }
