@@ -1,5 +1,8 @@
 ﻿@page "/token-generator"
 @using Sentinel.Core.TokenGenerator
+@using System.Text.Json
+
+
 
 <div class="row">
     <div class="col-md-6">
@@ -9,31 +12,32 @@
                 <h3>Token Generator</h3>
             </CardHeader>
             <CardBody>
-                <div class="row g-3">
-
-                    <div class="col-md-12">
-                        <label for="state" class="form-label">Authentication</label>
-                        <select class="form-select" id="authselect" required="" @bind="SelectedAuthenticationType">
-                            <option value="UseMSI">Use Managed Identity</option>
-                            <option value="SP">Use Service Principal</option>
-                        </select>
-                    </div>
-
-                    <div class="col-sm-12">
-                        <label for="firstName" class="form-label">Audience</label>
-                        <input type="text" class="form-control" id="audience" placeholder="Audience" @bind="request.Audience">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="country" class="form-label">Category</label>
-                    </div>
-                </div>
-                @if (SelectedAuthenticationType == "SP")
-                {
-                    <hr class="my-4">
-                    <h4> Service Principal</h4>
-
+                <EditForm Model="@request" OnValidSubmit="@SubmitValidForm">
                     <div class="row g-3">
+
+                        <div class="col-md-12">
+                            <label for="state" class="form-label">Authentication</label>
+                            <select class="form-select" id="authselect" required="" @bind="SelectedAuthenticationType">
+                                <option value="UseMSI">Use Managed Identity</option>
+                                <option value="SP">Use Service Principal</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <label for="firstName" class="form-label">Audience</label>
+                            <input type="text" class="form-control" id="audience" placeholder="Audience" @bind="request.Audience">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">Category</label>
+                        </div>
+                    </div>
+                    @if (SelectedAuthenticationType == "SP")
+                    {
+                        <hr class="my-4">
+                        <h4> Service Principal</h4>
+
+                        @*                     <div class="row g-3">
                         <div class="col-sm-12">
                             <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="request.ServicePrincipal.TenantId">
                         </div>
@@ -45,17 +49,38 @@
                         <div class="col-sm-12">
                             <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
                         </div>
-                    </div>
-                }
-
-                <hr class="my-4">
-
-
-                <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" @onclick="send_clicked">Send</Button>
-
+                    </div> *@
+                    }
+                    <span> @disableSendButton</span>
+                    <hr class="my-4">
+                    @if (disableSendButton)
+                    {
+                        <Progress Color="TablerColor.Purple" Indeterminate />
+                    }
+                    <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" Disabled="disableSendButton" Type="ButtonType.Submit" Text="Send" />
+                </EditForm>
 
             </CardBody>
         </Card>
+    </div>
+
+    <div class="col-6">
+
+        @if (response != null)
+        {
+
+            <Card Size="CardSize.Default" StatusStart="TablerColor.Green">
+                <CardBody>
+                    <CardTitle>
+                        <h3>Connected  </h3>
+                        <h4>Token: @response.Token</h4>
+                        <pre>@response.DecodedToken</pre>
+
+                        @(JsonSerializer.Serialize(@response.DecodedToken, new JsonSerializerOptions() { WriteIndented = true }))
+                    </CardTitle>
+                </CardBody>
+            </Card>
+        }
     </div>
 </div>
 
@@ -63,16 +88,50 @@
 
     [Inject]
     private ISender mediator { get; set; }
-
-    bool disableSendButton = false;
+    private TokenGenResponse response = null;
+    private bool disableSendButton = false;
     string SelectedAuthenticationType = "UseMSI";
     private TokenGenCommand request = new TokenGenCommand {  };
 
-    private void send_clicked(MouseEventArgs e)
+
+    public TokenGenerator()
     {
-        if (SelectedAuthenticationType == "UseMSI")
-            request.UseMSI = true;
-        mediator.Send(request);
+        // requestDictionary = new Dictionary<string, object>();
+        // requestDictionary.Add("RequestValue", request);
+
+
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        //selectedCategoryValue = connectionCheckDiscovery.Categories.Keys.First();
+    }
+
+    // private async Task SubmitValidForm()
+    // {
+    //     this.disableSendButton = true;
+    //     this.StateHasChanged();
+    //     if (SelectedAuthenticationType == "UseMSI")
+    //     Console.WriteLine(request.UseMSI + ":" + request.Audience.ToString());
+    //     request.UseMSI = true;
+    //     response = await  mediator.Send(request);
+    //     this.disableSendButton = false;
+    // }
+
+
+    private async Task SubmitValidForm()
+    {
+        disableSendButton = true;
+
+        await Task.Delay(10);
+        if (SelectedAuthenticationType == "UseMSI"){
+                 Console.WriteLine(request.UseMSI + ":" + request.Audience.ToString());
+                 request.UseMSI = true;
+                 
+        }
+        response = await mediator.Send(request);
+        disableSendButton = false;
     }
 }
 

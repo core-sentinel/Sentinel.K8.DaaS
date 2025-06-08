@@ -1,5 +1,5 @@
 namespace Sentinel.ConnectionChecks.Models;
-public class TestNetConnectionResponse
+public class TestNetConnectionResponse : ITestNetConnectionResponse
 {
     public bool IsConnected { get; set; }
     public string? Message { get; set; }

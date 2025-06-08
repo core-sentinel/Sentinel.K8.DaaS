@@ -16,6 +16,7 @@ public class HttpRequestBuilder
     private string? base64Certificate = null;
     private string? certificatePassword = null;
     private string? subscriptionKey = null;
+    public HttpRequestMessage request { get; set; } = new HttpRequestMessage();
 
     Dictionary<string, string>? headers = null;
     ILogger? logger = null;
@@ -44,6 +45,13 @@ public class HttpRequestBuilder
     public HttpRequestBuilder AddHeaders(Dictionary<string, string> headers)
     {
         this.headers = headers;
+        return this;
+    }
+
+    public HttpRequestBuilder AddHeader(string key, string value)
+    {
+        if (headers is null) { headers = new Dictionary<string, string>(); }
+        headers.TryAdd(key, value);
         return this;
     }
 
@@ -106,7 +114,7 @@ public class HttpRequestBuilder
     {
         EnsureArguments();
         this.LogDebug("SendAsync called for " + requestUri, null);
-        var request = new HttpRequestMessage
+        request = new HttpRequestMessage
         {
             Method = this.method,
             RequestUri = new Uri(this.requestUri),
@@ -165,6 +173,7 @@ public class HttpRequestBuilder
         //{
         //    client.DefaultRequestHeaders.Add("Content-Type", requestContentType);
         //}
+
         return await client.SendAsync(request);
     }
     private void LogDebug(string message, object[] args)

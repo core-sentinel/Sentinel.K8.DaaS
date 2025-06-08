@@ -8,5 +8,7 @@ internal class AzureAppConfigConnectionCheckRequestHandler : IRequestHandler<Azu
     {
         return Task.FromResult(new TestNetConnectionResponse());
     }
+
+
 }
 

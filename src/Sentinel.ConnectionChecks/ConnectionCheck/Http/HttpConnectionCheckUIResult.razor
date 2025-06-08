@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+
+@using MediatR
+@using Sentinel.ConnectionChecks;
+@using TabBlazor
+
+<Card Size="CardSize.Default" StatusStart="TablerColor.Green">
+    <CardBody>
+        <CardTitle>
+            <h4>Url :   @ExtraResult.URL</h4>        
+        </CardTitle>
+    </CardBody>
+</Card>
+
+<div class="row g-3">
+    <div class="col-md-12">
+        @if (ExtraResult?.Headers != null && ExtraResult.Headers.Count > 0)
+        {
+            <div style="overflow-x: auto;">
+                <table class="table table-bordered table-sm" style="min-width: 400px;">
+                    <thead>
+                        <tr>
+                            <th style="white-space: nowrap;">Header</th>
+                            <th style="min-width: 200px; max-width: 600px; word-break: break-all; overflow: hidden; text-overflow: ellipsis;">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var header in ExtraResult.Headers)
+                        {
+                            <tr>
+                                <td style="white-space: nowrap;">@header.Key</td>
+                                <td style="max-width: 600px; word-break: break-all; overflow: hidden; text-overflow: ellipsis;">@header.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Message { get; set; }
+
+    [Parameter]
+    public HttpConnectionExtraResponse ExtraResult { get; set; }
+
+    [Parameter]
+    public bool IsConnected { get; set; }
+
+    [Parameter]
+    public long ElapsedMilliseconds { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+       // RequestValue.Headers.Add(new HttpHeader("Accept", "application/json",true));
+        return base.OnInitializedAsync();
+
+    }
+
+    protected void addNewHeader()
+    {
+       // RequestValue.Headers.Add(new HttpHeader("", "", true));
+        this.StateHasChanged();
+    }
+}

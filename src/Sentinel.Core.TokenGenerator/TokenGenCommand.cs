@@ -25,5 +25,6 @@ public class ServicePrincipal
 public class TokenGenResponse
 {
     public string? Token { get; set; } = default!;
+    public string? DecodedToken { get; set; } = default!;
     public string? Error { get; set; } = default!;
 }

@@ -10,6 +10,7 @@
 
 @using MediatR
 @using Sentinel.ConnectionChecks;
+@using TabBlazor
 
 
 <div>
@@ -39,7 +40,8 @@
 
             <div class="col-md-12">
                 <label for="url" class="form-label">Client ID</label>
-                <input type="text" class="form-control" id="clientid" placeholder="ClientId" value="@RequestValue.ServicePrincipal.ClientId">
+                <input type="text" class="form-control" id="clientid" placeholder="ClientId" @bind="RequestValue.ServicePrincipal.ClientId">
+                <ValidationMessage class="alert alert-danger" For="@(() => RequestValue.ServicePrincipal.ClientId)" />
             </div>
         </div>
 
@@ -47,30 +49,68 @@
     <hr class="my-4">
 
 
+    <ul class="list-group">
+        <li  class="list-group-item">
+            <div class="row g-3">
+                <div class="col-md-4">Header</div>
+                <div class="col-md-4">Value</div>
+                <div class="col-md-4">
+                    <Button BackgroundColor="TablerColor.Primary"
+                            @onclick="() => addNewHeader()">Add</Button>
+                   </div>
+              
+            </div>
 
-    <div class="row g-3">
-        <div class="col-md-2">
-            <label for="url" class="form-label">Headers key</label>
-            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged>
-        </div>
-        <div class="col-md-2">
-            <label for="url" class="form-label">Headers value</label>
-            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged>
-        </div>
-        <div class="col-md-2">
-            <Button BackgroundColor="TablerColor.Red"  Size="ButtonSize.Small">Small</Button>
-        </div>
-       @*  <div class="col-md-6">
-            <label for="state" class="form-label">Content-Type</label>
-            <input type="text" class="form-control" id="url" placeholder="URL" value="@RequestValue.Url" @onchange=UrlChanged>
-        </div> *@
 
-    </div>
+            @* <input type="text" placeholder="Add notes..." />
+                 <button @onclick="() => ToggleTaskCompletion(task)">
+                    @(task.IsCompleted ? "Undo" : "Complete")
+                </button> *@
+        </li>
+        @foreach (var header in RequestValue.Headers)
+        {
+            <li class="list-group-item">
+              <div class="row g-3">
+                    <div class="col-md-2">
+                        <Checkbox Label="Enabled" @bind-Value="header.Enabled" />
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control"  placeholder="Key" @bind="header.Key">
+                    </div> 
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Value"  @bind="header.Value">
+                    </div>  
+               </div>
+            </li>
+        }
+    </ul>
 
+
+
+@*     <ul class="list-group">
+        @foreach (var header in RequestValue.Headers)
+        {
+            <li class="list-group-item">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        @header.Enabled
+                    </div>
+                    <div class="col-md-4">
+                        @header.Key
+                    </div>
+                    <div class="col-md-4">
+                        @header.Value
+                    </div>
+                </div>
+            </li>
+        }
+    </ul> *@
 
 </div>
 
 @code {
+
+
     [Parameter]
     public string URL { get; set; }
 
@@ -83,9 +123,23 @@
 
     private async Task UrlChanged(ChangeEventArgs e)
     {
-        
+
         RequestValue.Url = e.Value.ToString();
+
         await RequestValueChanged.InvokeAsync(RequestValue);
+        this.StateHasChanged();
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        RequestValue.Headers.Add(new HttpHeader("Accept", "application/json",true));
+        return base.OnInitializedAsync();
+
+    }
+
+    protected void addNewHeader()
+    {
+        RequestValue.Headers.Add(new HttpHeader("", "", true));
         this.StateHasChanged();
     }
 }

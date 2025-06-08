@@ -17,6 +17,7 @@
 <div class="row g-3">
     <div class="col-sm-12">
         <input type="text" class="form-control" id="connectionstring_redis" placeholder="Connection String" @bind="RequestValue.ConnectionString">
+        <ValidationMessage class="alert alert-danger" For="@(() => RequestValue.ConnectionString)" />
     </div>
 </div>
 

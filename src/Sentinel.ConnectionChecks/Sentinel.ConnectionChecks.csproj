@@ -33,6 +33,10 @@
     <ProjectReference Include="..\Sentinel.Core.HealthProbe\Sentinel.Core.HealthProbe.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pipeline\" />
+  </ItemGroup>
+
 
 
 </Project>
