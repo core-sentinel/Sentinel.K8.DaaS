@@ -93,12 +93,15 @@
     string SelectedAuthenticationType = "UseMSI";
     private TokenGenCommand request = new TokenGenCommand {  };
 
+    [Inject]
+    private IConfiguration configuration { get; set; }
 
     public TokenGenerator()
     {
         // requestDictionary = new Dictionary<string, object>();
         // requestDictionary.Add("RequestValue", request);
 
+       
 
     }
 
@@ -106,6 +109,11 @@
     {
         base.OnInitialized();
         //selectedCategoryValue = connectionCheckDiscovery.Categories.Keys.First();
+
+        if (configuration["AZURE_ClIENT_ID"] != null)
+        {
+            request.Audience = configuration["AZURE_ClIENT_ID"];
+        }
     }
 
     // private async Task SubmitValidForm()
@@ -126,9 +134,10 @@
 
         await Task.Delay(10);
         if (SelectedAuthenticationType == "UseMSI"){
-                 Console.WriteLine(request.UseMSI + ":" + request.Audience.ToString());
-                 request.UseMSI = true;
-                 
+            Console.WriteLine(request.UseMSI + ":" + request.Audience.ToString());
+            request.UseMSI = true;
+            
+
         }
         response = await mediator.Send(request);
         disableSendButton = false;
