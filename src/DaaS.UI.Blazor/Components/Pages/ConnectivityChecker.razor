@@ -10,7 +10,7 @@
             </CardHeader>
             <CardBody>
 
-                <EditForm Model="@request" OnValidSubmit="@SubmitValidForm">
+                <EditForm Model="@request" FormName="CheckConnectivity" OnValidSubmit="@SubmitValidForm">
                     <FluentValidationValidator />
                     <ValidationSummary />
 

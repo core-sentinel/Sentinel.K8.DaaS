@@ -53,7 +53,7 @@ namespace Sentinel.Core.K8s.Models.CRDs
 
         }
 
-        public class DeploymentScalerResourceStatus : V1Status
+        public record DeploymentScalerResourceStatus : V1Status
         {
             [JsonProperty(PropertyName = "phase")]
             public string Phase { get; set; } = default!;

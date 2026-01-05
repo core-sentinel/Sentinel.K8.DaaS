@@ -77,4 +77,6 @@ public class TestIBasicCheckAccessRequestClass : IBasicCheckAccessRequest
     public bool UseMSI { get; set; } = false;
     public ServicePrincipal? ServicePrincipal { get; set; }
     public Type? AdditionalRequestRazorContentType => null;
+
+    public string JsonDeserializationType => this.GetType().FullName;
 }

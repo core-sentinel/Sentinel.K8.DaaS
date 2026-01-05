@@ -1,4 +1,6 @@
-﻿namespace Sentinel.ConnectionChecks.Models
+﻿using MongoDB.Driver;
+
+namespace Sentinel.ConnectionChecks.Models
 {
     public interface IBasicCheckAccessRequest
     {
@@ -12,5 +14,6 @@
         ServicePrincipal? ServicePrincipal { get; set; }
 
         Type? AdditionalRequestRazorContentType { get; }
+        string JsonDeserializationType { get; } 
     }
 }

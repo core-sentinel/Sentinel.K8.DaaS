@@ -36,4 +36,5 @@ public class StorageAccountConnectionCheckRequest : IRequest<TestNetConnectionRe
     {
         ServicePrincipal = new ServicePrincipal();
     }
+    public string JsonDeserializationType => this.GetType().FullName;
 }

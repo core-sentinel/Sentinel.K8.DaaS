@@ -115,7 +115,7 @@ namespace Sentinel.Core.K8s.Watchers
                 var patch = new JsonPatchDocument<Corev1Event>();
                 patch.Replace(e => e.Count, newcount);
                 patch.Replace(e => e.LastTimestamp, DateTime.UtcNow);
-                v1event = await _client.ApiClient.CoreV1.PatchNamespacedEventAsync(new V1Patch(patch), name, @namespace);
+                v1event = await _client.ApiClient.CoreV1.PatchNamespacedEventAsync(new V1Patch(patch,PatchType.JsonPatch), name, @namespace);
             }
             else
             {
@@ -173,7 +173,11 @@ namespace Sentinel.Core.K8s.Watchers
             newEvent.Metadata.Name = resourceName + Guid.NewGuid().ToString();
             if (string.IsNullOrWhiteSpace(source))
             {
-                newEvent.Source = new V1EventSource(source);
+                newEvent.Source = new V1EventSource
+                {
+                    Component = source,
+                    Host = string.Empty
+                };
             }
 
 

@@ -21,5 +21,6 @@ public class CosmosDBConnectionCheckRequest : IRequest<TestNetConnectionResponse
     {
         ServicePrincipal = new ServicePrincipal();
     }
+    public string JsonDeserializationType => this.GetType().FullName;
 }
 

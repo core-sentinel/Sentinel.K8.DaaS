@@ -20,6 +20,7 @@ public class HttpConnectionCheckRequest : IRequest<TestNetConnectionResponse<Htt
     {
         ServicePrincipal = new ServicePrincipal();
     }
+    public string JsonDeserializationType => this.GetType().FullName;
 }
 
 public class HttpHeader

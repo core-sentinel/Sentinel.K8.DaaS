@@ -61,7 +61,7 @@ namespace Sentinel.Core.K8s.Models.CRDs
             public string Cert { get; set; } = default!;
         }
 
-        public class HealthCheckResourceStatus : V1Status
+        public record HealthCheckResourceStatus : V1Status
         {
             [JsonProperty(PropertyName = "phase")]
             public string Phase { get; set; } = default!;
