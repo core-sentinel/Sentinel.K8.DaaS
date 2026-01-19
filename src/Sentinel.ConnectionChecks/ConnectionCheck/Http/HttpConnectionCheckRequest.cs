@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Sentinel.ConnectionChecks.Models;
+using System.Text.Json.Serialization;
 
 namespace Sentinel.ConnectionChecks.ConnectionCheck.Http;
 
@@ -14,13 +15,15 @@ public class HttpConnectionCheckRequest : IRequest<TestNetConnectionResponse<Htt
 
     public List<HttpHeader> Headers { get; set; } = new List<HttpHeader>();
 
+    [System.Text.Json.Serialization.JsonIgnore]
+    [Newtonsoft.Json.JsonIgnore]
     public Type AdditionalRequestRazorContentType { get => typeof(HttpConnectionCheckUI); }
     public string SelectedAuthenticationType { get; set; } = "None";
     public HttpConnectionCheckRequest()
     {
         ServicePrincipal = new ServicePrincipal();
     }
-    public string JsonDeserializationType => this.GetType().FullName;
+    public string JsonDeserializationType => this.GetType().AssemblyQualifiedName;
 }
 
 public class HttpHeader

@@ -25,7 +25,7 @@ public class RedisConnectionCheckRequest : IRequest<TestNetConnectionResponse>, 
     {
         ServicePrincipal = new ServicePrincipal();
     }
-    public string JsonDeserializationType => this.GetType().FullName;
+    public string JsonDeserializationType => this.GetType().AssemblyQualifiedName;
 
 }
 

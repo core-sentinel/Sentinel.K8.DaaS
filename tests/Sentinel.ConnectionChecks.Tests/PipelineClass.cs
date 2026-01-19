@@ -78,5 +78,5 @@ public class TestIBasicCheckAccessRequestClass : IBasicCheckAccessRequest
     public ServicePrincipal? ServicePrincipal { get; set; }
     public Type? AdditionalRequestRazorContentType => null;
 
-    public string JsonDeserializationType => this.GetType().FullName;
+    public string JsonDeserializationType => this.GetType().AssemblyQualifiedName;
 }

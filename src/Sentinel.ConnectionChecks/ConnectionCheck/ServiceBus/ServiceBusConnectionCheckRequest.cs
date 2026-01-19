@@ -20,5 +20,5 @@ public class ServiceBusConnectionCheckRequest : IRequest<TestNetConnectionRespon
     {
         ServicePrincipal = new ServicePrincipal();
     }
-    public string JsonDeserializationType => this.GetType().FullName;
+    public string JsonDeserializationType => this.GetType().AssemblyQualifiedName;
 }

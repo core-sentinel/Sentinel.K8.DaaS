@@ -5,11 +5,7 @@
 
 
 <div class="row">
-    <div class="col-md-6">
-
-
-
-
+    <div class="col-md-4">
         <Card Size="CardSize.Small">
             <CardHeader>
                 <h3>Health Checker List</h3>
@@ -19,12 +15,15 @@
                 {
                     <EditForm Model="@healthCheckCronRequest" FormName="TokenGenerator" OnValidSubmit="@SubmitValidForm">
                         <div class="row g-3">
-
-
                             <div class="col-sm-12">
                                 <label for="Cron" class="form-label">Cron</label>
-                                <input type="text" class="form-control" id="cron" placeholder="Audience" @bind="healthCheckCronRequest.Cron">
+                                <input type="text" class="form-control" id="cron" placeholder="Cron" @bind="healthCheckCronRequest.Cron">
                             </div>
+                            <div class="col-sm-12">
+                                <label for="Cron" class="form-label">App Insight Connection String</label>
+                                <input type="text" class="form-control" id="cron" placeholder="app insight connection string" @bind="healthCheckCronRequest.ApplicationInsightsConnectionstring">
+                            </div>
+
                         </div>
                     </EditForm>
                 }
@@ -32,218 +31,125 @@
         </Card>
         @if (healthCheckCronRequest != null)
         {
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>TcpPing</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.TcpPing != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.TcpPing)
-                            {
-                                <a class="list-group-item list-group-item-action @(item.Value == selectedRequest ? "active" : "")" @onclick="() => changeSelected(item.Value)" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
+            @foreach (var checklist in healthCheckCronRequest.HealthChecks)
+            {
+                <Card Size="CardSize.Small">
+                    <CardHeader> 
+                        <h3 style="margin-bottom:0px">@checklist.Key</h3>   
+                        <Button BackgroundColor="TablerColor.Primary" Type="ButtonType.Button" Text="Add" Size="ButtonSize.Small" style="margin-left:20px" @onclick="() => addnewrequest(checklist.Key)" />
+                    </CardHeader>
 
 
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>Http</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.Http != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.Http)
-                            {
-                                <a class="list-group-item list-group-item-action @(item.Value == selectedRequest ? "active" : "")" @onclick="() => changeSelected(item.Value)" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
+                      
 
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>StrorageAccount</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.StrorageAccount != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.StrorageAccount)
-                            {
-                                <a class="list-group-item list-group-item-action @(item.Value == selectedRequest ? "active" : "")" @onclick="() => changeSelected(item.Value)" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
+                    <CardBody style="padding-top:0px; padding-bottom:0px">
+                        @if (checklist.Value != null)
+                        {
+                            <div class="list-group list-group-flush">
+                                @foreach (var item in checklist.Value)
+                                {
+                                    <a class="list-group-item list-group-item-action @(item == selectedRequest ? "active" : "")" style="padding-top:0px;padding-bottom:5px" @onclick="() => changeSelected(item, checklist.Key)" aria-current="true"> @item.Url </a>
+                                }
+                            </div>
+                        }
+                    </CardBody>
+                </Card>
+            }
 
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>KeyVault</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.KeyVault != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.KeyVault)
-                            {
-                                <a class="list-group-item list-group-item-action @(item.Value == selectedRequest ? "active" : "")" @onclick="() => changeSelected(item.Value)" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
-
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>ServiceBus</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.ServiceBus != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.ServiceBus)
-                            {
-                                <a class="list-group-item list-group-item-action @(item.Value == selectedRequest ? "active" : "")" @onclick="() => changeSelected(item.Value)" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
-
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>Redis</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.Redis != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.Redis)
-                            {
-                                <a class="list-group-item list-group-item-action @(item.Value == selectedRequest ? "active" : "")" @onclick="() => changeSelected(item.Value)" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
-
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>EventHub</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.EventHub != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.EventHub)
-                            {
-                                <a class="list-group-item list-group-item-action @(item.Value == selectedRequest ? "active" : "")" @onclick="() => changeSelected(item.Value)" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
-
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>CosmosDB</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.CosmosDB != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.CosmosDB)
-                            {
-                                <a class="list-group-item list-group-item-action @(item.Value == selectedRequest ? "active" : "")" @onclick="() => changeSelected(item.Value)" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
-
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>SQLServer</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.SQLServer != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.SQLServer)
-                            {
-                                <a class="list-group-item list-group-item-action active" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
-
-            <Card Size="CardSize.Small">
-                <CardHeader> <h3>AzureAppConfig</h3>  </CardHeader>
-                <CardBody>
-                    @if (healthCheckCronRequest.AzureAppConfig != null)
-                    {
-                        <div class="list-group list-group-flush">
-                            @foreach (var item in healthCheckCronRequest.AzureAppConfig)
-                            {
-                                <a class="list-group-item list-group-item-action active" aria-current="true"> @item.Key </a>
-                            }
-                        </div>
-                    }
-                </CardBody>
-            </Card>
         }
 
 
     </div>
-    <div class="col-md-6">
+   
+    <div class="col-8">
 
-        <Card Size="CardSize.Small">
+        <Card Size="CardSize.Medium">
             <CardHeader>
-                <h3>Health Checker</h3>
+                <h3>Check Connectivity</h3>
             </CardHeader>
             <CardBody>
-                <EditForm Model="@request" FormName="TokenGenerator" OnValidSubmit="@SubmitValidForm">
-                    <div class="row g-3">
+                @if (selectedRequest != null)
+                {
+                    <EditForm Model="@selectedRequest" FormName="CheckConnectivity" OnValidSubmit="@SubmitValidForm">
+                        <FluentValidationValidator />
+                        <ValidationSummary />
 
-                        <div class="col-md-12">
+                        <div class="row g-3">
+                            <div class="col-sm-9">
+                                @if (selectedRequest is HttpConnectionCheckRequest)
+                                {
+                                    <label for="url" class="form-label">URL</label>
+                                }
+                                else
+                                {
+                                    <label for="url" class="form-label">Domain</label>
+                                }
+                                <input type="text" class="form-control" id="url" placeholder="Domain" @bind="selectedRequest.Url">
+                                <ValidationMessage class="alert alert-danger" For="@(() => selectedRequest.Url)" />
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label for="lastName" class="form-label">Port</label>
+                                <input type="number" class="form-control" id="port" placeholder="Port" @bind="selectedRequest.Port">
+                            </div>
+
+                            @* 
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">Category</label>
+
+                            <select class="form-select" id="category" @bind="selectedCategoryValue" @bind:after="categoryChanged">
+                                @foreach (var cat in connectionCheckDiscovery.Categories)
+                                {
+                                    <option value="@cat.Key">@cat.Value</option>
+                                }
+                            </select>*@
+
+                        </div>
+
+                        <div class="col-md-6">
                             <label for="state" class="form-label">Authentication</label>
-                            <select class="form-select" id="authselect" required="" @bind="SelectedAuthenticationType">
+                            <select class="form-select" id="authselect" required="" @bind="selectedRequest.SelectedAuthenticationType">
+                                <option value="None">None</option>
                                 <option value="UseMSI">Use Managed Identity</option>
                                 <option value="SP">Use Service Principal</option>
                             </select>
                         </div>
 
-                        <div class="col-sm-12">
-                            <label for="firstName" class="form-label">Audience</label>
-                            <input type="text" class="form-control" id="audience" placeholder="Audience" @bind="request.Audience">
-                        </div>
+                        @if (selectedRequest.SelectedAuthenticationType == "SP")
+                        {
+                            <hr class="my-4">
+                            <h4> Service Principal</h4>
 
-                        <div class="col-md-6">
-                            <label for="country" class="form-label">Category</label>
-                        </div>
-                    </div>
-                    @if (SelectedAuthenticationType == "SP")
-                    {
+                            <div class="row g-3">
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="selectedRequest.ServicePrincipal.TenantId">
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="sp_clientid" placeholder="Client ID" @bind="selectedRequest.ServicePrincipal.ClientId">
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="selectedRequest.ServicePrincipal.ClientSecret">
+                                </div>
+                            </div>
+                        }
+                        @if (selectedRequest.AdditionalRequestRazorContentType != null)
+                        {
+                            <DynamicComponent Type="@selectedRequest.AdditionalRequestRazorContentType" Parameters="@requestDictionary" /> 
+                        }
                         <hr class="my-4">
-                        <h4> Service Principal</h4>
-
-                        @*                     <div class="row g-3">
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="sp_tenantid" placeholder="Tanent ID" @bind="request.ServicePrincipal.TenantId">
-                        </div>
-
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="sp_clientid" placeholder="Client ID" @bind="request.ServicePrincipal.ClientId">
-                        </div>
-
-                        <div class="col-sm-12">
-                            <input type="password" class="form-control" id="sp_clientsecret" placeholder="Client Secret" @bind="request.ServicePrincipal.ClientSecret">
-                        </div>
-                    </div> *@
-                    }
-                    <span> @disableSendButton</span>
-                    <hr class="my-4">
-                    @if (disableSendButton)
-                    {
-                        <Progress Color="TablerColor.Purple" Indeterminate />
-                    }
-                    <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" Disabled="disableSendButton" Type="ButtonType.Submit" Text="Send" />
-                </EditForm>
-
+                        @if (disableSendButton)
+                        {
+                            <Progress Color="TablerColor.Purple" Indeterminate />
+                        }
+                        <Button BackgroundColor="TablerColor.Primary" class="w-100 btn btn-primary" IsLoading="disableSendButton" Disabled="disableSendButton" Type="ButtonType.Submit" Text="Send" />
+                    </EditForm>
+                }
             </CardBody>
         </Card>
     </div>
+
 
     <div class="col-6">
 
@@ -296,7 +202,10 @@
     private TokenGenResponse response = null;
     private bool disableSendButton = false;
     string SelectedAuthenticationType = "UseMSI";
-    private TokenGenCommand request = new TokenGenCommand { };
+
+
+    [Inject] ConnectionCheckDiscovery connectionCheckDiscovery { get; set; } = default!;
+    public Dictionary<string, object> requestDictionary { get; set; } = new Dictionary<string, object>();
 
     [Inject]
     private IConfiguration configuration { get; set; }
@@ -307,113 +216,92 @@
 
     public HealthChecker()
     {
-        // requestDictionary = new Dictionary<string, object>();
-        // requestDictionary.Add("RequestValue", request);
-        selectedRequest = new TcpPingConnectionCheckRequest();
+        requestDictionary = new Dictionary<string, object>();
+        requestDictionary.Add("RequestValue", selectedRequest);
+        // selectedRequest = new TcpPingConnectionCheckRequest();
 
         configurationText = @"
         {
           ""HealthChecks"": {
             ""Cron"": ""0 */5 * * * *"",
-            ""TcpPing"": {   
-                ""api-check"": {
-                        ""Url"": ""api.example.com"",
-                        ""Port"": 443,
-                        ""Protocol"": ""TCP"",
-                        ""UseMSI"": false,
-                        ""SelectedAuthenticationType"": ""None""
-                      }
-                    },
+            ""TcpPing"": [{
+              ""Url"": ""api.example.com"",
+              ""Port"": 443,
+              ""Protocol"": ""TCP"",
+              ""UseMSI"": false,
+              ""SelectedAuthenticationType"": ""None""
+            }],
 
-    ""Http"": {
-      ""health-check"": {
-        ""Url"": ""https://api.example.com/health"",
-        ""HttpMethod"": ""Get"",
-        ""Port"": 443,
-        ""UseMSI"": false,
-        ""SelectedAuthenticationType"": ""None"",
-        ""Headers"": []
-      }
-    },
-    ""StrorageAccount"": {
-      ""prod-storage"": {
-        ""Url"": ""mystorageacct.blob.core.windows.net"",
-        ""Port"": 443,
-        ""StorageAccountName"": ""mystorageacct"",
-        ""UseMSI"": true,
-        ""SelectedAuthenticationType"": ""MSI"",
-        ""TestBlobStorage"": true,
-        ""TestQueueStorage"": true,
-        ""TestTableStorage"": true,
-        ""TestStaticwebsite"": false,
-        ""TestDataLakeStorage"": false,
-        ""TestAzureFiles"": false
-      }
-    },
-    ""KeyVault"": {
-      ""app-keyvault"": {
-        ""Url"": ""mykeyvault.vault.azure.net"",
-        ""Port"": 443,
-        ""KeyVaultName"": ""mykeyvault"",
-        ""UseMSI"": true,
-        ""SelectedAuthenticationType"": ""MSI""
-      }
-    },
-    ""ServiceBus"": {
-      ""orders-queue"": {
-        ""Url"": ""myservicebus.servicebus.windows.net"",
-        ""Port"": 443,
-        ""QueueName"": ""orders"",
-        ""UseMSI"": true,
-        ""SelectedAuthenticationType"": ""MSI""
-      }
-    },
-    ""Redis"": {
-      ""cache-check"": {
-        ""Url"": ""myredis.redis.cache.windows.net"",
-        ""Port"": 6380,
-        ""UseMSI"": true,
-        ""SelectedAuthenticationType"": ""MSI"",
-        ""RedisUsername"": ""default""
-      }
-    },
-    ""EventHub"": {
-      ""telemetry-hub"": {
-        ""Url"": ""myeventhub.servicebus.windows.net"",
-        ""Port"": 5671,
-        ""EventHubName"": ""telemetry"",
-        ""UseMSI"": true,
-        ""SelectedAuthenticationType"": ""MSI""
-      }
-    },
-    ""CosmosDB"": {
-      ""main-db"": {
-        ""Url"": ""mycosmosdb.documents.azure.com"",
-        ""Port"": 443,
-        ""DatabaseName"": ""MainDB"",
-        ""ContainerName"": ""Orders"",
-        ""UseMSI"": true,
-        ""SelectedAuthenticationType"": ""MSI""
-      }
-    },
-    ""SQLServer"": {
-      ""prod-sql"": {
-        ""Url"": ""myserver.database.windows.net"",
-        ""Port"": 1433,
-        ""UseMSI"": true,
-        ""SelectedAuthenticationType"": ""MSI""
-      }
-    },
-    ""AzureAppConfig"": {
-      ""app-config"": {
-        ""Url"": ""myappconfig.azconfig.io"",
-        ""Port"": 443,
-        ""UseMSI"": true,
-        ""SelectedAuthenticationType"": ""MSI""
-      }
-    }
+            ""Http"": [{
+                ""Url"": ""https://api.example.com/health"",
+                ""HttpMethod"": ""Get"",
+                ""Port"": 443,
+                ""UseMSI"": false,
+                ""SelectedAuthenticationType"": ""None"",
+                ""Headers"": []
+              }],
 
-
+            ""StrorageAccount"": [{
+                ""Url"": ""mystorageacct.blob.core.windows.net"",
+                ""Port"": 443,
+                ""StorageAccountName"": ""mystorageacct"",
+                ""UseMSI"": true,
+                ""SelectedAuthenticationType"": ""MSI"",
+                ""TestBlobStorage"": true,
+                ""TestQueueStorage"": true,
+                ""TestTableStorage"": true,
+                ""TestStaticwebsite"": false,
+                ""TestDataLakeStorage"": false,
+                ""TestAzureFiles"": false
+              }],
+            ""KeyVault"": [{
+                ""Url"": ""mykeyvault.vault.azure.net"",
+                ""Port"": 443,
+                ""KeyVaultName"": ""mykeyvault"",
+                ""UseMSI"": true,
+                ""SelectedAuthenticationType"": ""MSI""
+              }],
+            ""ServiceBus"": [{
+                ""Url"": ""myservicebus.servicebus.windows.net"",
+                ""Port"": 443,
+                ""QueueName"": ""orders"",
+                ""UseMSI"": true,
+                ""SelectedAuthenticationType"": ""MSI""
+              }],
+            ""Redis"": [{
+                ""Url"": ""myredis.redis.cache.windows.net"",
+                ""Port"": 6380,
+                ""UseMSI"": true,
+                ""SelectedAuthenticationType"": ""MSI"",
+                ""RedisUsername"": ""default""
+              }],
+            ""EventHub"": [{
+                ""Url"": ""myeventhub.servicebus.windows.net"",
+                ""Port"": 5671,
+                ""EventHubName"": ""telemetry"",
+                ""UseMSI"": true,
+                ""SelectedAuthenticationType"": ""MSI""
+              }],
+            ""CosmosDB"": [{
+                ""Url"": ""mycosmosdb.documents.azure.com"",
+                ""Port"": 443,
+                ""DatabaseName"": ""MainDB"",
+                ""ContainerName"": ""Orders"",
+                ""UseMSI"": true,
+                ""SelectedAuthenticationType"": ""MSI""
+              }],
+            ""SQLServer"": [{
+                ""Url"": ""myserver.database.windows.net"",
+                ""Port"": 1433,
+                ""UseMSI"": true,
+                ""SelectedAuthenticationType"": ""MSI""
+              }],
+            ""AzureAppConfig"": [{
+                ""Url"": ""myappconfig.azconfig.io"",
+                ""Port"": 443,
+                ""UseMSI"": true,
+                ""SelectedAuthenticationType"": ""MSI""
+              }]
           }
         }";
 
@@ -426,7 +314,7 @@
 
         if (configuration["AZURE_ClIENT_ID"] != null)
         {
-            request.Audience = configuration["AZURE_ClIENT_ID"];
+            // selectedRequest.Audience = configuration["AZURE_ClIENT_ID"];
         }
     }
 
@@ -446,15 +334,15 @@
     {
         disableSendButton = true;
 
-        await Task.Delay(10);
-        if (SelectedAuthenticationType == "UseMSI")
-        {
-            Console.WriteLine(request.UseMSI + ":" + request.Audience.ToString());
-            request.UseMSI = true;
+        // await Task.Delay(10);
+        // if (SelectedAuthenticationType == "UseMSI")
+        // {
+        //     Console.WriteLine(selectedRequest.UseMSI + ":" + selectedRequest.Audience.ToString());
+        //     selectedRequest.UseMSI = true;
 
 
-        }
-        response = await mediator.Send(request);
+        // }
+        // response = await mediator.Send(selectedRequest);
         disableSendButton = false;
     }
 
@@ -475,9 +363,22 @@
         healthCheckCronRequest = obj.HealthChecks;
 
     }
-    private void changeSelected(IBasicCheckAccessRequest request)
+    private void changeSelected(IBasicCheckAccessRequest request, string category)
     {
         selectedRequest = request;
+        //var qqq= connectionCheckDiscovery.Categories.TryGetValue(category, out var selectedCategoryValue);
+        //var regtype = connectionCheckDiscovery.Categories.SingleOrDefault(p => p.Value == category);
+
+        //request = connectionCheckDiscovery.CreateCheckAccessRequest(regtype.Key);
+        requestDictionary = new Dictionary<string, object>();
+        requestDictionary.Add("RequestValue", selectedRequest);
+    }
+
+    private void addnewrequest(string categoryName)
+    {
+        healthCheckCronRequest.AddnewRequest(categoryName);
+        StateHasChanged();
+        
     }
 }
 

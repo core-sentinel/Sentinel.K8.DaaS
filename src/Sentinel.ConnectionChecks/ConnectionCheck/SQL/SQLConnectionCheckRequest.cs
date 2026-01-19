@@ -22,5 +22,5 @@ public class SQLConnectionCheckRequest : IRequest<TestNetConnectionResponse>, IB
     {
         ServicePrincipal = new ServicePrincipal();
     }
-    public string JsonDeserializationType => this.GetType().FullName;
+    public string JsonDeserializationType => this.GetType().AssemblyQualifiedName;
 }

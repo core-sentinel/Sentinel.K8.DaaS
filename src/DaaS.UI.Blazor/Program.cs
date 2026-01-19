@@ -44,7 +44,11 @@ builder.Services.AddTickerQ(options =>
 {
     //options.UseInMemoryStorage();
     //options.ScanForTickerFunctions(typeof(DaaS.UI.Blazor.TickerQFunctions.TickerQFunctionsAssemblyMarker));
-
+    options.ConfigureRequestJsonOptions(jsonOptions =>
+    {
+        jsonOptions.IgnoreReadOnlyFields = true;
+        // Configure JSON options if needed
+    });
     options.AddDashboard(dashboardOptions =>
     {
         dashboardOptions.SetBasePath("/admin/tickerq");
